@@ -6,8 +6,7 @@ mc01td <- function(dico, dp, p) {
     p <- as.double(p)
 
     # Hidden Parameters
-
-
+    dwork <-  dwork <-
     # Out Parameters
     stable <- as.logical(0)
     nz <- as.integer(0)
@@ -18,7 +17,7 @@ mc01td <- function(dico, dp, p) {
     if (dim(as.array(p)) != c(dp + 1))
         stop("Incorrect dimensions for matrix p")
 
-    res <- .Fortran(MC01TD.f, DICO = dico, DP = dp, P = p, STABLE = stable, NZ = nz, DWORK = dwork, IWARN = iwarn, INFO = info)
+    res <- .Fortran("MC01TD", DICO = dico, DP = dp, P = p, STABLE = stable, NZ = nz, DWORK = dwork, IWARN = iwarn, INFO = info)
 
     return(list(dp = res$DP, stable = res$STABLE, nz = res$NZ, iwarn = res$IWARN, info = res$INFO))
 }
