@@ -78,9 +78,9 @@ create_call <- function(file_name, params)
 
   return (
     paste0(
-      "res <- .Fortran(",
+      "res <- .Fortran(\"",
       stringr::str_split_fixed(file_name, "\\.", 2)[1,1],
-      ",", param_string,
+      "\",", param_string,
       ")"
     )
   )
@@ -118,7 +118,7 @@ handle_in <- function(params)
 
 handle_hide <- function(params)
 {
-  hide_params <- dplyr::filter(params, intent == "hide")
+  hide_params <- dplyr::filter(params, stringr::str_detect(intent,"hide"))
 
   if (nrow(hide_params) == 0)
     return ("")
