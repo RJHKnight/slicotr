@@ -16,13 +16,14 @@ generate_function <- function(name, file_name, params)
     "# In Parameters", "\n",
     paste0(handle_in(params), collapse = "\n"), "\n\n",
 
+    # Define out parameters
+    "# Out Parameters", "\n",
+    paste0(handle_out(params), collapse = "\n"), "\n\n",
+
     # Define hidden parameters
     "# Hidden Parameters", "\n",
     paste0(handle_hide(params), collapse = "\n"), "\n\n",
 
-    # Define out parameters
-    "# Out Parameters", "\n",
-    paste0(handle_out(params), collapse = "\n"), "\n\n",
 
     # Apply checks
     "# Check dimensions of input parameters", "\n",
@@ -49,7 +50,7 @@ check_in <- function(params)
 
   filt_params %>%
     mutate(text = paste0(
-      "if (dim (as.array(", name, ")) != c(", dimension, ")) stop(\"Incorrect dimensions for matrix ", name, "\")"
+      "if (dim (", name, ") != c(", dimension, ")) stop(\"Incorrect dimensions for matrix ", name, "\")"
     )) %>%
     pull(text)
 }
@@ -104,7 +105,8 @@ handle_out <- function(params)
 
 handle_in <- function(params)
 {
-  in_params <- dplyr::filter(params, stringr::str_detect(intent, "in") | is.na(intent))
+  in_params <- dplyr::filter(params, stringr::str_detect(intent, "in") | is.na(intent)) %>%
+    filter(is.na(dimension))
 
   if (nrow(in_params) == 0)
     return ("")

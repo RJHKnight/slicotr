@@ -6,7 +6,9 @@ DIMENSION <- "dimension"
 
 parse_pyf <- function(file_name)
 {
-  raw <- readLines(file(file_name))
+  this_file <- file(file_name)
+  raw <- readLines(this_file)
+  close(this_file)
 
   handling_sub <- FALSE
   sub_name <- ""
@@ -145,6 +147,11 @@ handle_other <- function(other_properties)
            next
         }
       }
+    }
+
+    else if (i+2 > length(chars))
+    {
+      break
     }
 
     # Check
