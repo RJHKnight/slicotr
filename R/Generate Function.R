@@ -125,24 +125,30 @@ handle_hide <- function(params)
 
   hide_params %>%
     dplyr::rowwise() %>%
-    dplyr::mutate(value = handle_shape(value)) %>%
+    dplyr::mutate(value = handle_shape_dimension(value, dimension, type)) %>%
     dplyr::mutate(
       text = paste0(name, " <- " , value)
     ) %>%
     pull(text)
 }
 
-handle_shape <- function(x)
+handle_shape_dimension <- function(value, dimension, type)
 {
-  if (length(x) == 0)
+  if (nchar(value) == 0 & nchar(dimension) == 0)
     return ("")
 
-  if (!stringr::str_detect(x, "shape"))
+  if (nchar(value) == 0)
   {
-    return (x)
+    # Use dimension
+    return (paste0("array(as.", type, "(1), c(", dimension, "))"))
   }
 
-  bits <- stringr::str_split_fixed(x, "\\(|\\,|\\)", 4)
+  if (!stringr::str_detect(value, "shape"))
+  {
+    return (value)
+  }
+
+  bits <- stringr::str_split_fixed(value, "\\(|\\,|\\)", 4)
 
   return (paste0("dim(", bits[,2], ")[", as.integer(bits[,3])+1, "]"))
 }
