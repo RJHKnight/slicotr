@@ -20,7 +20,7 @@ subroutine mb03rd(jobx,sort,n,pmax,a,lda,x,ldx,nblcks,blsize,wr,wi,tol,dwork,inf
   double precision intent(in,out,copy),dimension(lda,n),depend(n) :: a
   integer intent(hide),check(lda>=max(1,n)) :: lda=shape(a,0)
   double precision intent(in,out,copy),dimension(ldx,n),depend(n) :: x
-  integer intent(hide),check((*jobx == 'N' && ldx>=1) || (*jobx == 'U' && ldx >= max(1,n))) :: ldx=shape(x,0)
+  integer intent(hide) :: ldx=shape(x,0)
   integer intent(out) :: nblcks
   integer intent(out),dimension(n) :: blsize
   double precision intent(out),dimension(n) :: wr
@@ -85,7 +85,7 @@ subroutine mb05md(balanc,n,delta,a,lda,v,ldv,y,ldy,valr,vali,iwork,dwork,ldwork,
     character intent(in):: balanc
     integer intent(in),check(n>=0) :: n
     double precision intent(in):: delta
-    double precision intent(in,out,copy),dimension(lda,*) :: a
+    double precision intent(in,out,copy),dimension(lda,n) :: a
     integer intent(hide),depend(a) :: lda=shape(a,0)
     double precision intent(out),depend(n),dimension(n,n) :: v
     integer, intent(hide),depend(v) :: ldv=shape(v,0)
