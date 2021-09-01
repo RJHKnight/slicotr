@@ -2,11 +2,13 @@ generate_function <- function(name, file_name, params)
 {
   output_name <- paste0(name, ".R")
 
+  param_names <- filter(params, stringr::str_detect(intent, "in") | is.na(intent)) %>% pull(name)
+
   x <- paste0(
 
     # Function definition
     name, "<- function(",
-    paste(params$name, collapse = ","),
+    paste(param_names, collapse = ","),
     ")\n",
     "{\n\n",
 
@@ -47,7 +49,7 @@ check_in <- function(params)
 
   filt_params %>%
     mutate(text = paste0(
-      "if (dim (", name, ") != c(", dimension, ")) stop(\"Incorrect dimensions for matrix ", name, "\")"
+      "if (dim (as.array(", name, ")) != c(", dimension, ")) stop(\"Incorrect dimensions for matrix ", name, "\")"
     )) %>%
     pull(text)
 }
@@ -77,7 +79,7 @@ create_call <- function(file_name, params)
   return (
     paste0(
       "res <- .Fortran(",
-      file_name,
+      stringr::str_split_fixed(file_name, "\\.", 2)[1,1],
       ",", param_string,
       ")"
     )
@@ -86,7 +88,12 @@ create_call <- function(file_name, params)
 
 handle_out <- function(params)
 {
-  dplyr::filter(params, intent == "out") %>%
+  out_params <- dplyr::filter(params, intent == "out")
+
+  if (nrow(out_params) == 0)
+    return ("")
+
+  out_params %>%
     mutate(text = paste0(
       name, " <- ",
       if_else(is.na(dimension),
@@ -97,12 +104,13 @@ handle_out <- function(params)
 
 handle_in <- function(params)
 {
-  in_params <- dplyr::filter(params, intent == "in")
+  in_params <- dplyr::filter(params, stringr::str_detect(intent, "in") | is.na(intent))
+
+  if (nrow(in_params) == 0)
+    return ("")
 
   text <- in_params %>%
-    mutate(text = if_else(type == "integer",
-                          paste0(name, " <- as.integer(", name, ")"),
-                          paste0(name, " <- as.double(", name, ")"))) %>%
+    mutate(text = paste0(name, " <- as.", type, "(", name, ")")) %>%
     pull(text)
 
   return (text)
@@ -110,7 +118,12 @@ handle_in <- function(params)
 
 handle_hide <- function(params)
 {
-  dplyr::filter(params, intent == "hide") %>%
+  hide_params <- dplyr::filter(params, intent == "hide")
+
+  if (nrow(hide_params) == 0)
+    return ("")
+
+  hide_params %>%
     dplyr::rowwise() %>%
     dplyr::mutate(value = handle_shape(value)) %>%
     dplyr::mutate(
@@ -121,40 +134,15 @@ handle_hide <- function(params)
 
 handle_shape <- function(x)
 {
+  if (length(x) == 0)
+    return ("")
+
   if (!stringr::str_detect(x, "shape"))
+  {
     return (x)
+  }
 
   bits <- stringr::str_split_fixed(x, "\\(|\\,|\\)", 4)
 
   return (paste0("dim(", bits[,2], ")[", as.integer(bits[,3])+1, "]"))
 }
-
-# Param:
-# - type
-# - intent
-# - check
-# - name
-# - shape
-type_levels <- c("integer", "double")
-intent_levels <- c("in", "inout", "inplace", "out", "hide")
-
-create_param <- function(type, intent, name, check = NA, dimension = NA, value = NA)
-{
-  return (data.frame(
-    name = name,
-    type = factor(type, levels = type_levels),
-    intent = factor(intent, levels = intent_levels),
-    check = check,
-    dimension = dimension,
-    value = value
-  ))
-}
-
-sample_params <- rbind(
-  create_param("integer", "in", "n", check = "n>=0"),
-  create_param("integer", "hide", "p", check ="p>=1", value = "shape(a,2)"),
-  create_param("integer", "in", "ilo", check = "1<=ilo && ilo<=max(1,n)",),
-  create_param("double", "inout", "a", check = "min(ilo,n)<=ihi && ihi<=n", dimension = "lda1,lda2,p"),
-  create_param("integer", "out", "tau", dimension = "max(1,n-1),p"),
-  create_param("integer", "out", "info")
-)
