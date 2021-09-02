@@ -36,7 +36,7 @@ generate_function <- function(name, file_name, params)
     create_return(params) , "\n}"
   )
 
-  file_name <- paste0("R/", name, "_tmp.R")
+  file_name <- paste0("R/", name, ".R")
   readr::write_file(x, file = file_name)
   formatR::tidy_file(file_name)
 }
@@ -106,7 +106,8 @@ handle_out <- function(params)
 handle_in <- function(params)
 {
   in_params <- dplyr::filter(params, stringr::str_detect(intent, "in") | is.na(intent)) %>%
-    filter(is.na(dimension))
+    filter(is.na(dimension)) %>%
+    arrange(!is.na(depend), name, depend)
 
   if (nrow(in_params) == 0)
     return ("")
