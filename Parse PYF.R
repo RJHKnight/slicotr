@@ -1,5 +1,5 @@
-START_SUB <- "^subroutine"
-END_SUB <- "^end subroutine"
+START_SUB <- "^subroutine|function"
+END_SUB <- "^end subroutine|function"
 PARAM <- "::"
 INTENT <- "intent"
 DIMENSION <- "dimension"

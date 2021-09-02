@@ -11,7 +11,7 @@ subroutine ab01nd(jobz,n,m,a,lda,b,ldb,ncont,indcon,nblk,z,ldz,tau,tol,iwork,dwo
     integer intent(out) :: indcon
     integer intent(out),dimension(n),depend(n) :: nblk
     double precision intent(out),dimension(ldz,n),depend(n,ldz) :: z
-    integer intent(hide),depend(n, jobz) :: ldz = (*jobz == 'N' ? 1 : n)
+    integer intent(hide),depend(n, jobz) :: ldz = (jobz == 'N' ? 1 : n)
     double precision intent(out),dimension(n),depend(n) :: tau
     double precision :: tol = 0
     integer intent(hide,cache),dimension(m),depend(m) :: iwork
@@ -115,13 +115,13 @@ subroutine ab08nd(equil,n,m,p,a,lda,b,ldb,c,ldc,d,ldd,nu,rank_bn,dinfz,nkror,nkr
     integer intent(in),check(n>=0),required :: n
     integer intent(in),check(m>=0),required :: m
     integer intent(in),check(p>=0),required :: p
-    double precision intent(in),dimension(lda,*),check(shape(a,1)>=n) :: a
+    double precision intent(in),dimension(lda,n),check(shape(a,1)>=n) :: a
     integer intent(hide),check(lda>=max(1,n)) :: lda=shape(a,0)
-    double precision intent(in),dimension(ldb,*),check(shape(b,1)>=m) :: b
+    double precision intent(in),dimension(ldb,m),check(shape(b,1)>=m) :: b
     integer intent(hide),check(ldb>=max(1,n)) :: ldb=shape(b,0)
-    double precision intent(in),dimension(ldc,*),check(shape(c,1)>=n) :: c
+    double precision intent(in),dimension(ldc,n),check(shape(c,1)>=n) :: c
     integer intent(hide),check(ldc>=max(1,p)) :: ldc=shape(c,0)
-    double precision intent(in),dimension(ldd,*),check(shape(d,1)>=m) :: d
+    double precision intent(in),dimension(ldd,m),check(shape(d,1)>=m) :: d
     integer intent(hide),check(ldd>=max(1,p)) :: ldd=shape(d,0)
     integer intent(out) :: nu
     integer intent(out) :: rank_bn
@@ -146,13 +146,13 @@ subroutine ab08nz(equil,n,m,p,a,lda,b,ldb,c,ldc,d,ldd,nu,rank_bn,dinfz,nkror,nkr
     integer intent(in),check(n>=0),required :: n
     integer intent(in),check(m>=0),required :: m
     integer intent(in),check(p>=0),required :: p
-    complex*16 intent(in),dimension(lda,*),check(shape(a,1)>=n) :: a
+    complex*16 intent(in),dimension(lda,n),check(shape(a,1)>=n) :: a
     integer intent(hide),check(lda>=max(1,n)) :: lda=shape(a,0)
-    complex*16 intent(in),dimension(ldb,*),check(shape(b,1)>=m) :: b
+    complex*16 intent(in),dimension(ldb,m),check(shape(b,1)>=m) :: b
     integer intent(hide),check(ldb>=max(1,n)) :: ldb=shape(b,0)
-    complex*16 intent(in),dimension(ldc,*),check(shape(c,1)>=n) :: c
+    complex*16 intent(in),dimension(ldc,n),check(shape(c,1)>=n) :: c
     integer intent(hide),check(ldc>=max(1,p)) :: ldc=shape(c,0)
-    complex*16 intent(in),dimension(ldd,*),check(shape(d,1)>=m) :: d
+    complex*16 intent(in),dimension(ldd,m),check(shape(d,1)>=m) :: d
     integer intent(hide),check(ldd>=max(1,p)) :: ldd=shape(d,0)
     integer intent(out) :: nu
     integer intent(out) :: rank_bn

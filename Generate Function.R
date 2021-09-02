@@ -137,7 +137,7 @@ handle_hide <- function(params)
 
 handle_shape_dimension <- function(value, dimension, type)
 {
-  if (nchar(value) == 0 & nchar(dimension) == 0)
+  if (nchar(value) == 0 & (nchar(dimension) == 0 | is.na(dimension)))
     return ("")
 
   if (nchar(value) == 0)
