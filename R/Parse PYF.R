@@ -73,17 +73,16 @@ parse_param <- function(this_line)
   other_props <- stringr::str_trim(bits[1,1])
 
   # Get param name and default value
-  bits <- stringr::str_split_fixed(name_value, "=", 2)
+  bits <- stringr::str_split_fixed(stringr::str_remove_all(name_value, " \\!.*"), "=", 2)
   param_name <- bits[1,1]
   param_value <- bits[1,2]
 
   # Handle the intent, check and dimension
   other <- handle_other(other_props)
-  intent <- other$intent
-  check <- other$check
-  dimension <- other$dimension
 
-  return (create_param(type, intent, param_name, check = check, dimension = dimension, value = param_value))
+  return (create_param(type, other$intent, param_name,
+                       check = other$check, dimension = other$dimension,
+                       value = param_value, depend = other$depend))
 }
 
 OPEN_PAREN <- "("
@@ -201,7 +200,7 @@ handle_other <- function(other_properties)
   return (list(intent = intent, check = check, dimension = dimension, depend = depend))
 }
 
-create_param <- function(type, intent, name, check = NA, dimension = NA, value = NA)
+create_param <- function(type, intent, name, check = NA, dimension = NA, value = NA, depend = NA)
 {
   return (data.frame(
     name = name,
@@ -209,7 +208,8 @@ create_param <- function(type, intent, name, check = NA, dimension = NA, value =
     intent = intent,
     check = check,
     dimension = dimension,
-    value = value
+    value = value,
+    depend = depend
   ))
 }
 
