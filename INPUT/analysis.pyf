@@ -1,0 +1,410 @@
+!    -*- f90 -*-
+subroutine ab01nd(jobz,n,m,a,lda,b,ldb,ncont,indcon,nblk,z,ldz,tau,tol,iwork,dwork,ldwork,info) ! in AB01ND.f
+    character :: jobz
+    integer check(n>0) :: n
+    integer check(m>0) :: m
+    double precision intent(in,out),dimension(n,n),depend(n) :: a
+    integer intent(hide),depend(a) :: lda=shape(a,0)
+    double precision intent(in,out),dimension(n,m),depend(n,m) :: b
+    integer intent(hide),depend(b) :: ldb=shape(b,0)
+    integer intent(out) :: ncont
+    integer intent(out) :: indcon
+    integer intent(out),dimension(n),depend(n) :: nblk
+    double precision intent(out),dimension(ldz,n),depend(n,ldz) :: z
+    integer intent(hide),depend(n, jobz) :: ldz = (*jobz == 'N' ? 1 : n)
+    double precision intent(out),dimension(n),depend(n) :: tau
+    double precision :: tol = 0
+    integer intent(hide,cache),dimension(m),depend(m) :: iwork
+    double precision intent(hide,cache),dimension(ldwork),depend(ldwork) :: dwork
+    integer :: ldwork = max(n,3*m)
+    integer intent(out) :: info
+end subroutine ab01nd
+subroutine ab05md(uplo,over,n1,m1,p1,n2,p2,a1,lda1,b1,ldb1,c1,ldc1,d1,ldd1,a2,lda2,b2,ldb2,c2,ldc2,d2,ldd2,n,a,lda,b,ldb,c,ldc,d,ldd,dwork,ldwork,info) ! in AB05MD.f
+    character :: uplo = 'U'
+    character intent(hide) :: over = 'N' ! not sure how the overlap works
+    integer check(n1>0) :: n1
+    integer check(m1>0) :: m1
+    integer check(p1>0) :: p1
+    integer check(n2>0) :: n2
+    integer check(p2>0) :: p2
+    double precision dimension(n1,n1),depend(n1) :: a1
+    integer intent(hide),depend(a1) :: lda1=shape(a1,0)
+    double precision dimension(n1,m1),depend(n1,m1) :: b1
+    integer intent(hide),depend(b1) :: ldb1=shape(b1,0)
+    double precision dimension(p1,n1),depend(n1,p1) :: c1
+    integer intent(hide),depend(c1) :: ldc1=shape(c1,0)
+    double precision dimension(p1,m1),depend(m1,p1) :: d1
+    integer intent(hide),depend(d1) :: ldd1=shape(d1,0)
+    double precision dimension(n2,n2),depend(n2) :: a2
+    integer intent(hide),depend(a2) :: lda2=shape(a2,0)
+    double precision dimension(n2,p1),depend(n2,p1) :: b2
+    integer intent(hide),depend(b2) :: ldb2=shape(b2,0)
+    double precision dimension(p2,n2),depend(n2,p2) :: c2
+    integer intent(hide),depend(c2) :: ldc2=shape(c2,0)
+    double precision dimension(p2,p1),depend(p1,p2) :: d2
+    integer intent(hide),depend(d2) :: ldd2=shape(d2,0)
+    integer intent(out) :: n
+    double precision intent(out),dimension(n1+n2,n1+n2),depend(n1,n2) :: a
+    integer intent(hide),depend(a) :: lda=shape(a,0)
+    double precision intent(out),dimension(n1+n2,m1),depend(n1,m1,n2) :: b
+    integer intent(hide),depend(b) :: ldb=shape(b,0)
+    double precision intent(out),dimension(p2,n1+n2),depend(n1,n2,p2) :: c
+    integer intent(hide),depend(c) :: ldc=shape(c,0)
+    double precision intent(out),dimension(p2,m1),depend(m1,p2) :: d
+    integer intent(hide),depend(d) :: ldd=shape(d,0)
+    double precision intent(hide,cache),dimension(ldwork),depend(ldwork) :: dwork
+    integer :: ldwork = 1
+    integer intent(out) :: info
+end subroutine ab05md
+subroutine ab05nd(over,n1,m1,p1,n2,alpha,a1,lda1,b1,ldb1,c1,ldc1,d1,ldd1,a2,lda2,b2,ldb2,c2,ldc2,d2,ldd2,n,a,lda,b,ldb,c,ldc,d,ldd,iwork,dwork,ldwork,info) ! in AB05ND.f
+    character intent(hide) :: over = 'N' ! not sure how the overlap works
+    integer check(n1>0) :: n1
+    integer check(m1>0) :: m1
+    integer check(p1>0) :: p1
+    integer check(n2>0) :: n2
+    double precision :: alpha
+    double precision dimension(n1,n1),depend(n1) :: a1
+    integer intent(hide),depend(a1) :: lda1=shape(a1,0)
+    double precision dimension(n1,m1),depend(n1,m1) :: b1
+    integer intent(hide),depend(b1) :: ldb1=shape(b1,0)
+    double precision dimension(p1,n1),depend(p1,n1) :: c1
+    integer intent(hide),depend(c1) :: ldc1=shape(c1,0)
+    double precision dimension(p1,m1),depend(p1,m1) :: d1
+    integer intent(hide),depend(d1) :: ldd1=shape(d1,0)
+    double precision dimension(n2,n2),depend(n2) :: a2
+    integer intent(hide),depend(a2) :: lda2=shape(a2,0)
+    double precision dimension(n2,p1),depend(n2,p1) :: b2
+    integer intent(hide),depend(b2) :: ldb2=shape(b2,0)
+    double precision dimension(m1,n2),depend(m1,n2) :: c2
+    integer intent(hide),depend(c2) :: ldc2=shape(c2,0)
+    double precision dimension(m1,p1),depend(m1,p1) :: d2
+    integer intent(hide),depend(d2) :: ldd2=shape(d2,0)
+    integer intent(out) :: n
+    double precision intent(out),dimension(n1+n2,n1+n2),depend(n1,n2) :: a
+    integer intent(hide),depend(a) :: lda=shape(a,0)
+    double precision intent(out),dimension(n1+n2,m1),depend(n1,n2,m1) :: b
+    integer intent(hide),depend(b) :: ldb=shape(b,0)
+    double precision intent(out),dimension(p1,n1,n2),depend(p1,n2,n2) :: c
+    integer intent(hide),depend(c) :: ldc=shape(c,0)
+    double precision intent(out),dimension(p1,m1),depend(p1,m1) :: d
+    integer intent(hide),depend(d) :: ldd=shape(d,0)
+    integer intent(hide,cache),dimension(p1),depend(p1) :: iwork
+    double precision intent(hide,cache),dimension(ldwork),depend(ldwork) :: dwork
+    integer :: ldwork = max(p1*p1,max(m1*m1,n1*p1))
+    integer intent(out) :: info
+end subroutine ab05nd
+subroutine ab07nd(n,m,a,lda,b,ldb,c,ldc,d,ldd,rcond,iwork,dwork,ldwork,info) ! in AB07ND.f
+    integer check(n>=0) :: n
+    integer check(m>=0) :: m
+    double precision intent(in,out,copy),dimension(n,n),depend(n) :: a
+    integer intent(hide),depend(a) :: lda=shape(a,0)
+    double precision intent(in,out,copy),dimension(n,m),depend(n,m) :: b
+    integer intent(hide),depend(b) :: ldb=shape(b,0)
+    double precision intent(in,out,copy),dimension(m,n),depend(n,m) :: c
+    integer intent(hide),depend(c) :: ldc=shape(c,0)
+    double precision intent(in,out,copy),dimension(m,m),depend(m) :: d
+    integer intent(hide),depend(d) :: ldd=shape(d,0)
+    double precision intent(out) :: rcond
+    integer intent(hide,cache),dimension(2*m) :: iwork
+    double precision intent(hide,cache),dimension(ldwork),depend(ldwork) :: dwork
+    integer :: ldwork = 4*m
+    integer intent(out) :: info
+end subroutine ab07nd
+subroutine ab08nd(equil,n,m,p,a,lda,b,ldb,c,ldc,d,ldd,nu,rank_bn,dinfz,nkror,nkrol,infz,kronr,kronl,af,ldaf,bf,ldbf,tol,iwork,dwork,ldwork,info) ! in :new:AB08ND.f
+    character :: equil='N'
+    integer intent(in),check(n>=0),required :: n
+    integer intent(in),check(m>=0),required :: m
+    integer intent(in),check(p>=0),required :: p
+    double precision intent(in),dimension(lda,*),check(shape(a,1)>=n) :: a
+    integer intent(hide),check(lda>=max(1,n)) :: lda=shape(a,0)
+    double precision intent(in),dimension(ldb,*),check(shape(b,1)>=m) :: b
+    integer intent(hide),check(ldb>=max(1,n)) :: ldb=shape(b,0)
+    double precision intent(in),dimension(ldc,*),check(shape(c,1)>=n) :: c
+    integer intent(hide),check(ldc>=max(1,p)) :: ldc=shape(c,0)
+    double precision intent(in),dimension(ldd,*),check(shape(d,1)>=m) :: d
+    integer intent(hide),check(ldd>=max(1,p)) :: ldd=shape(d,0)
+    integer intent(out) :: nu
+    integer intent(out) :: rank_bn
+    integer intent(out) :: dinfz
+    integer intent(out) :: nkror
+    integer intent(out) :: nkrol
+    integer intent(out),dimension(n),depend(n) :: infz
+    integer intent(out),dimension(max(n,m)+1),depend([n,m]) :: kronr
+    integer intent(out),dimension(max(n,p)+1),depend([n,p]) :: kronl
+    double precision intent(out),dimension(max(1,n+m),n+min(p,m)) :: af
+    integer intent(hide),depend(af) :: ldaf=shape(af,0)
+    double precision intent(out),dimension(max(1,n+p),n+m) :: bf
+    integer intent(hide),depend(bf) :: ldbf=shape(bf,0)
+    double precision :: tol=0.0
+    integer intent(hide,cache),dimension(max(m,p)) :: iwork
+    double precision intent(hide,cache),dimension(ldwork) :: dwork
+    integer optional :: ldwork = n + 3*max(m,p)
+    integer intent(out) :: info
+end subroutine ab08nd
+subroutine ab08nz(equil,n,m,p,a,lda,b,ldb,c,ldc,d,ldd,nu,rank_bn,dinfz,nkror,nkrol,infz,kronr,kronl,af,ldaf,bf,ldbf,tol,iwork,dwork,zwork,lzwork,info) ! in AB08NZ.f
+    character :: equil='N'
+    integer intent(in),check(n>=0),required :: n
+    integer intent(in),check(m>=0),required :: m
+    integer intent(in),check(p>=0),required :: p
+    complex*16 intent(in),dimension(lda,*),check(shape(a,1)>=n) :: a
+    integer intent(hide),check(lda>=max(1,n)) :: lda=shape(a,0)
+    complex*16 intent(in),dimension(ldb,*),check(shape(b,1)>=m) :: b
+    integer intent(hide),check(ldb>=max(1,n)) :: ldb=shape(b,0)
+    complex*16 intent(in),dimension(ldc,*),check(shape(c,1)>=n) :: c
+    integer intent(hide),check(ldc>=max(1,p)) :: ldc=shape(c,0)
+    complex*16 intent(in),dimension(ldd,*),check(shape(d,1)>=m) :: d
+    integer intent(hide),check(ldd>=max(1,p)) :: ldd=shape(d,0)
+    integer intent(out) :: nu
+    integer intent(out) :: rank_bn
+    integer intent(out) :: dinfz
+    integer intent(out) :: nkror
+    integer intent(out) :: nkrol
+    integer intent(out),dimension(n) :: infz
+    integer intent(out),dimension(max(n,m)+1) :: kronr
+    integer intent(out),dimension(max(n,p)+1) :: kronl
+    complex*16 intent(out),dimension(max(1,n+m),n+min(p,m)) :: af
+    integer intent(hide),check(ldaf>=max(1,n+m)) :: ldaf=shape(af,0)
+    complex*16 intent(out),dimension(max(1,n+p),n+m) :: bf
+    integer intent(hide),check(ldbf>=max(1,n+p)) :: ldbf=shape(bf,0)
+    double precision intent(in) :: tol = 0.0
+    integer intent(hide),cache,dimension(max(m,p)) :: iwork
+    double precision intent(hide),cache,dimension(max(n,2*max(p,m))) :: dwork
+    complex*16 intent(out),cache,dimension(lzwork) :: zwork
+    integer intent(in),check(lzwork>=max(min(p,m) + max(3*m-1,n), max(min(p,n) + max(3*p-1,max(n+p,n+m)), min(m,n) + max(3*m-1,n+m)))) :: lzwork = max(min(p,m) + max(3*m-1,n), max(min(p,n) + max(3*p-1,max(n+p,n+m)), min(m,n) + max(3*m-1,n+m)))
+    integer intent(out) :: info
+end subroutine ab08nz
+subroutine ab09ad(dico,job,equil,ordsel,n,m,p,nr,a,lda,b,ldb,c,ldc,hsv,tol,iwork,dwork,ldwork,iwarn,info) !in :balred:AB09AD.f
+    character intent(in) :: dico
+    character intent(in) :: job
+    character intent(in) :: equil
+    character intent(in) :: ordsel
+    integer check(n>=0) :: n
+    integer check(m>=0) :: m
+    integer check(p>=0) :: p
+    integer intent(in,out) :: nr
+    double precision intent(in,out,copy),dimension(n,n),depend(n) :: a
+    integer intent(hide),depend(a) :: lda=shape(a,0)
+    double precision intent(in,out,copy),dimension(n,m),depend(n,m) :: b
+    integer intent(hide),depend(b) :: ldb=shape(b,0)
+    double precision intent(in,out,copy),dimension(p,n),depend(n,p) :: c
+    integer intent(hide),depend(c) :: ldc=shape(c,0)
+    double precision intent(out),dimension(n),depend(n) :: hsv
+    double precision :: tol =0.0
+    integer intent(hide,cache),dimension(max(m,p)) :: iwork
+    double precision intent(hide,cache),dimension(ldwork) :: dwork
+    integer optional :: ldwork = max(1,n*(2*n+max(n,max(m,p))+5)+n*(n+1)/2)
+    integer intent(out) :: iwarn
+    integer intent(out) :: info
+end subroutine ab09ad
+subroutine ab09ax(dico,job,ordsel,n,m,p,nr,a,lda,b,ldb,c,ldc,hsv,t,ldt,ti,ldti,tol,iwork,dwork,ldwork,iwarn,info) !in AB09AX.f
+    character intent(in) :: dico
+    character intent(in) :: job
+    character intent(in) :: ordsel
+    integer check(n>=0) :: n
+    integer check(m>=0) :: m
+    integer check(p>=0) :: p
+    integer intent(in,out) :: nr
+    double precision intent(in,out,copy),dimension(n,n),depend(n) :: a
+    integer intent(hide),depend(a) :: lda=shape(a,0)
+    double precision intent(in,out,copy),dimension(n,m),depend(n,m) :: b
+    integer intent(hide),depend(b) :: ldb=shape(b,0)
+    double precision intent(in,out,copy),dimension(p,n),depend(p,n) :: c
+    integer intent(hide),depend(c) :: ldc=shape(c,0)
+    double precision intent(out),dimension(n),depend(n) :: hsv
+    double precision intent(out),dimension(n,n) :: t
+    integer intent(hide),depend(t) :: ldt=shape(t,0)
+    double precision intent(out),dimension(n,n) :: ti
+    integer intent(hide),depend(ti) :: ldti=shape(ti,0)
+    double precision :: tol =0.0
+    integer intent(hide,cache),dimension(max(m,p)) :: iwork
+    double precision intent(hide,cache),dimension(ldwork) :: dwork
+    integer optional :: ldwork = max(1,n*(max(n,max(m,p))+5)+n*(n+1)/2)
+    integer intent(out) :: iwarn
+    integer intent(out) :: info
+end subroutine ab09ax
+subroutine ab09bd(dico,job,equil,ordsel,n,m,p,nr,a,lda,b,ldb,c,ldc,d,ldd,hsv,tol1,tol2,iwork,dwork,ldwork,iwarn,info) !in :balred:AB09BD.f
+    character intent(in) :: dico
+    character intent(in) :: job
+    character intent(in) :: equil
+    character intent(in) :: ordsel
+    integer check(n>=0) :: n
+    integer check(m>=0) :: m
+    integer check(p>=0) :: p
+    integer intent(in,out) :: nr
+    double precision intent(in,out,copy),dimension(n,n),depend(n) :: a
+    integer intent(hide),depend(a) :: lda=shape(a,0)
+    double precision intent(in,out,copy),dimension(n,m),depend(n,m) :: b
+    integer intent(hide),depend(b) :: ldb=shape(b,0)
+    double precision intent(in,out,copy),dimension(p,n),depend(n,p) :: c
+    integer intent(hide),depend(c) :: ldc=shape(c,0)
+    double precision intent(in,out,copy),dimension(p,m),depend(m,p) :: d
+    integer intent(hide),depend(d) :: ldd=shape(d,0)
+    double precision intent(out),dimension(n),depend(n) :: hsv
+    double precision :: tol1 =0.0
+    double precision :: tol2 =0.0
+    integer intent(hide,cache),dimension(max(m,p)) :: iwork
+    double precision intent(hide,cache),dimension(ldwork) :: dwork
+    integer optional :: ldwork = max(1,n*(2*n+max(n,max(m,p))+5)+n*(n+1)/2)
+    integer intent(out) :: iwarn
+    integer intent(out) :: info
+end subroutine ab09bd
+subroutine ab09md(dico,job,equil,ordsel,n,m,p,nr,alpha,a,lda,b,ldb,c,ldc,ns,hsv,tol,iwork,dwork,ldwork,iwarn,info) !in :balred:AB09MD.f
+    character intent(in) :: dico
+    character intent(in) :: job
+    character intent(in) :: equil
+    character intent(in) :: ordsel
+    integer check(n>=0) :: n
+    integer check(m>=0) :: m
+    integer check(p>=0) :: p
+    integer intent(in,out) :: nr
+    double precision intent(in):: alpha
+    double precision intent(in,out,copy),dimension(n,n),depend(n) :: a
+    integer intent(hide),depend(a) :: lda=shape(a,0)
+    double precision intent(in,out,copy),dimension(n,m),depend(n,m) :: b
+    integer intent(hide),depend(b) :: ldb=shape(b,0)
+    double precision intent(in,out,copy),dimension(p,n),depend(n,p) :: c
+    integer intent(hide),depend(c) :: ldc=shape(c,0)
+    integer intent(out) :: ns
+    double precision intent(out),dimension(n),depend(n) :: hsv
+    double precision :: tol =0.0
+    integer intent(hide,cache),dimension(max(m,p)) :: iwork
+    double precision intent(hide,cache),dimension(ldwork) :: dwork
+    integer optional :: ldwork = max(1,n*(2*n+max(n,max(m,p))+5)+n*(n+1)/2)
+    integer intent(out) :: iwarn
+    integer intent(out) :: info
+end subroutine ab09md
+subroutine ab09nd(dico,job,equil,ordsel,n,m,p,nr,alpha,a,lda,b,ldb,c,ldc,d,ldd,ns,hsv,tol1,tol2,iwork,dwork,ldwork,iwarn,info) !in :balred:AB09ND.f
+    character intent(in) :: dico
+    character intent(in) :: job
+    character intent(in) :: equil
+    character intent(in) :: ordsel
+    integer check(n>=0) :: n
+    integer check(m>=0) :: m
+    integer check(p>=0) :: p
+    integer intent(in,out) :: nr
+    double precision intent(in):: alpha
+    double precision intent(in,out,copy),dimension(n,n),depend(n) :: a
+    integer intent(hide),depend(a) :: lda=shape(a,0)
+    double precision intent(in,out,copy),dimension(n,m),depend(n,m) :: b
+    integer intent(hide),depend(b) :: ldb=shape(b,0)
+    double precision intent(in,out,copy),dimension(p,n),depend(n,p) :: c
+    integer intent(hide),depend(c) :: ldc=shape(c,0)
+    double precision intent(in,out,copy),dimension(p,m),depend(m,p) :: d
+    integer intent(hide),depend(d) :: ldd=shape(d,0)
+    integer intent(out) :: ns
+    double precision intent(out),dimension(n),depend(n) :: hsv
+    double precision :: tol1 =0.0
+    double precision :: tol2 =0.0
+    integer intent(hide,cache),dimension(max(m,p)) :: iwork
+    double precision intent(hide,cache),dimension(ldwork) :: dwork
+    integer optional :: ldwork = max(1,n*(2*n+max(n,max(m,p))+5)+n*(n+1)/2)
+    integer intent(out) :: iwarn
+    integer intent(out) :: info
+end subroutine ab09nd
+function ab13bd(dico,jobn,n,m,p,a,lda,b,ldb,c,ldc,d,ldd,nq,tol,dwork,ldwork,iwarn,info) ! in AB13BD.f
+    character intent(in) :: dico
+    character intent(in) :: jobn
+    integer check(n>=0) :: n
+    integer check(n>=0) :: m
+    integer check(n>=0) :: p
+    double precision dimension(n,n),depend(n) :: a
+    integer intent(hide),depend(a) :: lda = shape(a,0)
+    double precision dimension(n,m),depend(n,m) :: b
+    integer intent(hide),depend(b) :: ldb = shape(b,0)
+    double precision dimension(p,n),depend(n,p) :: c
+    integer intent(hide),depend(c) :: ldc = shape(c,0)
+    double precision dimension(p,m),depend(m,p) :: d
+    integer intent(hide),depend(d) :: ldd = shape(d,0)
+    integer intent(out) :: nq
+    double precision :: tol
+    double precision intent(hide,cache),dimension(ldwork),depend(ldwork) :: dwork
+    integer intent(hide),depend(n,m,p) :: ldwork = max(1,max(m*(n+m)+max(n*(n+5),max(m*(m+2),4*p)),n*(max(n,p)+4)+min(n,p)))
+    integer intent(out) :: iwarn
+    integer intent(out) :: info
+    double precision intent(out) :: ab13bd
+end function ab13bd
+subroutine ab13dd(dico,jobe,equil,jobd,n,m,p,fpeak,a,lda,e,lde,b,ldb,c,ldc,d,ldd,gpeak,tol,iwork,dwork,ldwork,cwork,lcwork,info) ! in AB13DD.f
+    character intent(in) :: dico
+    character intent(in) :: jobe
+    character intent(in) :: equil
+    character intent(in) :: jobd
+    integer check(n>=0) :: n
+    integer check(m>=0) :: m
+    integer check(p>=0) :: p
+    double precision intent(in,out),dimension(2) :: fpeak
+    double precision dimension(n,n),depend(n) :: a
+    integer intent(hide),depend(a) :: lda = shape(a,0)
+    double precision dimension(n,n),depend(n) :: e
+    integer intent(hide),depend(e) :: lde = shape(e,0)
+    double precision dimension(n,m),depend(n,m) :: b
+    integer intent(hide),depend(b) :: ldb = shape(b,0)
+    double precision dimension(p,n),depend(n,p) :: c
+    integer intent(hide),depend(c) :: ldc = shape(c,0)
+    double precision dimension(p,m),depend(m,p) :: d
+    integer intent(hide),depend(d) :: ldd = shape(d,0)
+    double precision intent(out),dimension(2) :: gpeak
+    double precision :: tol = 0.0
+    integer intent(hide,cache),dimension(n),depend(n) :: iwork
+    double precision intent(hide,cache),dimension(ldwork),depend(ldwork) :: dwork
+    integer intent(hide),depend(n,m,p) :: ldwork = max(1,15*n*n+p*p+m*m+(6*n+3)*(p+m)+4*p*m+n*m+22*n+7*min(p,m))
+    complex*16 intent(hide,cache),dimension(lcwork),depend(lcwork) :: cwork
+    integer intent(hide),depend(n,m,p) :: lcwork = max(1,(n+m)*(n+p)+2*min(p,m)+max(p,m))
+    integer intent(out) :: info
+end subroutine ab13dd
+subroutine ab13ed(n,a,lda,low,high,tol,dwork,ldwork,info) ! in AB13ED.f
+    integer check(n>=0) :: n
+    double precision dimension(n,n),depend(n) :: a
+    integer intent(hide),depend(a) :: lda = shape(a,0)
+    double precision intent(out) :: low
+    double precision intent(out) :: high
+    double precision :: tol = 9
+    double precision intent(hide,cache),dimension(ldwork),depend(ldwork) :: dwork
+    integer intent(hide),depend(n) :: ldwork = max(1,3*n*(n+1))
+    integer intent(out) :: info
+end subroutine ab13ed
+subroutine ab13fd(n,a,lda,beta,omega,tol,dwork,ldwork,cwork,lcwork,info) ! in AB13FD.f
+    integer check(n>=0) :: n
+    double precision dimension(n,n),depend(n) :: a
+    integer intent(hide),depend(a) :: lda = shape(a,0)
+    double precision intent(out) :: beta
+    double precision intent(out) :: omega
+    double precision :: tol = 0
+    double precision intent(hide,cache),dimension(ldwork),depend(ldwork) :: dwork
+    integer intent(hide),depend(n) :: ldwork = max(1,3*n*(n+2))
+    complex*16 intent(hide,cache),dimension(lcwork),depend(lcwork) :: cwork
+    integer intent(hide),depend(n) :: lcwork = max(1,n*(n+3))
+    integer intent(out) :: info
+end subroutine ab13fd
+subroutine ag08bd(equil,l,n,m,p,a,lda,e,lde,b,ldb,c,ldc,d,ldd,nfz,nrank,niz,dinfz,nkror,ninfe,nkrol,infz,kronr,infe,kronl,tol,iwork,dwork,ldwork,info) ! in AG08BD.f
+    character intent(in) :: equil
+    integer intent(in),required,check(l>=0) :: l
+    integer intent(in),required,check(n>=0) :: n
+    integer intent(in),required,check(m>=0) :: m
+    integer intent(in),required,check(p>=0) :: p
+    double precision intent(in,out,copy),dimension(l,n),depend(l,n) :: a
+    integer intent(hide),depend(a) :: lda=MAX(shape(a,0),1)
+    double precision intent(in,out,copy),dimension(l,n),depend(l,m) :: e
+    integer intent(hide),depend(e) :: lde=MAX(shape(e,0),1)
+    double precision intent(in,copy),dimension(l,m),depend(l,m) :: b
+    integer intent(hide),depend(b) :: ldb=MAX(shape(b,0),1)
+    double precision intent(in,copy),dimension(p,n),depend(p,n) :: c
+    integer intent(hide),depend(c) :: ldc=MAX(shape(c,0),1)
+    double precision intent(in,copy),dimension(p,m),depend(p,m) :: d
+    integer intent(hide),depend(d) :: ldd=MAX(shape(d,0),1)
+    integer intent(out) :: nfz
+    integer intent(out) :: nrank
+    integer intent(out) :: niz
+    integer intent(out) :: dinfz
+    integer intent(out) :: nkror
+    integer intent(out) :: ninfe
+    integer intent(out) :: nkrol
+    integer intent(out),dimension(n+1),depend(n) :: infz
+    integer intent(out),dimension(n+m+1),depend(n,m) :: kronr
+    integer intent(out),dimension(1+MIN(l+p,n+m)),depend(l,p,n,m) :: infe
+    integer intent(out),dimension(l+p+1),depend(l,p) :: kronl
+    double precision intent(in) :: tol
+    integer intent(cache,hide),dimension(ldwork),depend(ldwork) :: iwork
+    double precision intent(hide,cache),dimension(ldwork),depend(ldwork) :: dwork
+    integer required intent(in) :: ldwork
+    integer intent(out) :: info
+end subroutine ag08bd
