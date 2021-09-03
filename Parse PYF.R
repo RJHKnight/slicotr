@@ -1,8 +1,9 @@
-START_SUB <- "^subroutine|function"
-END_SUB <- "^end subroutine|function"
+START_SUB <- "^(subroutine|function)"
+END_SUB <- "^end (subroutine|function)"
 PARAM <- "::"
 INTENT <- "intent"
 DIMENSION <- "dimension"
+FORTRAN_NAME <- "fortranname"
 
 parse_pyf <- function(file_name)
 {
@@ -23,12 +24,18 @@ parse_pyf <- function(file_name)
     if (stringr::str_detect(this_line, START_SUB))
     {
       handling_sub <- TRUE
-      file_name_raw <- stringr::str_match(this_line, "\\! in \\:new\\:(.*f)|\\! in (.*f)")
-      file_name <- ifelse(is.na(file_name_raw[1,2]), file_name_raw[1,3], file_name_raw[1,2])
+      sub_line <- stringr::str_remove_all(this_line, " ")
+      file_name_raw <- stringr::str_match(sub_line, "\\!in\\:new\\:(.*f)|\\!in(.*f)|\\!in\\:balred\\:(.*f)")
+      file_name <- file_name_raw[1,1+which(!is.na(file_name_raw[1,-1]))]
       file_name <- stringr::str_remove_all(file_name, "\\:.*\\:")
 
-      sub_name <- stringr::str_match(this_line, "^subroutine ([^\\(]*)")[1,2]
+      sub_name <- stringr::str_match(this_line, "^(subroutine|function) ([^\\(]*)")[1,3]
 
+    }
+    else if (stringr::str_detect(this_line, FORTRAN_NAME))
+    {
+      # This overrides the fortran name on the sub line, if present
+      file_name <- paste0(stringr::str_to_upper(stringr::str_split_fixed(this_line, " ", 2)[1,2]), ".f")
     }
     else if (stringr::str_detect(this_line, PARAM))
     {
@@ -45,13 +52,19 @@ parse_pyf <- function(file_name)
       cat(paste("Generating function:", sub_name, "\n"))
 
       # Generate the R file
-      generate_function(sub_name, file_name, params)
+      generate_function(sub_name, file_name, filter(unique(params), !is.na(type)))
+
+      if (str_detect(sub_name, "ab09nd"))
+      {
+        cat("Here.")
+      }
 
       # And reset state.
       sub_name <- ""
       file_name <- ""
       params <- NULL
       handling_sub <- FALSE
+
     }
   }
 }
@@ -203,22 +216,13 @@ handle_other <- function(other_properties)
 create_param <- function(type, intent, name, check = NA, dimension = NA, value = NA, depend = NA)
 {
   return (data.frame(
-    name = name,
-    type = type,
-    intent = intent,
-    check = check,
-    dimension = dimension,
-    value = value,
-    depend = depend
+    name = name[1],
+    type = type[1],
+    intent = intent[1],
+    check = check[1],
+    dimension = dimension[1],
+    value = value[1],
+    depend = depend[1]
   ))
 }
-
-# sample_params <- rbind(
-#   create_param("integer", "in", "n", check = "n>=0"),
-#   create_param("integer", "hide", "p", check ="p>=1", value = "shape(a,2)"),
-#   create_param("integer", "in", "ilo", check = "1<=ilo && ilo<=max(1,n)",),
-#   create_param("double", "inout", "a", check = "min(ilo,n)<=ihi && ihi<=n", dimension = "lda1,lda2,p"),
-#   create_param("integer", "out", "tau", dimension = "max(1,n-1),p"),
-#   create_param("integer", "out", "info")
-# )
 

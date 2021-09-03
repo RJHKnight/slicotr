@@ -1,0 +1,38 @@
+ab08nd <- function(equil, n, m, p, a, b, c, d, tol, ldwork) {
+
+    # In Parameters
+    equil <- as.character(equil)
+    ldwork <- as.integer(ldwork)
+    m <- as.integer(m)
+    n <- as.integer(n)
+    p <- as.integer(p)
+    tol <- as.double(tol)
+
+    # Out Parameters
+    nu <- as.integer(0)
+    rank_bn <- as.integer(0)
+    dinfz <- as.integer(0)
+    nkror <- as.integer(0)
+    nkrol <- as.integer(0)
+    infz <- array(as.integer(0), c(n))
+    kronr <- array(as.integer(0), c(max(n, m) + 1))
+    kronl <- array(as.integer(0), c(max(n, p) + 1))
+    af <- array(as.double(0), c(max(1, n + m), n + min(p, m)))
+    bf <- array(as.double(0), c(max(1, n + p), n + m))
+    info <- as.integer(0)
+
+    # Hidden Parameters
+    lda <- dim(a)[1]
+    ldb <- dim(b)[1]
+    ldc <- dim(c)[1]
+    ldd <- dim(d)[1]
+    ldaf <- dim(af)[1]
+    ldbf <- dim(bf)[1]
+    iwork <- array(as.integer(1), c(max(m, p)))
+    dwork <- array(as.double(1), c(ldwork))
+
+    res <- .Fortran("AB08ND", EQUIL = equil, N = n, M = m, P = p, A = a, LDA = lda, B = b, LDB = ldb, C = c, LDC = ldc, D = d, LDD = ldd, NU = nu, RANK_BN = rank_bn, DINFZ = dinfz, NKROR = nkror,
+        NKROL = nkrol, INFZ = infz, KRONR = kronr, KRONL = kronl, AF = af, LDAF = ldaf, BF = bf, LDBF = ldbf, TOL = tol, IWORK = iwork, DWORK = dwork, LDWORK = ldwork, INFO = info)
+
+    return(list(nu = res$NU, rank_bn = res$RANK_BN, dinfz = res$DINFZ, nkror = res$NKROR, nkrol = res$NKROL, infz = res$INFZ, kronr = res$KRONR, kronl = res$KRONL, af = res$AF, bf = res$BF, info = res$INFO))
+}

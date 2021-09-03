@@ -1,9 +1,9 @@
 library(tidyverse)
 
-debugSource("Generate Function.R")
-debugSource("Parse PYF.R")
+#debugSource("Parse PYF.R")
+#debugSource("Generate Function.R")
 
-pyf_files <- list.files(path = "INPUT/", pattern = "*.pyf", full.names = TRUE)
+pyf_files <- list.files(path = "INPUT/", pattern = "transform.pyf", full.names = TRUE)
 
 for (i in pyf_files)
 {

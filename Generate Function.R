@@ -1,5 +1,17 @@
 generate_function <- function(name, file_name, params)
 {
+
+  if (str_detect(name, "tb05ad_ag"))
+  {
+    cat("here.")
+  }
+
+  if (is.na(file_name) || str_detect(file_name, ".*Z.f"))
+  {
+    cat(paste("Skipping complex function", file_name, "\n"))
+    return ()
+  }
+
   output_name <- paste0(name, ".R")
 
   param_names <- filter(params, stringr::str_detect(intent, "in") | is.na(intent)) %>% pull(name)
@@ -26,8 +38,8 @@ generate_function <- function(name, file_name, params)
 
 
     # Apply checks
-    "# Check dimensions of input parameters", "\n",
-    paste0(check_in(params), collapse = "\n"), "\n\n",
+    #"# Check dimensions of input parameters", "\n",
+    #paste0(check_in(params), collapse = "\n"), "\n\n",
 
     # Call Fortran
     create_call(file_name, params), "\n\n",
@@ -35,6 +47,11 @@ generate_function <- function(name, file_name, params)
     # Return list
     create_return(params) , "\n}"
   )
+
+  # Handle reserved keywords
+  x <- stringr::str_replace_all(x, "(?<=(\\,|\\s))na(?=(\\,|\\s))", "na_")
+  x <- stringr::str_replace_all(x, "NA", "\\`NA\\`")
+  x <- stringr::str_remove_all(x, "(?<=complex)\\*[0-9]*")
 
   file_name <- paste0("R/", name, ".R")
   readr::write_file(x, file = file_name)
