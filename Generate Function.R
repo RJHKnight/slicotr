@@ -52,6 +52,7 @@ generate_function <- function(name, file_name, params)
   x <- stringr::str_replace_all(x, "(?<=(\\,|\\s))na(?=(\\,|\\s))", "na_")
   x <- stringr::str_replace_all(x, "NA", "\\`NA\\`")
   x <- stringr::str_remove_all(x, "(?<=complex)\\*[0-9]*")
+  x <- stringr::str_replace_all(x, "\\`\\?\\`", "ifelse")
 
   file_name <- paste0("R/", name, ".R")
   readr::write_file(x, file = file_name)
@@ -165,10 +166,21 @@ handle_shape_dimension <- function(value, dimension, type)
 
   if (!stringr::str_detect(value, "shape"))
   {
-    return (value)
+    # If/else in value.
+    if (stringr::str_detect(value, "\\?"))
+    {
+      bits <- stringr::str_match(value, "\\(([^\\?]*)\\?([^\\:]*)\\:(.*)\\)")
+      value <- paste0("ifelse(", bits[1,2], ",", bits[1,3], ",", bits[1,4], ")")
+    }
+
+    return (paste0("as.", type, "(", value, ")"))
   }
 
-  bits <- stringr::str_split_fixed(value, "\\(|\\,|\\)", 4)
+  obj_index <- str_extract(value, "(?<=shape\\()[^\\)]*")
+  bits <- stringr::str_split_fixed(obj_index, ",", 2)
+  dim_string <- paste0("dim(", bits[1], ")[", as.integer(bits[2])+1, "]")
 
-  return (paste0("dim(", bits[,2], ")[", as.integer(bits[,3])+1, "]"))
+  res <- stringr::str_replace(value, "shape\\([^\\)]*\\)", dim_string)
+
+  return (res)
 }
