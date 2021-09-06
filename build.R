@@ -4,7 +4,7 @@ debugSource("Parse PYF.R")
 debugSource("Generate Function.R")
 
 pyf_files <- list.files(path = "INPUT/", pattern = "*.pyf", full.names = TRUE)
-options(warn=2)
+options(warn=1)
 
 
 for (i in pyf_files)
