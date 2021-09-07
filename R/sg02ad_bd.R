@@ -42,9 +42,9 @@ sg02ad_bd <- function(dico, jobl, scal, sort, acc, n, m, p, a, e, b, q, r, l, to
     dwork <- array(as.double(1), c(ldwork))
     bwork <- array(as.logical(1), c(2 * n))
 
-    res <- .Fortran("   FORTRANNAME SG02AD", DICO = dico, JOBL = jobl, SCAL = scal, SORT = sort, ACC = acc, N = n, M = m, P = p, A = a, E = e, B = b, Q = q, R = r, L = l, TOL = tol, LDWORK = ldwork, RCONDU = rcondu, X = x, ALFAR = alfar,
-        ALFAI = alfai, BETA = beta, S = s, T = t, U = u, IWARN = iwarn, INFO = info, JOBB = jobb, FACT = fact, UPLO = uplo, LDA = lda, LDE = lde, LDB = ldb, LDQ = ldq, LDR = ldr, LDL = ldl, LDX = ldx, LDS = lds, LDT = ldt, LDU = ldu,
-        IWORK = iwork, DWORK = dwork, BWORK = bwork)
+    res <- .Fortran("SG02AD", DICO = dico, JOBL = jobl, SCAL = scal, SORT = sort, ACC = acc, N = n, M = m, P = p, A = a, E = e, B = b, Q = q, R = r, L = l, TOL = tol, LDWORK = ldwork, RCONDU = rcondu, X = x, ALFAR = alfar, ALFAI = alfai,
+        BETA = beta, S = s, T = t, U = u, IWARN = iwarn, INFO = info, JOBB = jobb, FACT = fact, UPLO = uplo, LDA = lda, LDE = lde, LDB = ldb, LDQ = ldq, LDR = ldr, LDL = ldl, LDX = ldx, LDS = lds, LDT = ldt, LDU = ldu, IWORK = iwork,
+        DWORK = dwork, BWORK = bwork)
 
     return(list(rcondu = res$RCONDU, x = res$X, alfar = res$ALFAR, alfai = res$ALFAI, beta = res$BETA, s = res$S, t = res$T, u = res$U, iwarn = res$IWARN, info = res$INFO))
 }

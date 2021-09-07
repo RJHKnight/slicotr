@@ -28,8 +28,8 @@ sb02mt_n <- function(uplo, n, m, b, r, ldwork) {
     iwork <- array(as.integer(1), c(m))
     dwork <- array(as.double(1), c(ldwork))
 
-    res <- .Fortran("   FORTRANNAME SB02MT", UPLO = uplo, N = n, M = m, B = b, R = r, LDWORK = ldwork, A = a, Q = q, L = l, IPIV = ipiv, OUFACT = oufact, G = g, INFO = info, JOBG = jobg, JOBL = jobl, FACT = fact, LDA = lda, LDB = ldb,
-        LDQ = ldq, LDR = ldr, LDL = ldl, LDG = ldg, IWORK = iwork, DWORK = dwork)
+    res <- .Fortran("SB02MT", UPLO = uplo, N = n, M = m, B = b, R = r, LDWORK = ldwork, A = a, Q = q, L = l, IPIV = ipiv, OUFACT = oufact, G = g, INFO = info, JOBG = jobg, JOBL = jobl, FACT = fact, LDA = lda, LDB = ldb, LDQ = ldq, LDR = ldr,
+        LDL = ldl, LDG = ldg, IWORK = iwork, DWORK = dwork)
 
     return(list(b = res$B, r = res$R, a = res$A, q = res$Q, l = res$L, ipiv = res$IPIV, oufact = res$OUFACT, g = res$G, info = res$INFO))
 }

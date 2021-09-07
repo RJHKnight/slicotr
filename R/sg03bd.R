@@ -23,8 +23,8 @@ sg03bd <- function(dico, fact, trans, n, m, a, e, q, z, b, ldwork) {
     ldb <- dim(b)[1]
     dwork <- array(as.double(1), c(ldwork))
 
-    res <- .Fortran("   FORTRANNAME SG03BD", DICO = dico, FACT = fact, TRANS = trans, N = n, M = m, A = a, E = e, Q = q, Z = z, B = b, LDWORK = ldwork, SCALE = scale, ALPHAR = alphar, ALPHAI = alphai, BETA = beta, INFO = info, LDA = lda,
-        LDE = lde, LDQ = ldq, LDZ = ldz, LDB = ldb, DWORK = dwork)
+    res <- .Fortran("SG03BD", DICO = dico, FACT = fact, TRANS = trans, N = n, M = m, A = a, E = e, Q = q, Z = z, B = b, LDWORK = ldwork, SCALE = scale, ALPHAR = alphar, ALPHAI = alphai, BETA = beta, INFO = info, LDA = lda, LDE = lde,
+        LDQ = ldq, LDZ = ldz, LDB = ldb, DWORK = dwork)
 
     return(list(b = res$B, scale = res$SCALE, alphar = res$ALPHAR, alphai = res$ALPHAI, beta = res$BETA, info = res$INFO))
 }

@@ -20,7 +20,7 @@ sb03od <- function(dico, fact, trans, n, m, a, q, b, ldwork) {
     ldb <- dim(b)[1]
     dwork <- array(as.double(1), c(ldwork))
 
-    res <- .Fortran("   FORTRANNAME SB03OD", DICO = dico, FACT = fact, TRANS = trans, N = n, M = m, A = a, Q = q, B = b, LDWORK = ldwork, SCALE = scale, WR = wr, WI = wi, INFO = info, LDA = lda, LDQ = ldq, LDB = ldb, DWORK = dwork)
+    res <- .Fortran("SB03OD", DICO = dico, FACT = fact, TRANS = trans, N = n, M = m, A = a, Q = q, B = b, LDWORK = ldwork, SCALE = scale, WR = wr, WI = wi, INFO = info, LDA = lda, LDQ = ldq, LDB = ldb, DWORK = dwork)
 
     return(list(b = res$B, scale = res$SCALE, wr = res$WR, wi = res$WI, info = res$INFO))
 }

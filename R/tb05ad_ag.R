@@ -24,8 +24,8 @@ tb05ad_ag <- function(n, m, p, a, b, c, ldwork, lzwork) {
     iwork <- array(as.integer(1), c(n))
     dwork <- array(as.double(1), c(ldwork))
 
-    res <- .Fortran(" FORTRANNAME TB05AD", N = n, M = m, P = p, A = a, B = b, C = c, LDWORK = ldwork, LZWORK = lzwork, RCOND = rcond, EVRE = evre, EVIM = evim, INFO = info, BALEIG = baleig, INITA = inita, LDA = lda, LDB = ldb, LDC = ldc,
-        LDG = ldg, LDHINV = ldhinv, IWORK = iwork, DWORK = dwork)
+    res <- .Fortran("TB05AD", N = n, M = m, P = p, A = a, B = b, C = c, LDWORK = ldwork, LZWORK = lzwork, RCOND = rcond, EVRE = evre, EVIM = evim, INFO = info, BALEIG = baleig, INITA = inita, LDA = lda, LDB = ldb, LDC = ldc, LDG = ldg,
+        LDHINV = ldhinv, IWORK = iwork, DWORK = dwork)
 
     return(list(a = res$A, b = res$B, c = res$C, rcond = res$RCOND, evre = res$EVRE, evim = res$EVIM, info = res$INFO))
 }

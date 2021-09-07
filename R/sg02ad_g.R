@@ -44,9 +44,9 @@ sg02ad_g <- function(dico, uplo, sort, acc, n, a, e, b, q, ldwork) {
     ldr <- dim(r)[1]
     ldl <- dim(l)[1]
 
-    res <- .Fortran("   FORTRANNAME SG02AD", DICO = dico, UPLO = uplo, SORT = sort, ACC = acc, N = n, A = a, E = e, B = b, Q = q, LDWORK = ldwork, RCONDU = rcondu, X = x, ALFAR = alfar, ALFAI = alfai, BETA = beta, S = s, T = t, U = u,
-        IWARN = iwarn, INFO = info, JOBB = jobb, FACT = fact, JOBL = jobl, SCAL = scal, M = m, P = p, LDA = lda, LDE = lde, LDB = ldb, LDQ = ldq, R = r, L = l, LDX = ldx, LDS = lds, LDT = ldt, LDU = ldu, TOL = tol, IWORK = iwork, DWORK = dwork,
-        BWORK = bwork, LDR = ldr, LDL = ldl)
+    res <- .Fortran("SG02AD", DICO = dico, UPLO = uplo, SORT = sort, ACC = acc, N = n, A = a, E = e, B = b, Q = q, LDWORK = ldwork, RCONDU = rcondu, X = x, ALFAR = alfar, ALFAI = alfai, BETA = beta, S = s, T = t, U = u, IWARN = iwarn,
+        INFO = info, JOBB = jobb, FACT = fact, JOBL = jobl, SCAL = scal, M = m, P = p, LDA = lda, LDE = lde, LDB = ldb, LDQ = ldq, R = r, L = l, LDX = ldx, LDS = lds, LDT = ldt, LDU = ldu, TOL = tol, IWORK = iwork, DWORK = dwork, BWORK = bwork,
+        LDR = ldr, LDL = ldl)
 
     return(list(rcondu = res$RCONDU, x = res$X, alfar = res$ALFAR, alfai = res$ALFAI, beta = res$BETA, s = res$S, t = res$T, u = res$U, iwarn = res$IWARN, info = res$INFO))
 }
