@@ -50,7 +50,7 @@ generate_function <- function(name, file_name, params)
 
   # Handle reserved keywords
   x <- stringr::str_replace_all(x, "(?<=(\\,|\\s))na(?=(\\,|\\s))", "na_")
-  x <- stringr::str_replace_all(x, "(?<=(\\,|\\s|\\$))NA(?=(\\,|\\s))", "\\`NA\\`")
+  x <- stringr::str_replace_all(x, "(?<=(\\,|\\s|\\$))NA(?=(\\,|\\s|\\=))", "\\`NA\\`")
   x <- stringr::str_remove_all(x, "(?<=complex)\\*[0-9]*")
   x <- stringr::str_replace_all(x, "\\`\\?\\`", "ifelse")
 
