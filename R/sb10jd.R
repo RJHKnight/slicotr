@@ -1,3 +1,21 @@
+#' sb10jd
+#'
+#' Converting a descriptor state-space system into regular state-space form
+#' @examples 
+
+#'   To convert the descriptor state-space system
+#' 
+#'   E*dx/dt = A*x + B*u
+#'         y = C*x + D*u
+#' 
+#'   into regular state-space form
+#' 
+#'    dx/dt = Ad*x + Bd*u
+#'        y = Cd*x + Dd*u .
+#' 
+#' #'
+#' @references \url{http://slicot.org/objects/software/shared/doc/SB10JD.html}
+#' @export
 sb10jd <- function(n, m, np, a, b, c, d, e, ldwork) {
 
     # In Parameters
@@ -18,7 +36,8 @@ sb10jd <- function(n, m, np, a, b, c, d, e, ldwork) {
     lde <- max(dim(e)[1], 1)
     dwork <- array(as.double(1), c(ldwork))
 
-    res <- .Fortran("SB10JD", N = n, M = m, NP = np, A = a, B = b, C = c, D = d, E = e, LDWORK = ldwork, NSYS = nsys, INFO = info, LDA = lda, LDB = ldb, LDC = ldc, LDD = ldd, LDE = lde, DWORK = dwork)
+    res <- .Fortran("SB10JD", N = n, M = m, NP = np, A = a, B = b, C = c, D = d, E = e, LDWORK = ldwork, NSYS = nsys, INFO = info, LDA = lda, LDB = ldb, LDC = ldc, LDD = ldd, LDE = lde,
+        DWORK = dwork)
 
     return(list(a = res$A, b = res$B, c = res$C, d = res$D, nsys = res$NSYS, info = res$INFO))
 }

@@ -1,3 +1,14 @@
+#' ab05md
+#'
+#' Cascade inter-connection of two systems in state-space form
+#' @examples 
+
+#'   To obtain the state-space model (A,B,C,D) for the cascaded
+#'   inter-connection of two systems, each given in state-space form.
+#' 
+#' #'
+#' @references \url{http://slicot.org/objects/software/shared/doc/AB05MD.html}
+#' @export
 ab05md <- function(uplo, n1, m1, p1, n2, p2, a1, b1, c1, d1, a2, b2, c2, d2, ldwork) {
 
     # In Parameters
@@ -33,8 +44,9 @@ ab05md <- function(uplo, n1, m1, p1, n2, p2, a1, b1, c1, d1, a2, b2, c2, d2, ldw
     ldd <- dim(d)[1]
     dwork <- array(as.double(1), c(ldwork))
 
-    res <- .Fortran("AB05MD", UPLO = uplo, N1 = n1, M1 = m1, P1 = p1, N2 = n2, P2 = p2, A1 = a1, B1 = b1, C1 = c1, D1 = d1, A2 = a2, B2 = b2, C2 = c2, D2 = d2, LDWORK = ldwork, N = n, A = a, B = b, C = c, D = d, INFO = info, OVER = over,
-        LDA1 = lda1, LDB1 = ldb1, LDC1 = ldc1, LDD1 = ldd1, LDA2 = lda2, LDB2 = ldb2, LDC2 = ldc2, LDD2 = ldd2, LDA = lda, LDB = ldb, LDC = ldc, LDD = ldd, DWORK = dwork)
+    res <- .Fortran("AB05MD", UPLO = uplo, N1 = n1, M1 = m1, P1 = p1, N2 = n2, P2 = p2, A1 = a1, B1 = b1, C1 = c1, D1 = d1, A2 = a2, B2 = b2, C2 = c2, D2 = d2, LDWORK = ldwork, N = n,
+        A = a, B = b, C = c, D = d, INFO = info, OVER = over, LDA1 = lda1, LDB1 = ldb1, LDC1 = ldc1, LDD1 = ldd1, LDA2 = lda2, LDB2 = ldb2, LDC2 = ldc2, LDD2 = ldd2, LDA = lda, LDB = ldb,
+        LDC = ldc, LDD = ldd, DWORK = dwork)
 
     return(list(n = res$N, a = res$A, b = res$B, c = res$C, d = res$D, info = res$INFO))
 }

@@ -1,3 +1,16 @@
+#' tb01pd
+#'
+#' Minimal, controllable or observable block Hessenberg realization for a given state-space representation
+#' @examples 
+
+#'   To find a reduced (controllable, observable, or minimal) state-
+#'   space representation (Ar,Br,Cr) for any original state-space
+#'   representation (A,B,C). The matrix Ar is in upper block
+#'   Hessenberg form.
+#' 
+#' #'
+#' @references \url{http://slicot.org/objects/software/shared/doc/TB01PD.html}
+#' @export
 tb01pd <- function(job, equil, n, m, p, a, b, c, tol, ldwork) {
 
     # In Parameters
@@ -20,7 +33,8 @@ tb01pd <- function(job, equil, n, m, p, a, b, c, tol, ldwork) {
     iwork <- array(as.integer(1), c(n + max(m, p)))
     dwork <- array(as.double(1), c(ldwork))
 
-    res <- .Fortran("TB01PD", JOB = job, EQUIL = equil, N = n, M = m, P = p, A = a, B = b, C = c, TOL = tol, LDWORK = ldwork, NR = nr, INFO = info, LDA = lda, LDB = ldb, LDC = ldc, IWORK = iwork, DWORK = dwork)
+    res <- .Fortran("TB01PD", JOB = job, EQUIL = equil, N = n, M = m, P = p, A = a, B = b, C = c, TOL = tol, LDWORK = ldwork, NR = nr, INFO = info, LDA = lda, LDB = ldb, LDC = ldc, IWORK = iwork,
+        DWORK = dwork)
 
     return(list(a = res$A, b = res$B, c = res$C, nr = res$NR, info = res$INFO))
 }

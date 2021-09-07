@@ -1,3 +1,21 @@
+#' ab09ax
+#'
+#' Balance & Truncate model reduction for stable systems with state matrix in real Schur canonical form
+#' @examples 
+
+#'   To compute a reduced order model (Ar,Br,Cr) for a stable original
+#'   state-space representation (A,B,C) by using either the square-root
+#'   or the balancing-free square-root Balance & Truncate model
+#'   reduction method. The state dynamics matrix A of the original
+#'   system is an upper quasi-triangular matrix in real Schur canonical
+#'   form. The matrices of the reduced order system are computed using
+#'   the truncation formulas:
+#' 
+#'        Ar = TI * A * T ,  Br = TI * B ,  Cr = C * T .
+#' 
+#' #'
+#' @references \url{http://slicot.org/objects/software/shared/doc/AB09AX.html}
+#' @export
 ab09ax <- function(dico, job, ordsel, n, m, p, nr, a, b, c, tol, ldwork) {
 
     # In Parameters
@@ -27,8 +45,8 @@ ab09ax <- function(dico, job, ordsel, n, m, p, nr, a, b, c, tol, ldwork) {
     iwork <- array(as.integer(1), c(max(m, p)))
     dwork <- array(as.double(1), c(ldwork))
 
-    res <- .Fortran("AB09AX", DICO = dico, JOB = job, ORDSEL = ordsel, N = n, M = m, P = p, NR = nr, A = a, B = b, C = c, TOL = tol, LDWORK = ldwork, HSV = hsv, T = t, TI = ti, IWARN = iwarn, INFO = info, LDA = lda, LDB = ldb, LDC = ldc,
-        LDT = ldt, LDTI = ldti, IWORK = iwork, DWORK = dwork)
+    res <- .Fortran("AB09AX", DICO = dico, JOB = job, ORDSEL = ordsel, N = n, M = m, P = p, NR = nr, A = a, B = b, C = c, TOL = tol, LDWORK = ldwork, HSV = hsv, T = t, TI = ti, IWARN = iwarn,
+        INFO = info, LDA = lda, LDB = ldb, LDC = ldc, LDT = ldt, LDTI = ldti, IWORK = iwork, DWORK = dwork)
 
     return(list(nr = res$NR, a = res$A, b = res$B, c = res$C, hsv = res$HSV, t = res$T, ti = res$TI, iwarn = res$IWARN, info = res$INFO))
 }

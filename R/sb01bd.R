@@ -1,3 +1,15 @@
+#' sb01bd
+#'
+#' Pole assignment for a given matrix pair (A,B)
+#' @examples 
+
+#'   To determine the state feedback matrix F for a given system (A,B)
+#'   such that the closed-loop state matrix A+B*F has specified
+#'   eigenvalues.
+#' 
+#' #'
+#' @references \url{http://slicot.org/objects/software/shared/doc/SB01BD.html}
+#' @export
 sb01bd <- function(dico, n, m, np, alpha, a, b, wr, wi, tol, ldwork) {
 
     # In Parameters
@@ -25,8 +37,8 @@ sb01bd <- function(dico, n, m, np, alpha, a, b, wr, wi, tol, ldwork) {
     ldz <- dim(z)[1]
     dwork <- array(as.double(1), c(ldwork))
 
-    res <- .Fortran("SB01BD", DICO = dico, N = n, M = m, NP = np, ALPHA = alpha, A = a, B = b, WR = wr, WI = wi, TOL = tol, LDWORK = ldwork, NFP = nfp, NAP = nap, NUP = nup, F = f, Z = z, IWARN = iwarn, INFO = info, LDA = lda, LDB = ldb,
-        LDF = ldf, LDZ = ldz, DWORK = dwork)
+    res <- .Fortran("SB01BD", DICO = dico, N = n, M = m, NP = np, ALPHA = alpha, A = a, B = b, WR = wr, WI = wi, TOL = tol, LDWORK = ldwork, NFP = nfp, NAP = nap, NUP = nup, F = f, Z = z,
+        IWARN = iwarn, INFO = info, LDA = lda, LDB = ldb, LDF = ldf, LDZ = ldz, DWORK = dwork)
 
     return(list(a = res$A, wr = res$WR, wi = res$WI, nfp = res$NFP, nap = res$NAP, nup = res$NUP, f = res$F, z = res$Z, iwarn = res$IWARN, info = res$INFO))
 }

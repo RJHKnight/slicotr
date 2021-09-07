@@ -1,3 +1,18 @@
+#' tf01rd
+#'
+#' Markov parameters of a multivariable system from the state-space representation
+#' @examples 
+
+#'   To compute N Markov parameters M(1), M(2),..., M(N) from the
+#'   parameters (A,B,C) of a linear time-invariant system, where each
+#'   M(k) is an NC-by-NB matrix and k = 1,2,...,N.
+#' 
+#'   All matrices are treated as dense, and hence TF01RD is not
+#'   intended for large sparse problems.
+#' 
+#' #'
+#' @references \url{http://slicot.org/objects/software/shared/doc/TF01RD.html}
+#' @export
 tf01rd <- function(na, nb, nc, n, a, b, c, ldwork) {
 
     # In Parameters

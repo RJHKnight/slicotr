@@ -1,3 +1,18 @@
+#' sb04md
+#'
+#' Solution of continuous-time Sylvester equations (Hessenberg-Schur method)
+#' @examples 
+
+#'   To solve for X the continuous-time Sylvester equation
+#' 
+#'      AX + XB = C
+#' 
+#'   where A, B, C and X are general N-by-N, M-by-M, N-by-M and
+#'   N-by-M matrices respectively.
+#' 
+#' #'
+#' @references \url{http://slicot.org/objects/software/shared/doc/SB04MD.html}
+#' @export
 sb04md <- function(n, m, a, b, c, ldwork) {
 
     # In Parameters

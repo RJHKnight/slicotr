@@ -1,3 +1,39 @@
+#' sb02md
+#'
+#' Solution of continuous- or discrete-time algebraic Riccati equations (Schur vectors method)
+#' @examples 
+
+#'   To solve for X either the continuous-time algebraic Riccati
+#'   equation
+#'                            -1
+#'      Q + A'*X + X*A - X*B*R  B'*X = 0                            (1)
+#' 
+#'   or the discrete-time algebraic Riccati equation
+#'                                      -1
+#'      X = A'*X*A - A'*X*B*(R + B'*X*B)  B'*X*A + Q                (2)
+#' 
+#'   where A, B, Q and R are N-by-N, N-by-M, N-by-N and M-by-M matrices
+#'   respectively, with Q symmetric and R symmetric nonsingular; X is
+#'   an N-by-N symmetric matrix.
+#'                     -1
+#'   The matrix G = B*R  B' must be provided on input, instead of B and
+#'   R, that is, for instance, the continuous-time equation
+#' 
+#'      Q + A'*X + X*A - X*G*X = 0                                  (3)
+#' 
+#'   is solved, where G is an N-by-N symmetric matrix. SLICOT Library
+#'   routine SB02MT should be used to compute G, given B and R. SB02MT
+#'   also enables to solve Riccati equations corresponding to optimal
+#'   problems with coupling terms.
+#' 
+#'   The routine also returns the computed values of the closed-loop
+#'   spectrum of the optimal system, i.e., the stable eigenvalues
+#'   lambda(1),...,lambda(N) of the corresponding Hamiltonian or
+#'   symplectic matrix associated to the optimal problem.
+#' 
+#' #'
+#' @references \url{http://slicot.org/objects/software/shared/doc/SB02MD.html}
+#' @export
 sb02md <- function(dico, hinv, uplo, scal, sort, n, a, g, q, ldwork) {
 
     # In Parameters
@@ -27,8 +63,8 @@ sb02md <- function(dico, hinv, uplo, scal, sort, n, a, g, q, ldwork) {
     dwork <- array(as.double(1), c(ldwork))
     bwork <- array(as.logical(1), c(2 * n))
 
-    res <- .Fortran("SB02MD", DICO = dico, HINV = hinv, UPLO = uplo, SCAL = scal, SORT = sort, N = n, A = a, G = g, Q = q, LDWORK = ldwork, U = u, INFO = info, RCOND = rcond, WR = wr, WI = wi, S = s, LDA = lda, LDG = ldg, LDQ = ldq,
-        LDU = ldu, LDS = lds, IWORK = iwork, DWORK = dwork, BWORK = bwork)
+    res <- .Fortran("SB02MD", DICO = dico, HINV = hinv, UPLO = uplo, SCAL = scal, SORT = sort, N = n, A = a, G = g, Q = q, LDWORK = ldwork, U = u, INFO = info, RCOND = rcond, WR = wr,
+        WI = wi, S = s, LDA = lda, LDG = ldg, LDQ = ldq, LDU = ldu, LDS = lds, IWORK = iwork, DWORK = dwork, BWORK = bwork)
 
     return(list(a = res$A, q = res$Q, u = res$U, info = res$INFO, rcond = res$RCOND, wr = res$WR, wi = res$WI, s = res$S))
 }

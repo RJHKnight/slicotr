@@ -1,3 +1,24 @@
+#' ag08bd
+#'
+#' Zeros and Kronecker structure of a descriptor system pencil
+#' @examples 
+
+#'   To extract from the system pencil
+#' 
+#'                     ( A-lambda*E B )
+#'         S(lambda) = (              )
+#'                     (      C     D )
+#' 
+#'   a regular pencil Af-lambda*Ef which has the finite Smith zeros of
+#'   S(lambda) as generalized eigenvalues. The routine also computes
+#'   the orders of the infinite Smith zeros and determines the singular
+#'   and infinite Kronecker structure of system pencil, i.e., the right
+#'   and left Kronecker indices, and the multiplicities of infinite
+#'   eigenvalues.
+#' 
+#' #'
+#' @references \url{http://slicot.org/objects/software/shared/doc/AG08BD.html}
+#' @export
 ag08bd <- function(equil, l, n, m, p, a, e, b, c, d, tol, ldwork) {
 
     # In Parameters
@@ -32,9 +53,10 @@ ag08bd <- function(equil, l, n, m, p, a, e, b, c, d, tol, ldwork) {
     iwork <- array(as.integer(1), c(ldwork))
     dwork <- array(as.double(1), c(ldwork))
 
-    res <- .Fortran("AG08BD", EQUIL = equil, L = l, N = n, M = m, P = p, A = a, E = e, B = b, C = c, D = d, TOL = tol, LDWORK = ldwork, NFZ = nfz, NRANK = nrank, NIZ = niz, DINFZ = dinfz, NKROR = nkror, NINFE = ninfe, NKROL = nkrol,
-        INFZ = infz, KRONR = kronr, INFE = infe, KRONL = kronl, INFO = info, LDA = lda, LDE = lde, LDB = ldb, LDC = ldc, LDD = ldd, IWORK = iwork, DWORK = dwork)
+    res <- .Fortran("AG08BD", EQUIL = equil, L = l, N = n, M = m, P = p, A = a, E = e, B = b, C = c, D = d, TOL = tol, LDWORK = ldwork, NFZ = nfz, NRANK = nrank, NIZ = niz, DINFZ = dinfz,
+        NKROR = nkror, NINFE = ninfe, NKROL = nkrol, INFZ = infz, KRONR = kronr, INFE = infe, KRONL = kronl, INFO = info, LDA = lda, LDE = lde, LDB = ldb, LDC = ldc, LDD = ldd, IWORK = iwork,
+        DWORK = dwork)
 
-    return(list(a = res$A, e = res$E, nfz = res$NFZ, nrank = res$NRANK, niz = res$NIZ, dinfz = res$DINFZ, nkror = res$NKROR, ninfe = res$NINFE, nkrol = res$NKROL, infz = res$INFZ, kronr = res$KRONR, infe = res$INFE, kronl = res$KRONL,
-        info = res$INFO))
+    return(list(a = res$A, e = res$E, nfz = res$NFZ, nrank = res$NRANK, niz = res$NIZ, dinfz = res$DINFZ, nkror = res$NKROR, ninfe = res$NINFE, nkrol = res$NKROL, infz = res$INFZ, kronr = res$KRONR,
+        infe = res$INFE, kronl = res$KRONL, info = res$INFO))
 }

@@ -1,3 +1,36 @@
+#' sb03od
+#'
+#' Solution of stable continuous- or discrete-time Lyapunov equations (Cholesky factor)
+#' @examples 
+
+#'   To solve for X = op(U)'*op(U) either the stable non-negative
+#'   definite continuous-time Lyapunov equation
+#'                                 2
+#'      op(A)'*X + X*op(A) = -scale *op(B)'*op(B)                   (1)
+#' 
+#'   or the convergent non-negative definite discrete-time Lyapunov
+#'   equation
+#'                                 2
+#'      op(A)'*X*op(A) - X = -scale *op(B)'*op(B)                   (2)
+#' 
+#'   where op(K) = K or K' (i.e., the transpose of the matrix K), A is
+#'   an N-by-N matrix, op(B) is an M-by-N matrix, U is an upper
+#'   triangular matrix containing the Cholesky factor of the solution
+#'   matrix X, X = op(U)'*op(U), and scale is an output scale factor,
+#'   set less than or equal to 1 to avoid overflow in X. If matrix B
+#'   has full rank then the solution matrix X will be positive-definite
+#'   and hence the Cholesky factor U will be nonsingular, but if B is
+#'   rank deficient then X may be only positive semi-definite and U
+#'   will be singular.
+#' 
+#'   In the case of equation (1) the matrix A must be stable (that
+#'   is, all the eigenvalues of A must have negative real parts),
+#'   and for equation (2) the matrix A must be convergent (that is,
+#'   all the eigenvalues of A must lie inside the unit circle).
+#' 
+#' #'
+#' @references \url{http://slicot.org/objects/software/shared/doc/SB03OD.html}
+#' @export
 sb03od <- function(dico, fact, trans, n, m, a, q, b, ldwork) {
 
     # In Parameters
@@ -20,7 +53,8 @@ sb03od <- function(dico, fact, trans, n, m, a, q, b, ldwork) {
     ldb <- dim(b)[1]
     dwork <- array(as.double(1), c(ldwork))
 
-    res <- .Fortran("SB03OD", DICO = dico, FACT = fact, TRANS = trans, N = n, M = m, A = a, Q = q, B = b, LDWORK = ldwork, SCALE = scale, WR = wr, WI = wi, INFO = info, LDA = lda, LDQ = ldq, LDB = ldb, DWORK = dwork)
+    res <- .Fortran("SB03OD", DICO = dico, FACT = fact, TRANS = trans, N = n, M = m, A = a, Q = q, B = b, LDWORK = ldwork, SCALE = scale, WR = wr, WI = wi, INFO = info, LDA = lda, LDQ = ldq,
+        LDB = ldb, DWORK = dwork)
 
     return(list(b = res$B, scale = res$SCALE, wr = res$WR, wi = res$WI, info = res$INFO))
 }

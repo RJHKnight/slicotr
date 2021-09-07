@@ -1,3 +1,37 @@
+#' tg01ad
+#'
+#' Balancing the matrices of the system pencil corresponding to a descriptor triple (A-lambda E,B,C)
+#' @examples 
+
+#'   To balance the matrices of the system pencil
+#' 
+#'           S =  ( A  B ) - lambda ( E  0 ) :=  Q - lambda Z,
+#'                ( C  0 )          ( 0  0 )
+#' 
+#'   corresponding to the descriptor triple (A-lambda E,B,C),
+#'   by balancing. This involves diagonal similarity transformations
+#'   (Dl*A*Dr - lambda Dl*E*Dr, Dl*B, C*Dr) applied to the system
+#'   (A-lambda E,B,C) to make the rows and columns of system pencil
+#'   matrices
+#' 
+#'                diag(Dl,I) * S * diag(Dr,I)
+#' 
+#'   as close in norm as possible. Balancing may reduce the 1-norms
+#'   of the matrices of the system pencil S.
+#' 
+#'   The balancing can be performed optionally on the following
+#'   particular system pencils
+#' 
+#'            S = A-lambda E,
+#' 
+#'            S = ( A-lambda E  B ),    or
+#' 
+#'            S = ( A-lambda E ).
+#'                (     C      )
+#' 
+#' #'
+#' @references \url{http://slicot.org/objects/software/shared/doc/TG01AD.html}
+#' @export
 tg01ad <- function(job, l, n, m, p, thresh, a, e, b, c) {
 
     # In Parameters
@@ -20,7 +54,8 @@ tg01ad <- function(job, l, n, m, p, thresh, a, e, b, c) {
     ldc <- max(dim(c)[1], 1)
     dwork <- array(as.double(1), c(3 * (l + n)))
 
-    res <- .Fortran("TG01AD", JOB = job, L = l, N = n, M = m, P = p, THRESH = thresh, A = a, E = e, B = b, C = c, LSCALE = lscale, RSCALE = rscale, INFO = info, LDA = lda, LDE = lde, LDB = ldb, LDC = ldc, DWORK = dwork)
+    res <- .Fortran("TG01AD", JOB = job, L = l, N = n, M = m, P = p, THRESH = thresh, A = a, E = e, B = b, C = c, LSCALE = lscale, RSCALE = rscale, INFO = info, LDA = lda, LDE = lde,
+        LDB = ldb, LDC = ldc, DWORK = dwork)
 
     return(list(a = res$A, e = res$E, b = res$B, c = res$C, lscale = res$LSCALE, rscale = res$RSCALE, info = res$INFO))
 }

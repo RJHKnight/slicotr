@@ -1,3 +1,19 @@
+#' mb05nd
+#'
+#' Matrix exponential and integral for a real matrix
+#' @examples 
+
+#'   To compute
+#' 
+#'   (a)    F(delta) =  exp(A*delta) and
+#' 
+#'   (b)    H(delta) =  Int[F(s) ds] from s = 0 to s = delta,
+#' 
+#'   where A is a real N-by-N matrix and delta is a scalar value.
+#' 
+#' #'
+#' @references \url{http://slicot.org/objects/software/shared/doc/MB05ND.html}
+#' @export
 mb05nd <- function(n, delta, a, tol) {
 
     # In Parameters

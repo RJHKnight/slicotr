@@ -1,3 +1,20 @@
+#' mb05md
+#'
+#' Matrix exponential for a real non-defective matrix
+#' @examples 
+
+#'   To compute exp(A*delta) where A is a real N-by-N non-defective
+#'   matrix with real or complex eigenvalues and delta is a scalar
+#'   value. The routine also returns the eigenvalues and eigenvectors
+#'   of A as well as (if all eigenvalues are real) the matrix product
+#'   exp(Lambda*delta) times the inverse of the eigenvector matrix
+#'   of A, where Lambda is the diagonal matrix of eigenvalues.
+#'   Optionally, the routine computes a balancing transformation to
+#'   improve the conditioning of the eigenvalues and eigenvectors.
+#' 
+#' #'
+#' @references \url{http://slicot.org/objects/software/shared/doc/MB05MD.html}
+#' @export
 mb05md <- function(balanc, n, delta, a) {
 
     # In Parameters
@@ -20,7 +37,8 @@ mb05md <- function(balanc, n, delta, a) {
     dwork <- array(as.double(1), c(4 * n))
     ldwork <- dim(dwork)[1]
 
-    res <- .Fortran("MB05MD", BALANC = balanc, N = n, DELTA = delta, A = a, V = v, Y = y, VALR = valr, VALI = vali, INFO = info, LDA = lda, LDV = ldv, LDY = ldy, IWORK = iwork, DWORK = dwork, LDWORK = ldwork)
+    res <- .Fortran("MB05MD", BALANC = balanc, N = n, DELTA = delta, A = a, V = v, Y = y, VALR = valr, VALI = vali, INFO = info, LDA = lda, LDV = ldv, LDY = ldy, IWORK = iwork, DWORK = dwork,
+        LDWORK = ldwork)
 
     return(list(a = res$A, v = res$V, y = res$Y, valr = res$VALR, vali = res$VALI, info = res$INFO))
 }

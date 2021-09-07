@@ -1,3 +1,49 @@
+#' sb10ad
+#'
+#' H-infinity optimal controller using modified Glover's and Doyle's formulas (continuous-time)
+#' @examples 
+
+#'   To compute the matrices of an H-infinity optimal n-state
+#'   controller
+#' 
+#'            | AK | BK |
+#'        K = |----|----|,
+#'            | CK | DK |
+#' 
+#'   using modified Glover's and Doyle's 1988 formulas, for the system
+#' 
+#'            | A  | B1  B2  |   | A | B |
+#'        P = |----|---------| = |---|---|
+#'            | C1 | D11 D12 |   | C | D |
+#'            | C2 | D21 D22 |
+#' 
+#'   and for the estimated minimal possible value of gamma with respect
+#'   to GTOL, where B2 has as column size the number of control inputs
+#'   (NCON) and C2 has as row size the number of measurements (NMEAS)
+#'   being provided to the controller, and then to compute the matrices
+#'   of the closed-loop system
+#' 
+#'            | AC | BC |
+#'        G = |----|----|,
+#'            | CC | DC |
+#' 
+#'   if the stabilizing controller exists.
+#' 
+#'   It is assumed that
+#' 
+#'   (A1) (A,B2) is stabilizable and (C2,A) is detectable,
+#' 
+#'   (A2) D12 is full column rank and D21 is full row rank,
+#' 
+#'   (A3) | A-j*omega*I  B2  | has full column rank for all omega,
+#'        |    C1        D12 |
+#' 
+#'   (A4) | A-j*omega*I  B1  |  has full row rank for all omega.
+#'        |    C2        D21 |
+#' 
+#' #'
+#' @references \url{http://slicot.org/objects/software/shared/doc/SB10AD.html}
+#' @export
 sb10ad <- function(job, n, m, np, ncon, nmeas, gamma, a, b, c, d, gtol, actol, liwork, ldwork) {
 
     # In Parameters
@@ -43,9 +89,9 @@ sb10ad <- function(job, n, m, np, ncon, nmeas, gamma, a, b, c, d, gtol, actol, l
     lbwork <- as.integer(2 * n)
     bwork <- array(as.logical(1), c(lbwork))
 
-    res <- .Fortran("SB10AD", JOB = job, N = n, M = m, NP = np, NCON = ncon, NMEAS = nmeas, GAMMA = gamma, A = a, B = b, C = c, D = d, GTOL = gtol, ACTOL = actol, LIWORK = liwork, LDWORK = ldwork, AK = ak, BK = bk, CK = ck, DK = dk,
-        AC = ac, BC = bc, CC = cc, DC = dc, RCOND = rcond, INFO = info, LDA = lda, LDB = ldb, LDC = ldc, LDD = ldd, LDAK = ldak, LDBK = ldbk, LDCK = ldck, LDDK = lddk, LDAC = ldac, LDBC = ldbc, LDCC = ldcc, LDDC = lddc, IWORK = iwork,
-        DWORK = dwork, LBWORK = lbwork, BWORK = bwork)
+    res <- .Fortran("SB10AD", JOB = job, N = n, M = m, NP = np, NCON = ncon, NMEAS = nmeas, GAMMA = gamma, A = a, B = b, C = c, D = d, GTOL = gtol, ACTOL = actol, LIWORK = liwork, LDWORK = ldwork,
+        AK = ak, BK = bk, CK = ck, DK = dk, AC = ac, BC = bc, CC = cc, DC = dc, RCOND = rcond, INFO = info, LDA = lda, LDB = ldb, LDC = ldc, LDD = ldd, LDAK = ldak, LDBK = ldbk, LDCK = ldck,
+        LDDK = lddk, LDAC = ldac, LDBC = ldbc, LDCC = ldcc, LDDC = lddc, IWORK = iwork, DWORK = dwork, LBWORK = lbwork, BWORK = bwork)
 
     return(list(gamma = res$GAMMA, ak = res$AK, bk = res$BK, ck = res$CK, dk = res$DK, ac = res$AC, bc = res$BC, cc = res$CC, dc = res$DC, rcond = res$RCOND, info = res$INFO))
 }

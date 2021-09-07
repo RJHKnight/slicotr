@@ -1,3 +1,16 @@
+#' tc01od_r
+#'
+#' Dual of a left/right polynomial matrix representation
+#' @examples 
+
+#'   To find the dual right (left) polynomial matrix representation of
+#'   a given left (right) polynomial matrix representation, where the
+#'   right and left polynomial matrix representations are of the form
+#'   Q(s)*inv(P(s)) and inv(P(s))*Q(s) respectively.
+#' 
+#' #'
+#' @references \url{http://slicot.org/objects/software/shared/doc/TC01OD.html}
+#' @export
 tc01od_r <- function(m, p, indlim, pcoeff, qcoeff) {
 
     # In Parameters

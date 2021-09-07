@@ -1,3 +1,34 @@
+#' sb02mt_cl
+#'
+#' Conversion of optimal problems with coupling weighting terms to standard problems
+#' @examples 
+
+#'   To compute the following matrices
+#' 
+#'              -1
+#'       G = B*R  *B',
+#' 
+#'       -          -1
+#'       A = A - B*R  *L',
+#' 
+#'       -          -1
+#'       Q = Q - L*R  *L',
+#' 
+#'   where A, B, Q, R, L, and G are N-by-N, N-by-M, N-by-N, M-by-M,
+#'   N-by-M, and N-by-N matrices, respectively, with Q, R and G
+#'   symmetric matrices.
+#' 
+#'   When R is well-conditioned with respect to inversion, standard
+#'   algorithms for solving linear-quadratic optimization problems will
+#'   then also solve optimization problems with coupling weighting
+#'   matrix L. Moreover, a gain in efficiency is possible using matrix
+#'   G in the deflating subspace algorithms (see SLICOT Library routine
+#'   SB02OD) or in the Newton's algorithms (see SLICOT Library routine
+#'   SG02CD).
+#' 
+#' #'
+#' @references \url{http://slicot.org/objects/software/shared/doc/SB02MT.html}
+#' @export
 sb02mt_cl <- function(uplo, n, m, a, b, q, r, l) {
 
     # In Parameters
@@ -25,8 +56,8 @@ sb02mt_cl <- function(uplo, n, m, a, b, q, r, l) {
     ldwork <- as.integer(1)
     dwork <- array(as.double(1), c(ldwork))
 
-    res <- .Fortran("SB02MT", UPLO = uplo, N = n, M = m, A = a, B = b, Q = q, R = r, L = l, IPIV = ipiv, OUFACT = oufact, G = g, INFO = info, JOBG = jobg, JOBL = jobl, FACT = fact, LDA = lda, LDB = ldb, LDQ = ldq, LDR = ldr, LDL = ldl,
-        LDG = ldg, IWORK = iwork, LDWORK = ldwork, DWORK = dwork)
+    res <- .Fortran("SB02MT", UPLO = uplo, N = n, M = m, A = a, B = b, Q = q, R = r, L = l, IPIV = ipiv, OUFACT = oufact, G = g, INFO = info, JOBG = jobg, JOBL = jobl, FACT = fact, LDA = lda,
+        LDB = ldb, LDQ = ldq, LDR = ldr, LDL = ldl, LDG = ldg, IWORK = iwork, LDWORK = ldwork, DWORK = dwork)
 
     return(list(a = res$A, b = res$B, q = res$Q, r = res$R, l = res$L, ipiv = res$IPIV, oufact = res$OUFACT, g = res$G, info = res$INFO))
 }

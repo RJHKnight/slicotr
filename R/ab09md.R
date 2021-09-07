@@ -1,3 +1,16 @@
+#' ab09md
+#'
+#' Balance & Truncate model reduction for the stable part of a system
+#' @examples 
+
+#'   To compute a reduced order model (Ar,Br,Cr) for an original
+#'   state-space representation (A,B,C) by using either the square-root
+#'   or the balancing-free square-root Balance & Truncate (B & T)
+#'   model reduction method for the ALPHA-stable part of the system.
+#' 
+#' #'
+#' @references \url{http://slicot.org/objects/software/shared/doc/AB09MD.html}
+#' @export
 ab09md <- function(dico, job, equil, ordsel, n, m, p, nr, alpha, a, b, c, tol, ldwork) {
 
     # In Parameters
@@ -26,8 +39,8 @@ ab09md <- function(dico, job, equil, ordsel, n, m, p, nr, alpha, a, b, c, tol, l
     iwork <- array(as.integer(1), c(max(m, p)))
     dwork <- array(as.double(1), c(ldwork))
 
-    res <- .Fortran("AB09MD", DICO = dico, JOB = job, EQUIL = equil, ORDSEL = ordsel, N = n, M = m, P = p, NR = nr, ALPHA = alpha, A = a, B = b, C = c, TOL = tol, LDWORK = ldwork, NS = ns, HSV = hsv, IWARN = iwarn, INFO = info, LDA = lda,
-        LDB = ldb, LDC = ldc, IWORK = iwork, DWORK = dwork)
+    res <- .Fortran("AB09MD", DICO = dico, JOB = job, EQUIL = equil, ORDSEL = ordsel, N = n, M = m, P = p, NR = nr, ALPHA = alpha, A = a, B = b, C = c, TOL = tol, LDWORK = ldwork, NS = ns,
+        HSV = hsv, IWARN = iwarn, INFO = info, LDA = lda, LDB = ldb, LDC = ldc, IWORK = iwork, DWORK = dwork)
 
     return(list(nr = res$NR, a = res$A, b = res$B, c = res$C, ns = res$NS, hsv = res$HSV, iwarn = res$IWARN, info = res$INFO))
 }

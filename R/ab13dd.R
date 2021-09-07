@@ -1,3 +1,22 @@
+#' ab13dd
+#'
+#' L-infinity norm of a state space system
+#' @examples 
+
+#'   To compute the L-infinity norm of a continuous-time or
+#'   discrete-time system, either standard or in the descriptor form,
+#' 
+#'                                   -1
+#'      G(lambda) = C*( lambda*E - A ) *B + D .
+#' 
+#'   The norm is finite if and only if the matrix pair (A,E) has no
+#'   eigenvalue on the boundary of the stability domain, i.e., the
+#'   imaginary axis, or the unit circle, respectively. It is assumed
+#'   that the matrix E is nonsingular.
+#' 
+#' #'
+#' @references \url{http://slicot.org/objects/software/shared/doc/AB13DD.html}
+#' @export
 ab13dd <- function(dico, jobe, equil, jobd, n, m, p, fpeak, a, e, b, c, d, tol) {
 
     # In Parameters
@@ -25,8 +44,8 @@ ab13dd <- function(dico, jobe, equil, jobd, n, m, p, fpeak, a, e, b, c, d, tol) 
     lcwork <- as.integer(max(1, (n + m) * (n + p) + 2 * min(p, m) + max(p, m)))
     dwork <- array(as.double(1), c(ldwork))
 
-    res <- .Fortran("AB13DD", DICO = dico, JOBE = jobe, EQUIL = equil, JOBD = jobd, N = n, M = m, P = p, FPEAK = fpeak, A = a, E = e, B = b, C = c, D = d, TOL = tol, GPEAK = gpeak, INFO = info, LDA = lda, LDE = lde, LDB = ldb, LDC = ldc,
-        LDD = ldd, IWORK = iwork, LDWORK = ldwork, LCWORK = lcwork, DWORK = dwork)
+    res <- .Fortran("AB13DD", DICO = dico, JOBE = jobe, EQUIL = equil, JOBD = jobd, N = n, M = m, P = p, FPEAK = fpeak, A = a, E = e, B = b, C = c, D = d, TOL = tol, GPEAK = gpeak, INFO = info,
+        LDA = lda, LDE = lde, LDB = ldb, LDC = ldc, LDD = ldd, IWORK = iwork, LDWORK = ldwork, LCWORK = lcwork, DWORK = dwork)
 
     return(list(fpeak = res$FPEAK, gpeak = res$GPEAK, info = res$INFO))
 }
