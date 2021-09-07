@@ -1,7 +1,7 @@
 library(tidyverse)
 
-debugSource("Parse PYF.R")
-debugSource("Generate Function.R")
+source("Parse PYF.R")
+source("Generate Function.R")
 
 pyf_files <- list.files(path = "INPUT/", pattern = "*.pyf", full.names = TRUE)
 options(warn=1)

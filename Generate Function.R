@@ -1,11 +1,7 @@
+source("Documentation.R")
+
 generate_function <- function(name, file_name, params)
 {
-
-  if (str_detect(name, "tb05ad_ag"))
-  {
-    cat("here.")
-  }
-
   if (is.na(file_name) || str_detect(file_name, ".*Z.f"))
   {
     cat(paste("Skipping complex function", file_name, "\n"))
@@ -17,6 +13,9 @@ generate_function <- function(name, file_name, params)
   param_names <- filter(params, stringr::str_detect(intent, "in") | is.na(intent)) %>% pull(name)
 
   x <- paste0(
+
+    # Roxygen
+    generate_docs(file_name, name),
 
     # Function definition
     name, "<- function(",
