@@ -1,4 +1,2 @@
 exportPattern("^[[:alpha:]]+")
 useDynLib(slicotr, .registration=TRUE)
-import(magrittr)
-import(dplyr)
