@@ -1,12 +1,13 @@
 Package: slicotr
 Type: Package
-Title: What the Package Does (Title Case)
+Title: An R interface to the SLICOT control library
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Author: Richard Knight
+Maintainer: Richard Knight <rjhknight@gmail.com>
+Description: A wrapper for the SLICOT control library, leaning heavily on the slycot python project.
+    SLICOT provides a large number of robust and stable numerical algorithms for computations of relavance to control theory and linear dynamic systems. 
+    Of particular note are the solvers for Riccati, Lyapunov and Sylvester equations.
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
