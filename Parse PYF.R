@@ -35,7 +35,7 @@ parse_pyf <- function(file_name)
     else if (stringr::str_detect(this_line, FORTRAN_NAME))
     {
       # This overrides the fortran name on the sub line, if present
-      file_name <- paste0(stringr::str_to_upper(stringr::str_split_fixed(this_line, " ", 2)[1,2]), ".f")
+      file_name <- paste0(stringr::str_to_upper(stringr::str_split_fixed(stringr::str_trim(this_line), " ", 2)[1,2]), ".f")
     }
     else if (stringr::str_detect(this_line, PARAM))
     {
