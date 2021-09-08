@@ -228,11 +228,8 @@ handle_depends <- function(params, name)
     # First input params
     input <- dplyr::filter(params, stringr::str_detect(intent, "in") | is.na(intent))
 
-    # Then out
-    out <- dplyr::filter(params, intent == "out")
-
     # Hidden needs more finesse
-    hide_params <- dplyr::filter(params, stringr::str_detect(intent,"hide"))
+    hide_params <- dplyr::filter(params, stringr::str_detect(intent,"hide|out"))
 
     depend_details = select(params, name, intent ) %>% rename(other_intent = intent)
 
@@ -240,8 +237,8 @@ handle_depends <- function(params, name)
       left_join(depend_details, by = c("depend" = "name"))
 
     # Hide params depending on in params
-    hide_params_in_out <- dplyr::filter(hide_params, stringr::str_detect(other_intent, "in") | stringr::str_detect(other_intent, "out") | is.na(other_intent))
-    hide_params_other <- dplyr::filter(hide_params, !(stringr::str_detect(other_intent, "in") | stringr::str_detect(other_intent, "out") | is.na(other_intent)))
+    hide_params_in_out <- dplyr::filter(hide_params, stringr::str_detect(other_intent, "in") | is.na(other_intent))
+    hide_params_other <- dplyr::filter(hide_params, !(stringr::str_detect(other_intent, "in") | is.na(other_intent)))
 
     if (nrow(hide_params_other) > 1)
     {
@@ -251,7 +248,6 @@ handle_depends <- function(params, name)
     return (
       rbind(
         input,
-        out,
         select(hide_params_in_out, -other_intent),
         select(hide_params_other, -other_intent)
       )
