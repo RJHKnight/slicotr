@@ -25,26 +25,39 @@ generate_function <- function(name, file_name, params)
 
     # Type coercion for in parameters
     "# In Parameters", "\n",
-    paste0(handle_in(params), collapse = "\n"), "\n\n",
+    paste0(handle_in(params), collapse = "\n"), "\n\n"
+  )
 
-    # Define out parameters
-    "# Out Parameters", "\n",
-    paste0(handle_out(params), collapse = "\n"), "\n\n",
+  other_params <- dplyr::filter(params, !(stringr::str_detect(intent, "in") | is.na(intent)))
 
-    # Define hidden parameters
-    "# Hidden Parameters", "\n",
-    paste0(handle_hide(params), collapse = "\n"), "\n\n",
+  for (i in 1:nrow(other_params))
+  {
+    this_param <- other_params[i,]
 
+    if (is_out(this_param))
+    {
+      # Define out parameters
+      x <- paste0(x, handle_out(this_param), "\n")
+    }
 
-    # Apply checks
-    #"# Check dimensions of input parameters", "\n",
-    #paste0(check_in(params), collapse = "\n"), "\n\n",
+    else
+    {
+      # Define hidden parameters
+      x <- paste0(x, handle_hide(this_param), "\n")
+    }
+  }
 
-    # Call Fortran
-    create_call(file_name, params), "\n\n",
+  # Apply checks
+  #"# Check dimensions of input parameters", "\n",
+  #paste0(check_in(params), collapse = "\n"), "\n\n",
 
-    # Return list
-    create_return(params) , "\n}"
+  x <- paste0(x, "\n\n",
+
+              # Call Fortran
+              create_call(file_name, params), "\n\n",
+
+              # Return list
+              create_return(params) , "\n}"
   )
 
   # Handle reserved keywords
@@ -102,6 +115,12 @@ create_call <- function(file_name, params)
       ")"
     )
   )
+}
+
+is_out <- function(param)
+{
+  this_intent <- param$intent[1]
+  return (!is.na(this_intent) && this_intent == "out")
 }
 
 handle_out <- function(params)

@@ -215,7 +215,7 @@ create_param <- function(type, intent, name, check = NA, dimension = NA, value =
   return (data.frame(
     name = stringr::str_to_lower(stringr::str_trim(name[1])),
     type = stringr::str_to_lower(stringr::str_trim(type[1])),
-    intent = stringr::str_to_lower(stringr::str_trim(intent[1])),
+    intent = ifelse(is.na(intent[1]), "in", stringr::str_to_lower(stringr::str_trim(intent[1]))),
     check = stringr::str_to_lower(stringr::str_trim(check[1])),
     dimension = stringr::str_to_lower(stringr::str_trim(dimension[1])),
     value = stringr::str_to_lower(stringr::str_trim(value[1])),
@@ -225,31 +225,61 @@ create_param <- function(type, intent, name, check = NA, dimension = NA, value =
 
 handle_depends <- function(params, name)
 {
-    # First input params
-    input <- dplyr::filter(params, stringr::str_detect(intent, "in") | is.na(intent))
+    # First params without depends
+    no_depend <- dplyr::filter(params, is.na(depend))
 
-    # Hidden needs more finesse
-    hide_params <- dplyr::filter(params, stringr::str_detect(intent,"hide|out"))
+    # Others need more finesse
+    depend_params <- dplyr::filter(params, !is.na(depend))
 
-    depend_details = select(params, name, intent ) %>% rename(other_intent = intent)
+    depend_details = select(params, name, depend ) %>% rename(other_depend = depend) %>% separate_rows(other_depend)
 
-    hide_params <- hide_params %>%
+    depend_params <- depend_params %>%
+      separate_rows(depend) %>%
       left_join(depend_details, by = c("depend" = "name"))
 
-    # Hide params depending on in params
-    hide_params_in_out <- dplyr::filter(hide_params, stringr::str_detect(other_intent, "in") | is.na(other_intent))
-    hide_params_other <- dplyr::filter(hide_params, !(stringr::str_detect(other_intent, "in") | is.na(other_intent)))
 
-    if (nrow(hide_params_other) > 1)
+    # Anything that depends on a no-depend param can go next
+    depend_1 <- dplyr::filter(depend_params, is.na(other_depend)) %>% select(-other_depend) %>%
+      group_by(name) %>%
+      summarise(name = name[1],
+                type = type[1],
+                intent = intent[1],
+                check = check[1],
+                dimension = dimension[1],
+                value = value[1],
+                depend = paste(depend, collapse = ","))
+
+    # These all depend on a depend param
+    depend_res <- dplyr::filter(depend_params, !name %in% depend_1$name)
+
+    # If it depends on anything in depend 1 - ok to add
+    depend_2 <- depend_res %>%
+      mutate(in_depend_1 = depend %in% depend_1$name) %>%
+      group_by(name) %>%
+      summarise(name = name[1],
+                type = type[1],
+                intent = intent[1],
+                check = check[1],
+                dimension = dimension[1],
+                value = value[1],
+                depend = paste(depend, collapse = ","),
+                include = all(in_depend_1, TRUE)) %>%
+      filter(include) %>%
+      select(-include)
+
+    depend_3 <- dplyr::filter(depend_params, !name %in% c(depend_1$name, depend_2$name)) %>% select(-other_depend)
+
+    if (nrow(depend_3) > 1)
     {
-      warning("Mutliple dependent params - check code for: ", name)
+      warning("Mutliple dependent3 params - check code for: ", name)
     }
 
     return (
       rbind(
-        input,
-        select(hide_params_in_out, -other_intent),
-        select(hide_params_other, -other_intent)
+        no_depend,
+        depend_1,
+        depend_2,
+        depend_3
       )
     )
 }
