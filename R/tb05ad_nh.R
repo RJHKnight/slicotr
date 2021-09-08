@@ -23,24 +23,22 @@ tb05ad_nh <- function(n, m, p, a, b, c, ldwork, lzwork) {
     ldwork <- as.integer(ldwork)
     lzwork <- as.integer(lzwork)
 
-    # Out Parameters
-    info <- as.integer(0)
-
-    # Hidden Parameters
     baleig <- as.character("n")
     inita <- as.character("h")
+    rcond <- iwork <- array(as.integer(1), c(n))
+    info <- as.integer(0)
+    evim <- array(as.double(1), c(n))
+    evre <- array(as.double(1), c(n))
+    ldg <- as.integer(p)
+    ldhinv <- as.integer(n)
+    dwork <- array(as.double(1), c(ldwork))
     lda <- dim(a)[1]
     ldb <- dim(b)[1]
     ldc <- dim(c)[1]
-    rcond <- ldg <- as.integer(p)
-    evre <- array(as.double(1), c(n))
-    evim <- array(as.double(1), c(n))
-    ldhinv <- as.integer(n)
-    iwork <- array(as.integer(1), c(n))
-    dwork <- array(as.double(1), c(ldwork))
 
-    res <- .Fortran("TB05AD", N = n, M = m, P = p, A = a, B = b, C = c, LDWORK = ldwork, LZWORK = lzwork, INFO = info, BALEIG = baleig, INITA = inita, LDA = lda, LDB = ldb, LDC = ldc,
-        RCOND = rcond, LDG = ldg, EVRE = evre, EVIM = evim, LDHINV = ldhinv, IWORK = iwork, DWORK = dwork)
+
+    res <- .Fortran("TB05AD", BALEIG = baleig, INITA = inita, N = n, M = m, P = p, RCOND = rcond, IWORK = iwork, INFO = info, A = a, B = b, C = c, EVIM = evim, EVRE = evre, LDG = ldg, LDHINV = ldhinv, LDWORK = ldwork, LZWORK = lzwork,
+        DWORK = dwork, LDA = lda, LDB = ldb, LDC = ldc)
 
     return(list(info = res$INFO))
 }

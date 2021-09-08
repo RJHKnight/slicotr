@@ -44,7 +44,7 @@
 #' #'
 #' @references \url{http://slicot.org/objects/software/shared/doc/SG02AD.html}
 #' @export
-sg02ad_bn <- function(dico, uplo, jobl, scal, sort, acc, n, m, a, e, b, q, r, l, tol, ldwork) {
+sg02ad_bn <- function(dico, uplo, jobl, scal, sort, acc, n, m, tol, a, b, e, l, ldwork, q, r) {
 
     # In Parameters
     acc <- as.character(acc)
@@ -58,39 +58,37 @@ sg02ad_bn <- function(dico, uplo, jobl, scal, sort, acc, n, m, a, e, b, q, r, l,
     uplo <- as.character(uplo)
     ldwork <- as.integer(ldwork)
 
-    # Out Parameters
-    rcondu <- as.double(0)
-    x <- array(as.double(0), c(max(1, n), n))
-    alfar <- array(as.double(0), c(2 * n))
-    alfai <- array(as.double(0), c(2 * n))
-    beta <- array(as.double(0), c(2 * n))
-    s <- array(as.double(0), c(max(1, 2 * n + m), 2 * n + m))
-    t <- array(as.double(0), c(max(1, 2 * n + m), 2 * n))
-    u <- array(as.double(0), c(max(1, 2 * n), 2 * n))
-    iwarn <- as.integer(0)
-    info <- as.integer(0)
-
-    # Hidden Parameters
     jobb <- as.character("b")
     fact <- as.character("n")
     p <- as.integer(0)
+    rcondu <- as.double(0)
+    dwork <- array(as.double(1), c(ldwork))
+    iwarn <- as.integer(0)
+    info <- as.integer(0)
+    alfai <- array(as.double(0), c(2 * n))
+    alfar <- array(as.double(0), c(2 * n))
+    beta <- array(as.double(0), c(2 * n))
+    bwork <- array(as.logical(1), c(2 * n))
+    iwork <- array(as.integer(1), c(max(m, 2 * n)))
+    s <- array(as.double(0), c(max(1, 2 * n + m), 2 * n + m))
+    t <- array(as.double(0), c(max(1, 2 * n + m), 2 * n))
+    u <- array(as.double(0), c(max(1, 2 * n), 2 * n))
+    x <- array(as.double(0), c(max(1, n), n))
     lda <- dim(a)[1]
-    lde <- dim(e)[1]
     ldb <- dim(b)[1]
+    lde <- dim(e)[1]
+    ldl <- dim(l)[1]
     ldq <- dim(q)[1]
     ldr <- dim(r)[1]
-    ldl <- dim(l)[1]
-    ldx <- dim(x)[1]
     lds <- dim(s)[1]
     ldt <- dim(t)[1]
     ldu <- dim(u)[1]
-    iwork <- array(as.integer(1), c(max(m, 2 * n)))
-    dwork <- array(as.double(1), c(ldwork))
-    bwork <- array(as.logical(1), c(2 * n))
+    ldx <- dim(x)[1]
 
-    res <- .Fortran("SG02AD", DICO = dico, UPLO = uplo, JOBL = jobl, SCAL = scal, SORT = sort, ACC = acc, N = n, M = m, A = a, E = e, B = b, Q = q, R = r, L = l, TOL = tol, LDWORK = ldwork,
-        RCONDU = rcondu, X = x, ALFAR = alfar, ALFAI = alfai, BETA = beta, S = s, T = t, U = u, IWARN = iwarn, INFO = info, JOBB = jobb, FACT = fact, P = p, LDA = lda, LDE = lde, LDB = ldb,
-        LDQ = ldq, LDR = ldr, LDL = ldl, LDX = ldx, LDS = lds, LDT = ldt, LDU = ldu, IWORK = iwork, DWORK = dwork, BWORK = bwork)
 
-    return(list(rcondu = res$RCONDU, x = res$X, alfar = res$ALFAR, alfai = res$ALFAI, beta = res$BETA, s = res$S, t = res$T, u = res$U, iwarn = res$IWARN, info = res$INFO))
+    res <- .Fortran("SG02AD", DICO = dico, JOBB = jobb, FACT = fact, UPLO = uplo, JOBL = jobl, SCAL = scal, SORT = sort, ACC = acc, N = n, M = m, P = p, RCONDU = rcondu, TOL = tol, DWORK = dwork, IWARN = iwarn, INFO = info, A = a, ALFAI = alfai,
+        ALFAR = alfar, B = b, BETA = beta, BWORK = bwork, E = e, IWORK = iwork, L = l, LDWORK = ldwork, Q = q, R = r, S = s, T = t, U = u, X = x, LDA = lda, LDB = ldb, LDE = lde, LDL = ldl, LDQ = ldq, LDR = ldr, LDS = lds, LDT = ldt,
+        LDU = ldu, LDX = ldx)
+
+    return(list(rcondu = res$RCONDU, iwarn = res$IWARN, info = res$INFO, alfai = res$ALFAI, alfar = res$ALFAR, beta = res$BETA, s = res$S, t = res$T, u = res$U, x = res$X))
 }

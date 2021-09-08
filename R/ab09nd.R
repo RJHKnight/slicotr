@@ -12,7 +12,7 @@
 #' #'
 #' @references \url{http://slicot.org/objects/software/shared/doc/AB09ND.html}
 #' @export
-ab09nd <- function(dico, job, equil, ordsel, n, m, p, nr, alpha, a, b, c, d, tol1, tol2, ldwork) {
+ab09nd <- function(dico, job, equil, ordsel, n, m, p, nr, alpha, tol1, tol2, ldwork, a, b, c, d) {
 
     # In Parameters
     alpha <- as.double(alpha)
@@ -28,22 +28,20 @@ ab09nd <- function(dico, job, equil, ordsel, n, m, p, nr, alpha, a, b, c, d, tol
     tol1 <- as.double(tol1)
     tol2 <- as.double(tol2)
 
-    # Out Parameters
     ns <- as.integer(0)
-    hsv <- array(as.double(0), c(n))
+    iwork <- array(as.integer(1), c(max(m, p)))
+    dwork <- array(as.double(1), c(ldwork))
     iwarn <- as.integer(0)
     info <- as.integer(0)
-
-    # Hidden Parameters
+    hsv <- array(as.double(0), c(n))
     lda <- dim(a)[1]
     ldb <- dim(b)[1]
     ldc <- dim(c)[1]
     ldd <- dim(d)[1]
-    iwork <- array(as.integer(1), c(max(m, p)))
-    dwork <- array(as.double(1), c(ldwork))
 
-    res <- .Fortran("AB09ND", DICO = dico, JOB = job, EQUIL = equil, ORDSEL = ordsel, N = n, M = m, P = p, NR = nr, ALPHA = alpha, A = a, B = b, C = c, D = d, TOL1 = tol1, TOL2 = tol2,
-        LDWORK = ldwork, NS = ns, HSV = hsv, IWARN = iwarn, INFO = info, LDA = lda, LDB = ldb, LDC = ldc, LDD = ldd, IWORK = iwork, DWORK = dwork)
 
-    return(list(nr = res$NR, a = res$A, b = res$B, c = res$C, d = res$D, ns = res$NS, hsv = res$HSV, iwarn = res$IWARN, info = res$INFO))
+    res <- .Fortran("AB09ND", DICO = dico, JOB = job, EQUIL = equil, ORDSEL = ordsel, N = n, M = m, P = p, NR = nr, ALPHA = alpha, NS = ns, TOL1 = tol1, TOL2 = tol2, IWORK = iwork, DWORK = dwork, LDWORK = ldwork, IWARN = iwarn, INFO = info,
+        A = a, B = b, C = c, D = d, HSV = hsv, LDA = lda, LDB = ldb, LDC = ldc, LDD = ldd)
+
+    return(list(nr = res$NR, ns = res$NS, iwarn = res$IWARN, info = res$INFO, a = res$A, b = res$B, c = res$C, d = res$D, hsv = res$HSV))
 }

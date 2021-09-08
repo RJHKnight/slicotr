@@ -44,7 +44,7 @@
 #' #'
 #' @references \url{http://slicot.org/objects/software/shared/doc/SB10AD.html}
 #' @export
-sb10ad <- function(job, n, m, np, ncon, nmeas, gamma, a, b, c, d, gtol, actol, liwork, ldwork) {
+sb10ad <- function(job, n, m, np, ncon, gamma, gtol, actol, liwork, ldwork, a, b, c, d, nmeas) {
 
     # In Parameters
     actol <- as.double(actol)
@@ -59,39 +59,37 @@ sb10ad <- function(job, n, m, np, ncon, nmeas, gamma, a, b, c, d, gtol, actol, l
     np <- as.integer(np)
     nmeas <- as.integer(nmeas)
 
-    # Out Parameters
-    ak <- array(as.double(0), c(n, n))
-    bk <- array(as.double(0), c(n, nmeas))
-    ck <- array(as.double(0), c(ncon, n))
-    dk <- array(as.double(0), c(ncon, nmeas))
-    ac <- array(as.double(0), c(2 * n, 2 * n))
-    bc <- array(as.double(0), c(2 * n, m - ncon))
-    cc <- array(as.double(0), c(np - nmeas, 2 * n))
-    dc <- array(as.double(0), c(np - nmeas, m - ncon))
     rcond <- array(as.double(0), c(4))
     info <- as.integer(0)
-
-    # Hidden Parameters
-    lda <- dim(a)[1]
-    ldb <- dim(b)[1]
-    ldc <- dim(c)[1]
-    ldd <- dim(d)[1]
-    ldak <- dim(ak)[1]
-    ldbk <- dim(bk)[1]
-    ldck <- dim(ck)[1]
-    lddk <- dim(dk)[1]
-    ldac <- dim(ac)[1]
-    ldbc <- dim(bc)[1]
-    ldcc <- dim(cc)[1]
-    lddc <- dim(dc)[1]
-    iwork <- array(as.integer(1), c(liwork))
+    ac <- array(as.double(0), c(2 * n, 2 * n))
+    ak <- array(as.double(0), c(n, n))
+    bc <- array(as.double(0), c(2 * n, m - ncon))
+    bk <- array(as.double(0), c(n, nmeas))
+    cc <- array(as.double(0), c(np - nmeas, 2 * n))
+    ck <- array(as.double(0), c(ncon, n))
+    dc <- array(as.double(0), c(np - nmeas, m - ncon))
+    dk <- array(as.double(0), c(ncon, nmeas))
     dwork <- array(as.double(1), c(ldwork))
+    iwork <- array(as.integer(1), c(liwork))
     lbwork <- as.integer(2 * n)
     bwork <- array(as.logical(1), c(lbwork))
+    lda <- dim(a)[1]
+    ldac <- dim(ac)[1]
+    ldak <- dim(ak)[1]
+    ldb <- dim(b)[1]
+    ldbc <- dim(bc)[1]
+    ldbk <- dim(bk)[1]
+    ldc <- dim(c)[1]
+    ldcc <- dim(cc)[1]
+    ldck <- dim(ck)[1]
+    ldd <- dim(d)[1]
+    lddc <- dim(dc)[1]
+    lddk <- dim(dk)[1]
 
-    res <- .Fortran("SB10AD", JOB = job, N = n, M = m, NP = np, NCON = ncon, NMEAS = nmeas, GAMMA = gamma, A = a, B = b, C = c, D = d, GTOL = gtol, ACTOL = actol, LIWORK = liwork, LDWORK = ldwork,
-        AK = ak, BK = bk, CK = ck, DK = dk, AC = ac, BC = bc, CC = cc, DC = dc, RCOND = rcond, INFO = info, LDA = lda, LDB = ldb, LDC = ldc, LDD = ldd, LDAK = ldak, LDBK = ldbk, LDCK = ldck,
-        LDDK = lddk, LDAC = ldac, LDBC = ldbc, LDCC = ldcc, LDDC = lddc, IWORK = iwork, DWORK = dwork, LBWORK = lbwork, BWORK = bwork)
 
-    return(list(gamma = res$GAMMA, ak = res$AK, bk = res$BK, ck = res$CK, dk = res$DK, ac = res$AC, bc = res$BC, cc = res$CC, dc = res$DC, rcond = res$RCOND, info = res$INFO))
+    res <- .Fortran("SB10AD", JOB = job, N = n, M = m, NP = np, NCON = ncon, GAMMA = gamma, RCOND = rcond, GTOL = gtol, ACTOL = actol, LIWORK = liwork, LDWORK = ldwork, INFO = info, A = a, AC = ac, AK = ak, B = b, BC = bc, BK = bk, C = c,
+        CC = cc, CK = ck, D = d, DC = dc, DK = dk, DWORK = dwork, IWORK = iwork, LBWORK = lbwork, NMEAS = nmeas, BWORK = bwork, LDA = lda, LDAC = ldac, LDAK = ldak, LDB = ldb, LDBC = ldbc, LDBK = ldbk, LDC = ldc, LDCC = ldcc, LDCK = ldck,
+        LDD = ldd, LDDC = lddc, LDDK = lddk)
+
+    return(list(gamma = res$GAMMA, rcond = res$RCOND, info = res$INFO, ac = res$AC, ak = res$AK, bc = res$BC, bk = res$BK, cc = res$CC, ck = res$CK, dc = res$DC, dk = res$DK))
 }

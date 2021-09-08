@@ -34,7 +34,7 @@
 #' #'
 #' @references \url{http://slicot.org/objects/software/shared/doc/SB02MD.html}
 #' @export
-sb02md <- function(dico, hinv, uplo, scal, sort, n, a, g, q, ldwork) {
+sb02md <- function(dico, hinv, uplo, scal, sort, n, a, g, ldwork, q) {
 
     # In Parameters
     dico <- as.character(dico)
@@ -45,26 +45,24 @@ sb02md <- function(dico, hinv, uplo, scal, sort, n, a, g, q, ldwork) {
     uplo <- as.character(uplo)
     ldwork <- as.integer(ldwork)
 
-    # Out Parameters
-    u <- array(as.double(0), c(2 * n, 2 * n))
     info <- as.integer(0)
     rcond <- as.double(0)
-    wr <- array(as.double(0), c(2 * n))
-    wi <- array(as.double(0), c(2 * n))
+    dwork <- array(as.double(1), c(ldwork))
+    bwork <- array(as.logical(1), c(2 * n))
+    iwork <- array(as.integer(1), c(2 * n))
     s <- array(as.double(0), c(2 * n, 2 * n))
-
-    # Hidden Parameters
+    u <- array(as.double(0), c(2 * n, 2 * n))
+    wi <- array(as.double(0), c(2 * n))
+    wr <- array(as.double(0), c(2 * n))
     lda <- dim(a)[1]
     ldg <- dim(g)[1]
     ldq <- dim(q)[1]
-    ldu <- dim(u)[1]
     lds <- dim(s)[1]
-    iwork <- array(as.integer(1), c(2 * n))
-    dwork <- array(as.double(1), c(ldwork))
-    bwork <- array(as.logical(1), c(2 * n))
+    ldu <- dim(u)[1]
 
-    res <- .Fortran("SB02MD", DICO = dico, HINV = hinv, UPLO = uplo, SCAL = scal, SORT = sort, N = n, A = a, G = g, Q = q, LDWORK = ldwork, U = u, INFO = info, RCOND = rcond, WR = wr,
-        WI = wi, S = s, LDA = lda, LDG = ldg, LDQ = ldq, LDU = ldu, LDS = lds, IWORK = iwork, DWORK = dwork, BWORK = bwork)
 
-    return(list(a = res$A, q = res$Q, u = res$U, info = res$INFO, rcond = res$RCOND, wr = res$WR, wi = res$WI, s = res$S))
+    res <- .Fortran("SB02MD", DICO = dico, HINV = hinv, UPLO = uplo, SCAL = scal, SORT = sort, N = n, INFO = info, RCOND = rcond, DWORK = dwork, A = a, BWORK = bwork, G = g, IWORK = iwork, LDWORK = ldwork, Q = q, S = s, U = u, WI = wi,
+        WR = wr, LDA = lda, LDG = ldg, LDQ = ldq, LDS = lds, LDU = ldu)
+
+    return(list(info = res$INFO, rcond = res$RCOND, a = res$A, q = res$Q, s = res$S, u = res$U, wi = res$WI, wr = res$WR))
 }

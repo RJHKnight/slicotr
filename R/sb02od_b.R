@@ -33,7 +33,7 @@
 #' #'
 #' @references \url{http://slicot.org/objects/software/shared/doc/SB02OD.html}
 #' @export
-sb02od_b <- function(dico, uplo, jobl, sort, n, m, p, a, b, q, r, l, tol, ldwork) {
+sb02od_b <- function(dico, uplo, jobl, sort, n, m, p, tol, ldwork, a, b, l, q, r) {
 
     # In Parameters
     dico <- as.character(dico)
@@ -46,7 +46,8 @@ sb02od_b <- function(dico, uplo, jobl, sort, n, m, p, a, b, q, r, l, tol, ldwork
     tol <- as.double(tol)
     uplo <- as.character(uplo)
 
-    # Out Parameters
+    jobb <- as.character("b")
+    fact <- as.character("b")
     rcond <- as.double(0)
     x <- array(as.double(0), c(n, n))
     alfar <- array(as.double(0), c(2 * n))
@@ -54,28 +55,24 @@ sb02od_b <- function(dico, uplo, jobl, sort, n, m, p, a, b, q, r, l, tol, ldwork
     beta <- array(as.double(0), c(2 * n))
     s <- array(as.double(0), c(2 * n + m, 2 * n + m))
     t <- array(as.double(0), c(2 * n + m, 2 * n))
+    u <- array(as.double(1), c(2 * n, 2 * n))
+    dwork <- array(as.double(1), c(ldwork))
     info <- as.integer(0)
-
-    # Hidden Parameters
-    jobb <- as.character("b")
-    fact <- as.character("b")
-    lda <- dim(a)[1]
-    ldb <- dim(b)[1]
-    ldq <- dim(q)[1]
-    ldr <- dim(r)[1]
-    ldl <- dim(l)[1]
-    ldx <- dim(x)[1]
+    bwork <- array(as.logical(1), c(2 * n))
+    iwork <- array(as.integer(1), c(max(2 * n, m)))
     lds <- dim(s)[1]
     ldt <- dim(t)[1]
-    u <- array(as.double(1), c(2 * n, 2 * n))
-    iwork <- array(as.integer(1), c(max(2 * n, m)))
-    dwork <- array(as.double(1), c(ldwork))
-    bwork <- array(as.logical(1), c(2 * n))
     ldu <- dim(u)[1]
+    ldx <- dim(x)[1]
+    lda <- dim(a)[1]
+    ldb <- dim(b)[1]
+    ldl <- dim(l)[1]
+    ldq <- dim(q)[1]
+    ldr <- dim(r)[1]
 
-    res <- .Fortran("SB02OD", DICO = dico, UPLO = uplo, JOBL = jobl, SORT = sort, N = n, M = m, P = p, A = a, B = b, Q = q, R = r, L = l, TOL = tol, LDWORK = ldwork, RCOND = rcond, X = x,
-        ALFAR = alfar, ALFAI = alfai, BETA = beta, S = s, T = t, INFO = info, JOBB = jobb, FACT = fact, LDA = lda, LDB = ldb, LDQ = ldq, LDR = ldr, LDL = ldl, LDX = ldx, LDS = lds, LDT = ldt,
-        U = u, IWORK = iwork, DWORK = dwork, BWORK = bwork, LDU = ldu)
+
+    res <- .Fortran("SB02OD", DICO = dico, JOBB = jobb, FACT = fact, UPLO = uplo, JOBL = jobl, SORT = sort, N = n, M = m, P = p, RCOND = rcond, X = x, ALFAR = alfar, ALFAI = alfai, BETA = beta, S = s, T = t, U = u, TOL = tol, DWORK = dwork,
+        LDWORK = ldwork, INFO = info, A = a, B = b, BWORK = bwork, IWORK = iwork, L = l, LDS = lds, LDT = ldt, LDU = ldu, LDX = ldx, Q = q, R = r, LDA = lda, LDB = ldb, LDL = ldl, LDQ = ldq, LDR = ldr)
 
     return(list(rcond = res$RCOND, x = res$X, alfar = res$ALFAR, alfai = res$ALFAI, beta = res$BETA, s = res$S, t = res$T, info = res$INFO))
 }

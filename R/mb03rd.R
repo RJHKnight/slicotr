@@ -14,7 +14,7 @@
 #' #'
 #' @references \url{http://slicot.org/objects/software/shared/doc/MB03RD.html}
 #' @export
-mb03rd <- function(jobx, sort, n, pmax, a, x, tol) {
+mb03rd <- function(jobx, sort, n, pmax, tol, a, x) {
 
     # In Parameters
     jobx <- as.character(jobx)
@@ -23,20 +23,17 @@ mb03rd <- function(jobx, sort, n, pmax, a, x, tol) {
     sort <- as.character(sort)
     tol <- as.double(tol)
 
-    # Out Parameters
+    lda <- dim(a)[1]
+    ldx <- dim(x)[1]
     nblcks <- as.integer(0)
     blsize <- array(as.integer(0), c(n))
     wr <- array(as.double(0), c(n))
     wi <- array(as.double(0), c(n))
+    dwork <- array(as.double(1), c(n))
     info <- as.integer(0)
 
-    # Hidden Parameters
-    lda <- dim(a)[1]
-    ldx <- dim(x)[1]
-    dwork <- array(as.double(1), c(n))
 
-    res <- .Fortran("MB03RD", JOBX = jobx, SORT = sort, N = n, PMAX = pmax, A = a, X = x, TOL = tol, NBLCKS = nblcks, BLSIZE = blsize, WR = wr, WI = wi, INFO = info, LDA = lda, LDX = ldx,
-        DWORK = dwork)
+    res <- .Fortran("MB03RD", JOBX = jobx, SORT = sort, N = n, PMAX = pmax, LDA = lda, LDX = ldx, NBLCKS = nblcks, BLSIZE = blsize, WR = wr, WI = wi, TOL = tol, DWORK = dwork, INFO = info, A = a, X = x)
 
-    return(list(a = res$A, x = res$X, nblcks = res$NBLCKS, blsize = res$BLSIZE, wr = res$WR, wi = res$WI, info = res$INFO))
+    return(list(nblcks = res$NBLCKS, blsize = res$BLSIZE, wr = res$WR, wi = res$WI, info = res$INFO, a = res$A, x = res$X))
 }

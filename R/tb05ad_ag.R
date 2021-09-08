@@ -23,25 +23,23 @@ tb05ad_ag <- function(n, m, p, a, b, c, ldwork, lzwork) {
     ldwork <- as.integer(ldwork)
     lzwork <- as.integer(lzwork)
 
-    # Out Parameters
-    rcond <- as.double(0)
-    evre <- array(as.double(0), c(n))
-    evim <- array(as.double(0), c(n))
-    info <- as.integer(0)
-
-    # Hidden Parameters
     baleig <- as.character("a")
     inita <- as.character("g")
+    rcond <- as.double(0)
+    iwork <- array(as.integer(1), c(n))
+    info <- as.integer(0)
+    evim <- array(as.double(0), c(n))
+    evre <- array(as.double(0), c(n))
+    ldg <- as.integer(p)
+    ldhinv <- as.integer(n)
+    dwork <- array(as.double(1), c(ldwork))
     lda <- dim(a)[1]
     ldb <- dim(b)[1]
     ldc <- dim(c)[1]
-    ldg <- as.integer(p)
-    ldhinv <- as.integer(n)
-    iwork <- array(as.integer(1), c(n))
-    dwork <- array(as.double(1), c(ldwork))
 
-    res <- .Fortran("TB05AD", N = n, M = m, P = p, A = a, B = b, C = c, LDWORK = ldwork, LZWORK = lzwork, RCOND = rcond, EVRE = evre, EVIM = evim, INFO = info, BALEIG = baleig, INITA = inita,
-        LDA = lda, LDB = ldb, LDC = ldc, LDG = ldg, LDHINV = ldhinv, IWORK = iwork, DWORK = dwork)
 
-    return(list(a = res$A, b = res$B, c = res$C, rcond = res$RCOND, evre = res$EVRE, evim = res$EVIM, info = res$INFO))
+    res <- .Fortran("TB05AD", BALEIG = baleig, INITA = inita, N = n, M = m, P = p, RCOND = rcond, IWORK = iwork, INFO = info, A = a, B = b, C = c, EVIM = evim, EVRE = evre, LDG = ldg, LDHINV = ldhinv, LDWORK = ldwork, LZWORK = lzwork,
+        DWORK = dwork, LDA = lda, LDB = ldb, LDC = ldc)
+
+    return(list(rcond = res$RCOND, info = res$INFO, a = res$A, b = res$B, c = res$C, evim = res$EVIM, evre = res$EVRE))
 }

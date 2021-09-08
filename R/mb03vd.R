@@ -16,25 +16,23 @@
 #' #'
 #' @references \url{http://slicot.org/objects/software/shared/doc/MB03VD.html}
 #' @export
-mb03vd <- function(n, ilo, ihi, a) {
+mb03vd <- function(n, a, ihi, ilo) {
 
     # In Parameters
     n <- as.integer(n)
     ihi <- as.integer(ihi)
     ilo <- as.integer(ilo)
 
-    # Out Parameters
-    tau <- array(as.double(0), c(max(1, n - 1), p))
     info <- as.integer(0)
-
-    # Hidden Parameters
-    p <- dim(a)[3]
+    dwork <- array(as.double(1), c(n))
     lda1 <- dim(a)[1]
     lda2 <- dim(a)[2]
+    p <- dim(a)[3]
+    tau <- array(as.double(0), c(max(1, n - 1), p))
     ldtau <- dim(tau)[1]
-    dwork <- array(as.double(1), c(n))
 
-    res <- .Fortran("MB03VD", N = n, ILO = ilo, IHI = ihi, A = a, TAU = tau, INFO = info, P = p, LDA1 = lda1, LDA2 = lda2, LDTAU = ldtau, DWORK = dwork)
 
-    return(list(a = res$A, tau = res$TAU, info = res$INFO))
+    res <- .Fortran("MB03VD", N = n, A = a, INFO = info, DWORK = dwork, IHI = ihi, ILO = ilo, LDA1 = lda1, LDA2 = lda2, P = p, TAU = tau, LDTAU = ldtau)
+
+    return(list(a = res$A, info = res$INFO, tau = res$TAU))
 }

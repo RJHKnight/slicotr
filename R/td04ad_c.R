@@ -11,7 +11,7 @@
 #' #'
 #' @references \url{http://slicot.org/objects/software/shared/doc/TD04AD.html}
 #' @export
-td04ad_c <- function(m, p, index_bn, dcoeff, ucoeff, nr, tol, ldwork) {
+td04ad_c <- function(m, p, nr, tol, ldwork, dcoeff, index_bn, ucoeff) {
 
     # In Parameters
     ldwork <- as.integer(ldwork)
@@ -20,27 +20,25 @@ td04ad_c <- function(m, p, index_bn, dcoeff, ucoeff, nr, tol, ldwork) {
     p <- as.integer(p)
     tol <- as.double(tol)
 
-    # Out Parameters
+    rowcol <- as.character("c")
+    iwork <- array(as.integer(1), c(nr + max(m, p)))
+    dwork <- array(as.double(1), c(ldwork))
+    info <- as.integer(0)
     a <- array(as.double(0), c(max(1, nr), max(1, nr)))
     b <- array(as.double(0), c(max(1, nr), max(m, p)))
     c <- array(as.double(0), c(max(1, max(m, p)), max(1, nr)))
     d <- array(as.double(0), c(max(1, max(m, p)), max(m, p)))
-    info <- as.integer(0)
-
-    # Hidden Parameters
-    rowcol <- as.character("c")
-    lddcoe <- dim(dcoeff)[1]
-    lduco1 <- dim(ucoeff)[1]
-    lduco2 <- dim(ucoeff)[2]
     lda <- dim(a)[1]
     ldb <- dim(b)[1]
     ldc <- dim(c)[1]
     ldd <- dim(d)[1]
-    iwork <- array(as.integer(1), c(nr + max(m, p)))
-    dwork <- array(as.double(1), c(ldwork))
+    lddcoe <- dim(dcoeff)[1]
+    lduco1 <- dim(ucoeff)[1]
+    lduco2 <- dim(ucoeff)[2]
 
-    res <- .Fortran("TD04AD", M = m, P = p, INDEX_BN = index_bn, DCOEFF = dcoeff, UCOEFF = ucoeff, NR = nr, TOL = tol, LDWORK = ldwork, A = a, B = b, C = c, D = d, INFO = info, ROWCOL = rowcol,
-        LDDCOE = lddcoe, LDUCO1 = lduco1, LDUCO2 = lduco2, LDA = lda, LDB = ldb, LDC = ldc, LDD = ldd, IWORK = iwork, DWORK = dwork)
 
-    return(list(nr = res$NR, a = res$A, b = res$B, c = res$C, d = res$D, info = res$INFO))
+    res <- .Fortran("TD04AD", ROWCOL = rowcol, M = m, P = p, NR = nr, TOL = tol, IWORK = iwork, DWORK = dwork, LDWORK = ldwork, INFO = info, A = a, B = b, C = c, D = d, DCOEFF = dcoeff, INDEX_BN = index_bn, UCOEFF = ucoeff, LDA = lda,
+        LDB = ldb, LDC = ldc, LDD = ldd, LDDCOE = lddcoe, LDUCO1 = lduco1, LDUCO2 = lduco2)
+
+    return(list(nr = res$NR, info = res$INFO, a = res$A, b = res$B, c = res$C, d = res$D))
 }

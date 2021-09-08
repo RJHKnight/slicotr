@@ -11,7 +11,7 @@
 #' #'
 #' @references \url{http://slicot.org/objects/software/shared/doc/TB04AD.html}
 #' @export
-tb04ad_r <- function(n, m, p, a, b, c, d, tol1, tol2, ldwork) {
+tb04ad_r <- function(n, m, p, tol1, tol2, ldwork, a, b, c, d) {
 
     # In Parameters
     ldwork <- as.integer(ldwork)
@@ -21,15 +21,14 @@ tb04ad_r <- function(n, m, p, a, b, c, d, tol1, tol2, ldwork) {
     tol1 <- as.double(tol1)
     tol2 <- as.double(tol2)
 
-    # Out Parameters
-    nr <- as.integer(0)
-    index_bn <- array(as.integer(0), c(p))
-    dcoeff <- array(as.double(0), c(max(1, p), n + 1))
-    ucoeff <- array(as.double(0), c(max(1, p), max(1, m), n + 1))
-    info <- as.integer(0)
-
-    # Hidden Parameters
     rowcol <- as.character("r")
+    nr <- as.integer(0)
+    iwork <- array(as.integer(1), c(n + max(m, p)))
+    dwork <- array(as.double(1), c(ldwork))
+    info <- as.integer(0)
+    dcoeff <- array(as.double(0), c(max(1, p), n + 1))
+    index_bn <- array(as.integer(0), c(p))
+    ucoeff <- array(as.double(0), c(max(1, p), max(1, m), n + 1))
     lda <- dim(a)[1]
     ldb <- dim(b)[1]
     ldc <- dim(c)[1]
@@ -37,11 +36,10 @@ tb04ad_r <- function(n, m, p, a, b, c, d, tol1, tol2, ldwork) {
     lddcoe <- dim(dcoeff)[1]
     lduco1 <- dim(ucoeff)[1]
     lduco2 <- dim(ucoeff)[2]
-    iwork <- array(as.integer(1), c(n + max(m, p)))
-    dwork <- array(as.double(1), c(ldwork))
 
-    res <- .Fortran("TB04AD", N = n, M = m, P = p, A = a, B = b, C = c, D = d, TOL1 = tol1, TOL2 = tol2, LDWORK = ldwork, NR = nr, INDEX_BN = index_bn, DCOEFF = dcoeff, UCOEFF = ucoeff,
-        INFO = info, ROWCOL = rowcol, LDA = lda, LDB = ldb, LDC = ldc, LDD = ldd, LDDCOE = lddcoe, LDUCO1 = lduco1, LDUCO2 = lduco2, IWORK = iwork, DWORK = dwork)
 
-    return(list(a = res$A, b = res$B, c = res$C, nr = res$NR, index_bn = res$INDEX_BN, dcoeff = res$DCOEFF, ucoeff = res$UCOEFF, info = res$INFO))
+    res <- .Fortran("TB04AD", ROWCOL = rowcol, N = n, M = m, P = p, NR = nr, TOL1 = tol1, TOL2 = tol2, IWORK = iwork, DWORK = dwork, LDWORK = ldwork, INFO = info, A = a, B = b, C = c, D = d, DCOEFF = dcoeff, INDEX_BN = index_bn, UCOEFF = ucoeff,
+        LDA = lda, LDB = ldb, LDC = ldc, LDD = ldd, LDDCOE = lddcoe, LDUCO1 = lduco1, LDUCO2 = lduco2)
+
+    return(list(nr = res$NR, info = res$INFO, a = res$A, b = res$B, c = res$C, dcoeff = res$DCOEFF, index_bn = res$INDEX_BN, ucoeff = res$UCOEFF))
 }

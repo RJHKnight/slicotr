@@ -34,16 +34,14 @@ tb01id <- function(job, n, m, p, maxred, a, b, c) {
     n <- as.integer(n)
     p <- as.integer(p)
 
-    # Out Parameters
-    scale <- array(as.double(0), c(n))
     info <- as.integer(0)
-
-    # Hidden Parameters
+    scale <- array(as.double(0), c(n))
     lda <- dim(a)[1]
     ldb <- dim(b)[1]
     ldc <- dim(c)[1]
 
-    res <- .Fortran("TB01ID", JOB = job, N = n, M = m, P = p, MAXRED = maxred, A = a, B = b, C = c, SCALE = scale, INFO = info, LDA = lda, LDB = ldb, LDC = ldc)
 
-    return(list(maxred = res$MAXRED, a = res$A, b = res$B, c = res$C, scale = res$SCALE, info = res$INFO))
+    res <- .Fortran("TB01ID", JOB = job, N = n, M = m, P = p, MAXRED = maxred, INFO = info, A = a, B = b, C = c, SCALE = scale, LDA = lda, LDB = ldb, LDC = ldc)
+
+    return(list(maxred = res$MAXRED, info = res$INFO, a = res$A, b = res$B, c = res$C, scale = res$SCALE))
 }

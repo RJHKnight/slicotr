@@ -13,7 +13,7 @@
 #' #'
 #' @references \url{http://slicot.org/objects/software/shared/doc/TB03AD.html}
 #' @export
-tb03ad_l <- function(equil, n, m, p, a, b, c, d, tol, ldwork) {
+tb03ad_l <- function(equil, n, m, p, tol, ldwork, a, b, c, d) {
 
     # In Parameters
     equil <- as.character(equil)
@@ -23,32 +23,29 @@ tb03ad_l <- function(equil, n, m, p, a, b, c, d, tol, ldwork) {
     p <- as.integer(p)
     tol <- as.double(tol)
 
-    # Out Parameters
+    leri <- as.character("l")
     nr <- as.integer(0)
     index_bn <- array(as.integer(0), c(p))
     pcoeff <- array(as.double(0), c(p, p, n + 1))
     qcoeff <- array(as.double(0), c(p, m, n + 1))
     vcoeff <- array(as.double(0), c(p, n, n + 1))
+    iwork <- array(as.integer(1), c(n + max(m, p)))
     info <- as.integer(0)
-
-    # Hidden Parameters
-    leri <- as.character("l")
-    lda <- dim(a)[1]
-    ldb <- dim(b)[1]
-    ldc <- dim(c)[1]
-    ldd <- dim(d)[1]
+    dwork <- array(as.double(1), c(ldwork))
     ldpco1 <- dim(pcoeff)[1]
     ldpco2 <- dim(pcoeff)[2]
     ldqco1 <- dim(qcoeff)[1]
     ldqco2 <- dim(qcoeff)[2]
     ldvco1 <- dim(vcoeff)[1]
     ldvco2 <- dim(vcoeff)[2]
-    iwork <- array(as.integer(1), c(n + max(m, p)))
-    dwork <- array(as.double(1), c(ldwork))
+    lda <- dim(a)[1]
+    ldb <- dim(b)[1]
+    ldc <- dim(c)[1]
+    ldd <- dim(d)[1]
 
-    res <- .Fortran("TB03AD", EQUIL = equil, N = n, M = m, P = p, A = a, B = b, C = c, D = d, TOL = tol, LDWORK = ldwork, NR = nr, INDEX_BN = index_bn, PCOEFF = pcoeff, QCOEFF = qcoeff,
-        VCOEFF = vcoeff, INFO = info, LERI = leri, LDA = lda, LDB = ldb, LDC = ldc, LDD = ldd, LDPCO1 = ldpco1, LDPCO2 = ldpco2, LDQCO1 = ldqco1, LDQCO2 = ldqco2, LDVCO1 = ldvco1, LDVCO2 = ldvco2,
-        IWORK = iwork, DWORK = dwork)
 
-    return(list(a = res$A, b = res$B, c = res$C, nr = res$NR, index_bn = res$INDEX_BN, pcoeff = res$PCOEFF, qcoeff = res$QCOEFF, vcoeff = res$VCOEFF, info = res$INFO))
+    res <- .Fortran("TB03AD", LERI = leri, EQUIL = equil, N = n, M = m, P = p, NR = nr, INDEX_BN = index_bn, PCOEFF = pcoeff, QCOEFF = qcoeff, VCOEFF = vcoeff, TOL = tol, IWORK = iwork, LDWORK = ldwork, INFO = info, A = a, B = b, C = c,
+        D = d, DWORK = dwork, LDPCO1 = ldpco1, LDPCO2 = ldpco2, LDQCO1 = ldqco1, LDQCO2 = ldqco2, LDVCO1 = ldvco1, LDVCO2 = ldvco2, LDA = lda, LDB = ldb, LDC = ldc, LDD = ldd)
+
+    return(list(nr = res$NR, index_bn = res$INDEX_BN, pcoeff = res$PCOEFF, qcoeff = res$QCOEFF, vcoeff = res$VCOEFF, info = res$INFO, a = res$A, b = res$B, c = res$C))
 }

@@ -26,7 +26,7 @@
 #' #'
 #' @references \url{http://slicot.org/objects/software/shared/doc/MB03WD.html}
 #' @export
-mb03wd <- function(job, compz, n, ilo, ihi, iloz, ihiz, h, z, ldwork) {
+mb03wd <- function(job, compz, n, h, ihi, ihiz, ilo, iloz, ldwork, z) {
 
     # In Parameters
     compz <- as.character(compz)
@@ -38,21 +38,19 @@ mb03wd <- function(job, compz, n, ilo, ihi, iloz, ihiz, h, z, ldwork) {
     iloz <- as.integer(iloz)
     ldwork <- as.integer(ldwork)
 
-    # Out Parameters
-    wr <- array(as.double(0), c(n))
-    wi <- array(as.double(0), c(n))
+    dwork <- array(as.double(1), c(ldwork))
     info <- as.integer(0)
-
-    # Hidden Parameters
-    p <- dim(h)[3]
     ldh1 <- dim(h)[1]
     ldh2 <- dim(h)[2]
+    p <- dim(h)[3]
+    wi <- array(as.double(0), c(n))
+    wr <- array(as.double(0), c(n))
     ldz1 <- dim(z)[1]
     ldz2 <- dim(z)[2]
-    dwork <- array(as.double(1), c(ldwork))
 
-    res <- .Fortran("MB03WD", JOB = job, COMPZ = compz, N = n, ILO = ilo, IHI = ihi, ILOZ = iloz, IHIZ = ihiz, H = h, Z = z, LDWORK = ldwork, WR = wr, WI = wi, INFO = info, P = p, LDH1 = ldh1,
-        LDH2 = ldh2, LDZ1 = ldz1, LDZ2 = ldz2, DWORK = dwork)
 
-    return(list(h = res$H, z = res$Z, wr = res$WR, wi = res$WI, info = res$INFO))
+    res <- .Fortran("MB03WD", JOB = job, COMPZ = compz, N = n, H = h, DWORK = dwork, INFO = info, IHI = ihi, IHIZ = ihiz, ILO = ilo, LDH1 = ldh1, LDH2 = ldh2, P = p, WI = wi, WR = wr, ILOZ = iloz, LDWORK = ldwork, Z = z, LDZ1 = ldz1,
+        LDZ2 = ldz2)
+
+    return(list(h = res$H, info = res$INFO, wi = res$WI, wr = res$WR, z = res$Z))
 }

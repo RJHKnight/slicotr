@@ -25,7 +25,7 @@
 #' #'
 #' @references \url{http://slicot.org/objects/software/shared/doc/SG03AD.html}
 #' @export
-sg03ad <- function(dico, job, fact, trans, uplo, n, a, e, q, z, x, ldwork) {
+sg03ad <- function(dico, job, fact, trans, uplo, n, a, e, ldwork, q, x, z) {
 
     # In Parameters
     dico <- as.character(dico)
@@ -36,26 +36,24 @@ sg03ad <- function(dico, job, fact, trans, uplo, n, a, e, q, z, x, ldwork) {
     uplo <- as.character(uplo)
     ldwork <- as.integer(ldwork)
 
-    # Out Parameters
     scale <- as.double(0)
     sep <- as.double(0)
     ferr <- as.double(0)
-    alphar <- array(as.double(0), c(n))
-    alphai <- array(as.double(0), c(n))
-    beta <- array(as.double(0), c(n))
+    dwork <- array(as.double(1), c(ldwork))
     info <- as.integer(0)
-
-    # Hidden Parameters
+    alphai <- array(as.double(0), c(n))
+    alphar <- array(as.double(0), c(n))
+    beta <- array(as.double(0), c(n))
+    iwork <- array(as.integer(1), c(n * n))
     lda <- dim(a)[1]
     lde <- dim(e)[1]
     ldq <- dim(q)[1]
-    ldz <- dim(z)[1]
     ldx <- dim(x)[1]
-    iwork <- array(as.integer(1), c(n * n))
-    dwork <- array(as.double(1), c(ldwork))
+    ldz <- dim(z)[1]
 
-    res <- .Fortran("SG03AD", DICO = dico, JOB = job, FACT = fact, TRANS = trans, UPLO = uplo, N = n, A = a, E = e, Q = q, Z = z, X = x, LDWORK = ldwork, SCALE = scale, SEP = sep, FERR = ferr,
-        ALPHAR = alphar, ALPHAI = alphai, BETA = beta, INFO = info, LDA = lda, LDE = lde, LDQ = ldq, LDZ = ldz, LDX = ldx, IWORK = iwork, DWORK = dwork)
 
-    return(list(a = res$A, e = res$E, q = res$Q, z = res$Z, x = res$X, scale = res$SCALE, sep = res$SEP, ferr = res$FERR, alphar = res$ALPHAR, alphai = res$ALPHAI, beta = res$BETA, info = res$INFO))
+    res <- .Fortran("SG03AD", DICO = dico, JOB = job, FACT = fact, TRANS = trans, UPLO = uplo, N = n, SCALE = scale, SEP = sep, FERR = ferr, DWORK = dwork, INFO = info, A = a, ALPHAI = alphai, ALPHAR = alphar, BETA = beta, E = e, IWORK = iwork,
+        LDWORK = ldwork, Q = q, X = x, Z = z, LDA = lda, LDE = lde, LDQ = ldq, LDX = ldx, LDZ = ldz)
+
+    return(list(scale = res$SCALE, sep = res$SEP, ferr = res$FERR, info = res$INFO, a = res$A, alphai = res$ALPHAI, alphar = res$ALPHAR, beta = res$BETA, e = res$E, q = res$Q, x = res$X, z = res$Z))
 }

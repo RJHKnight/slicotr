@@ -31,7 +31,7 @@
 #' #'
 #' @references \url{http://slicot.org/objects/software/shared/doc/SB03OD.html}
 #' @export
-sb03od <- function(dico, fact, trans, n, m, a, q, b, ldwork) {
+sb03od <- function(dico, fact, trans, n, m, a, b, ldwork, q) {
 
     # In Parameters
     dico <- as.character(dico)
@@ -41,20 +41,17 @@ sb03od <- function(dico, fact, trans, n, m, a, q, b, ldwork) {
     trans <- as.character(trans)
     ldwork <- as.integer(ldwork)
 
-    # Out Parameters
     scale <- as.double(0)
-    wr <- array(as.double(0), c(n))
-    wi <- array(as.double(0), c(n))
-    info <- as.integer(0)
-
-    # Hidden Parameters
-    lda <- dim(a)[1]
-    ldq <- dim(q)[1]
-    ldb <- dim(b)[1]
     dwork <- array(as.double(1), c(ldwork))
+    info <- as.integer(0)
+    wi <- array(as.double(0), c(n))
+    wr <- array(as.double(0), c(n))
+    lda <- dim(a)[1]
+    ldb <- dim(b)[1]
+    ldq <- dim(q)[1]
 
-    res <- .Fortran("SB03OD", DICO = dico, FACT = fact, TRANS = trans, N = n, M = m, A = a, Q = q, B = b, LDWORK = ldwork, SCALE = scale, WR = wr, WI = wi, INFO = info, LDA = lda, LDQ = ldq,
-        LDB = ldb, DWORK = dwork)
 
-    return(list(b = res$B, scale = res$SCALE, wr = res$WR, wi = res$WI, info = res$INFO))
+    res <- .Fortran("SB03OD", DICO = dico, FACT = fact, TRANS = trans, N = n, M = m, SCALE = scale, DWORK = dwork, INFO = info, A = a, B = b, LDWORK = ldwork, Q = q, WI = wi, WR = wr, LDA = lda, LDB = ldb, LDQ = ldq)
+
+    return(list(scale = res$SCALE, info = res$INFO, b = res$B, wi = res$WI, wr = res$WR))
 }

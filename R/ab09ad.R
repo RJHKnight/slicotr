@@ -11,7 +11,7 @@
 #' #'
 #' @references \url{http://slicot.org/objects/software/shared/doc/AB09AD.html}
 #' @export
-ab09ad <- function(dico, job, equil, ordsel, n, m, p, nr, a, b, c, tol, ldwork) {
+ab09ad <- function(dico, job, equil, ordsel, n, m, p, nr, tol, ldwork, a, b, c) {
 
     # In Parameters
     dico <- as.character(dico)
@@ -25,20 +25,18 @@ ab09ad <- function(dico, job, equil, ordsel, n, m, p, nr, a, b, c, tol, ldwork) 
     p <- as.integer(p)
     tol <- as.double(tol)
 
-    # Out Parameters
-    hsv <- array(as.double(0), c(n))
+    iwork <- array(as.integer(1), c(max(m, p)))
+    dwork <- array(as.double(1), c(ldwork))
     iwarn <- as.integer(0)
     info <- as.integer(0)
-
-    # Hidden Parameters
+    hsv <- array(as.double(0), c(n))
     lda <- dim(a)[1]
     ldb <- dim(b)[1]
     ldc <- dim(c)[1]
-    iwork <- array(as.integer(1), c(max(m, p)))
-    dwork <- array(as.double(1), c(ldwork))
 
-    res <- .Fortran("AB09AD", DICO = dico, JOB = job, EQUIL = equil, ORDSEL = ordsel, N = n, M = m, P = p, NR = nr, A = a, B = b, C = c, TOL = tol, LDWORK = ldwork, HSV = hsv, IWARN = iwarn,
-        INFO = info, LDA = lda, LDB = ldb, LDC = ldc, IWORK = iwork, DWORK = dwork)
 
-    return(list(nr = res$NR, a = res$A, b = res$B, c = res$C, hsv = res$HSV, iwarn = res$IWARN, info = res$INFO))
+    res <- .Fortran("AB09AD", DICO = dico, JOB = job, EQUIL = equil, ORDSEL = ordsel, N = n, M = m, P = p, NR = nr, TOL = tol, IWORK = iwork, DWORK = dwork, LDWORK = ldwork, IWARN = iwarn, INFO = info, A = a, B = b, C = c, HSV = hsv,
+        LDA = lda, LDB = ldb, LDC = ldc)
+
+    return(list(nr = res$NR, iwarn = res$IWARN, info = res$INFO, a = res$A, b = res$B, c = res$C, hsv = res$HSV))
 }

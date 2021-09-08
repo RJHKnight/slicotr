@@ -31,7 +31,7 @@
 #' #'
 #' @references \url{http://slicot.org/objects/software/shared/doc/SB10HD.html}
 #' @export
-sb10hd <- function(n, m, np, ncon, nmeas, a, b, c, d, tol, ldwork) {
+sb10hd <- function(n, m, np, ncon, tol, ldwork, a, b, c, d, nmeas) {
 
     # In Parameters
     ldwork <- as.integer(ldwork)
@@ -42,29 +42,27 @@ sb10hd <- function(n, m, np, ncon, nmeas, a, b, c, d, tol, ldwork) {
     tol <- as.double(tol)
     nmeas <- as.integer(nmeas)
 
-    # Out Parameters
-    ak <- array(as.double(0), c(n, n))
-    bk <- array(as.double(0), c(n, nmeas))
-    ck <- array(as.double(0), c(ncon, n))
-    dk <- array(as.double(0), c(ncon, nmeas))
     rcond <- array(as.double(0), c(4))
     info <- as.integer(0)
-
-    # Hidden Parameters
-    lda <- dim(a)[1]
-    ldb <- dim(b)[1]
-    ldc <- dim(c)[1]
-    ldd <- dim(d)[1]
-    ldak <- dim(ak)[1]
-    ldbk <- dim(bk)[1]
-    ldck <- dim(ck)[1]
-    lddk <- dim(dk)[1]
-    iwork <- array(as.integer(1), c(max(2 * n, n * n)))
-    dwork <- array(as.double(1), c(ldwork))
+    ak <- array(as.double(0), c(n, n))
+    bk <- array(as.double(0), c(n, nmeas))
     bwork <- array(as.logical(1), c(2 * n))
+    ck <- array(as.double(0), c(ncon, n))
+    dk <- array(as.double(0), c(ncon, nmeas))
+    dwork <- array(as.double(1), c(ldwork))
+    iwork <- array(as.integer(1), c(max(2 * n, n * n)))
+    lda <- dim(a)[1]
+    ldak <- dim(ak)[1]
+    ldb <- dim(b)[1]
+    ldbk <- dim(bk)[1]
+    ldc <- dim(c)[1]
+    ldck <- dim(ck)[1]
+    ldd <- dim(d)[1]
+    lddk <- dim(dk)[1]
 
-    res <- .Fortran("SB10HD", N = n, M = m, NP = np, NCON = ncon, NMEAS = nmeas, A = a, B = b, C = c, D = d, TOL = tol, LDWORK = ldwork, AK = ak, BK = bk, CK = ck, DK = dk, RCOND = rcond,
-        INFO = info, LDA = lda, LDB = ldb, LDC = ldc, LDD = ldd, LDAK = ldak, LDBK = ldbk, LDCK = ldck, LDDK = lddk, IWORK = iwork, DWORK = dwork, BWORK = bwork)
 
-    return(list(ak = res$AK, bk = res$BK, ck = res$CK, dk = res$DK, rcond = res$RCOND, info = res$INFO))
+    res <- .Fortran("SB10HD", N = n, M = m, NP = np, NCON = ncon, RCOND = rcond, TOL = tol, LDWORK = ldwork, INFO = info, A = a, AK = ak, B = b, BK = bk, BWORK = bwork, C = c, CK = ck, D = d, DK = dk, DWORK = dwork, IWORK = iwork, NMEAS = nmeas,
+        LDA = lda, LDAK = ldak, LDB = ldb, LDBK = ldbk, LDC = ldc, LDCK = ldck, LDD = ldd, LDDK = lddk)
+
+    return(list(rcond = res$RCOND, info = res$INFO, ak = res$AK, bk = res$BK, ck = res$CK, dk = res$DK))
 }

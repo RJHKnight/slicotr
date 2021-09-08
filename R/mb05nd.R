@@ -14,25 +14,25 @@
 #' #'
 #' @references \url{http://slicot.org/objects/software/shared/doc/MB05ND.html}
 #' @export
-mb05nd <- function(n, delta, a, tol) {
+mb05nd <- function(n, delta, tol, a) {
 
     # In Parameters
     delta <- as.double(delta)
     n <- as.integer(n)
     tol <- as.double(tol)
 
-    # Out Parameters
-    info <- as.integer(0)
 
-    # Hidden Parameters
-    lda <- dim(a)[1]
+
+    info <- as.integer(0)
+    dwork <- array(as.double(1), c(max(2 * n * n, 1)))
+    iwork <- array(as.integer(1), c(n))
     ldex <- dim(ex)[1]
     ldexin <- dim(exint)[1]
-    iwork <- array(as.integer(1), c(n))
-    dwork <- array(as.double(1), c(max(2 * n * n, 1)))
+    lda <- dim(a)[1]
     ldwork <- dim(dwork)[1]
 
-    res <- .Fortran("MB05ND", N = n, DELTA = delta, A = a, TOL = tol, INFO = info, LDA = lda, LDEX = ldex, LDEXIN = ldexin, IWORK = iwork, DWORK = dwork, LDWORK = ldwork)
 
-    return(list(info = res$INFO))
+    res <- .Fortran("MB05ND", N = n, DELTA = delta, EX = ex, EXINT = exint, TOL = tol, INFO = info, A = a, DWORK = dwork, IWORK = iwork, LDEX = ldex, LDEXIN = ldexin, LDA = lda, LDWORK = ldwork)
+
+    return(list(ex = res$EX, exint = res$EXINT, info = res$INFO))
 }
