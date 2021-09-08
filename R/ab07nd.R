@@ -8,7 +8,7 @@
 #' #'
 #' @references \url{http://slicot.org/objects/software/shared/doc/AB07ND.html}
 #' @export
-ab07nd <- function(n, m, ldwork, a, b, c, d) {
+ab07nd <- function(n, m, a, b, c, d, ldwork) {
 
     # In Parameters
     ldwork <- as.integer(ldwork)
@@ -25,7 +25,7 @@ ab07nd <- function(n, m, ldwork, a, b, c, d) {
     ldd <- dim(d)[1]
 
 
-    res <- .Fortran("AB07ND", N = n, M = m, RCOND = rcond, IWORK = iwork, LDWORK = ldwork, INFO = info, A = a, B = b, C = c, D = d, DWORK = dwork, LDA = lda, LDB = ldb, LDC = ldc, LDD = ldd)
+    res <- .Fortran("AB07ND", N = n, M = m, A = a, LDA = lda, B = b, LDB = ldb, C = c, LDC = ldc, D = d, LDD = ldd, RCOND = rcond, IWORK = iwork, DWORK = dwork, LDWORK = ldwork, INFO = info)
 
     return(list(rcond = res$RCOND, info = res$INFO, a = res$A, b = res$B, c = res$C, d = res$D))
 }

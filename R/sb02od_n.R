@@ -33,7 +33,7 @@
 #' #'
 #' @references \url{http://slicot.org/objects/software/shared/doc/SB02OD.html}
 #' @export
-sb02od_n <- function(dico, uplo, jobl, sort, n, m, tol, ldwork, a, b, l, q, r) {
+sb02od_n <- function(dico, uplo, jobl, sort, n, m, a, b, q, r, l, tol, ldwork) {
 
     # In Parameters
     dico <- as.character(dico)
@@ -71,8 +71,8 @@ sb02od_n <- function(dico, uplo, jobl, sort, n, m, tol, ldwork, a, b, l, q, r) {
     ldr <- dim(r)[1]
 
 
-    res <- .Fortran("SB02OD", DICO = dico, JOBB = jobb, FACT = fact, UPLO = uplo, JOBL = jobl, SORT = sort, N = n, M = m, P = p, RCOND = rcond, X = x, ALFAR = alfar, ALFAI = alfai, BETA = beta, S = s, T = t, U = u, TOL = tol, DWORK = dwork,
-        LDWORK = ldwork, INFO = info, A = a, B = b, BWORK = bwork, IWORK = iwork, L = l, LDS = lds, LDT = ldt, LDU = ldu, LDX = ldx, Q = q, R = r, LDA = lda, LDB = ldb, LDL = ldl, LDQ = ldq, LDR = ldr)
+    res <- .Fortran("SB02OD", DICO = dico, JOBB = jobb, FACT = fact, UPLO = uplo, JOBL = jobl, SORT = sort, N = n, M = m, P = p, A = a, LDA = lda, B = b, LDB = ldb, Q = q, LDQ = ldq, R = r, LDR = ldr, L = l, LDL = ldl, RCOND = rcond,
+        X = x, LDX = ldx, ALFAR = alfar, ALFAI = alfai, BETA = beta, S = s, LDS = lds, T = t, LDT = ldt, U = u, LDU = ldu, TOL = tol, IWORK = iwork, DWORK = dwork, LDWORK = ldwork, BWORK = bwork, INFO = info)
 
     return(list(rcond = res$RCOND, x = res$X, alfar = res$ALFAR, alfai = res$ALFAI, beta = res$BETA, s = res$S, t = res$T, info = res$INFO))
 }

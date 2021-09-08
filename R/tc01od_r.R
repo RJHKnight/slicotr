@@ -26,7 +26,7 @@ tc01od_r <- function(m, p, indlim, pcoeff, qcoeff) {
     ldqco2 <- dim(qcoeff)[2]
 
 
-    res <- .Fortran("TC01OD", LERI = leri, M = m, P = p, INDLIM = indlim, INFO = info, PCOEFF = pcoeff, QCOEFF = qcoeff, LDPCO1 = ldpco1, LDPCO2 = ldpco2, LDQCO1 = ldqco1, LDQCO2 = ldqco2)
+    res <- .Fortran("TC01OD", LERI = leri, M = m, P = p, INDLIM = indlim, PCOEFF = pcoeff, LDPCO1 = ldpco1, LDPCO2 = ldpco2, QCOEFF = qcoeff, LDQCO1 = ldqco1, LDQCO2 = ldqco2, INFO = info)
 
     return(list(info = res$INFO))
 }

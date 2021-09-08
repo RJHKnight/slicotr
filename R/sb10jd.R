@@ -34,7 +34,7 @@ sb10jd <- function(n, m, np, a, b, c, d, e, ldwork) {
     lde <- max(dim(e)[1], 1)
 
 
-    res <- .Fortran("SB10JD", N = n, M = m, NP = np, A = a, B = b, C = c, D = d, E = e, NSYS = nsys, LDWORK = ldwork, INFO = info, DWORK = dwork, LDA = lda, LDB = ldb, LDC = ldc, LDD = ldd, LDE = lde)
+    res <- .Fortran("SB10JD", N = n, M = m, NP = np, A = a, LDA = lda, B = b, LDB = ldb, C = c, LDC = ldc, D = d, LDD = ldd, E = e, LDE = lde, NSYS = nsys, DWORK = dwork, LDWORK = ldwork, INFO = info)
 
     return(list(a = res$A, b = res$B, c = res$C, d = res$D, nsys = res$NSYS, info = res$INFO))
 }

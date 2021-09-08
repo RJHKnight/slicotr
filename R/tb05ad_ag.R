@@ -38,8 +38,8 @@ tb05ad_ag <- function(n, m, p, a, b, c, ldwork, lzwork) {
     ldc <- dim(c)[1]
 
 
-    res <- .Fortran("TB05AD", BALEIG = baleig, INITA = inita, N = n, M = m, P = p, RCOND = rcond, IWORK = iwork, INFO = info, A = a, B = b, C = c, EVIM = evim, EVRE = evre, LDG = ldg, LDHINV = ldhinv, LDWORK = ldwork, LZWORK = lzwork,
-        DWORK = dwork, LDA = lda, LDB = ldb, LDC = ldc)
+    res <- .Fortran("TB05AD", BALEIG = baleig, INITA = inita, N = n, M = m, P = p, A = a, LDA = lda, B = b, LDB = ldb, C = c, LDC = ldc, RCOND = rcond, LDG = ldg, EVRE = evre, EVIM = evim, LDHINV = ldhinv, IWORK = iwork, DWORK = dwork,
+        LDWORK = ldwork, LZWORK = lzwork, INFO = info)
 
     return(list(rcond = res$RCOND, info = res$INFO, a = res$A, b = res$B, c = res$C, evim = res$EVIM, evre = res$EVRE))
 }

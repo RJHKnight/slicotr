@@ -43,7 +43,7 @@
 #' #'
 #' @references \url{http://slicot.org/objects/software/shared/doc/SG03BD.html}
 #' @export
-sg03bd <- function(dico, fact, trans, n, m, a, b, e, ldwork, q, z) {
+sg03bd <- function(dico, fact, trans, n, m, a, e, q, z, b, ldwork) {
 
     # In Parameters
     dico <- as.character(dico)
@@ -66,8 +66,8 @@ sg03bd <- function(dico, fact, trans, n, m, a, b, e, ldwork, q, z) {
     ldz <- dim(z)[1]
 
 
-    res <- .Fortran("SG03BD", DICO = dico, FACT = fact, TRANS = trans, N = n, M = m, SCALE = scale, DWORK = dwork, INFO = info, A = a, ALPHAI = alphai, ALPHAR = alphar, B = b, BETA = beta, E = e, LDWORK = ldwork, Q = q, Z = z, LDA = lda,
-        LDB = ldb, LDE = lde, LDQ = ldq, LDZ = ldz)
+    res <- .Fortran("SG03BD", DICO = dico, FACT = fact, TRANS = trans, N = n, M = m, A = a, LDA = lda, E = e, LDE = lde, Q = q, LDQ = ldq, Z = z, LDZ = ldz, B = b, LDB = ldb, SCALE = scale, ALPHAR = alphar, ALPHAI = alphai, BETA = beta,
+        DWORK = dwork, LDWORK = ldwork, INFO = info)
 
     return(list(scale = res$SCALE, info = res$INFO, alphai = res$ALPHAI, alphar = res$ALPHAR, b = res$B, beta = res$BETA))
 }

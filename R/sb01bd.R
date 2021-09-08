@@ -10,7 +10,7 @@
 #' #'
 #' @references \url{http://slicot.org/objects/software/shared/doc/SB01BD.html}
 #' @export
-sb01bd <- function(dico, n, m, alpha, tol, ldwork, a, b, np, wi, wr) {
+sb01bd <- function(dico, n, m, np, alpha, a, b, wr, wi, tol, ldwork) {
 
     # In Parameters
     alpha <- as.double(alpha)
@@ -35,8 +35,8 @@ sb01bd <- function(dico, n, m, alpha, tol, ldwork, a, b, np, wi, wr) {
     ldb <- dim(b)[1]
 
 
-    res <- .Fortran("SB01BD", DICO = dico, N = n, M = m, ALPHA = alpha, NFP = nfp, NAP = nap, NUP = nup, F = f, Z = z, TOL = tol, LDWORK = ldwork, IWARN = iwarn, INFO = info, A = a, B = b, DWORK = dwork, LDF = ldf, LDZ = ldz, NP = np,
-        LDA = lda, LDB = ldb, WI = wi, WR = wr)
+    res <- .Fortran("SB01BD", DICO = dico, N = n, M = m, NP = np, ALPHA = alpha, A = a, LDA = lda, B = b, LDB = ldb, WR = wr, WI = wi, NFP = nfp, NAP = nap, NUP = nup, F = f, LDF = ldf, Z = z, LDZ = ldz, TOL = tol, DWORK = dwork, LDWORK = ldwork,
+        IWARN = iwarn, INFO = info)
 
     return(list(nfp = res$NFP, nap = res$NAP, nup = res$NUP, f = res$F, z = res$Z, iwarn = res$IWARN, info = res$INFO, a = res$A, wi = res$WI, wr = res$WR))
 }

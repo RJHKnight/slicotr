@@ -31,7 +31,7 @@
 #' #'
 #' @references \url{http://slicot.org/objects/software/shared/doc/SB03OD.html}
 #' @export
-sb03od <- function(dico, fact, trans, n, m, a, b, ldwork, q) {
+sb03od <- function(dico, fact, trans, n, m, a, q, b, ldwork) {
 
     # In Parameters
     dico <- as.character(dico)
@@ -51,7 +51,7 @@ sb03od <- function(dico, fact, trans, n, m, a, b, ldwork, q) {
     ldq <- dim(q)[1]
 
 
-    res <- .Fortran("SB03OD", DICO = dico, FACT = fact, TRANS = trans, N = n, M = m, SCALE = scale, DWORK = dwork, INFO = info, A = a, B = b, LDWORK = ldwork, Q = q, WI = wi, WR = wr, LDA = lda, LDB = ldb, LDQ = ldq)
+    res <- .Fortran("SB03OD", DICO = dico, FACT = fact, TRANS = trans, N = n, M = m, A = a, LDA = lda, Q = q, LDQ = ldq, B = b, LDB = ldb, SCALE = scale, WR = wr, WI = wi, DWORK = dwork, LDWORK = ldwork, INFO = info)
 
     return(list(scale = res$SCALE, info = res$INFO, b = res$B, wi = res$WI, wr = res$WR))
 }

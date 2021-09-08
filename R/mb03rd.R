@@ -14,7 +14,7 @@
 #' #'
 #' @references \url{http://slicot.org/objects/software/shared/doc/MB03RD.html}
 #' @export
-mb03rd <- function(jobx, sort, n, pmax, tol, a, x) {
+mb03rd <- function(jobx, sort, n, pmax, a, x, tol) {
 
     # In Parameters
     jobx <- as.character(jobx)
@@ -33,7 +33,7 @@ mb03rd <- function(jobx, sort, n, pmax, tol, a, x) {
     info <- as.integer(0)
 
 
-    res <- .Fortran("MB03RD", JOBX = jobx, SORT = sort, N = n, PMAX = pmax, LDA = lda, LDX = ldx, NBLCKS = nblcks, BLSIZE = blsize, WR = wr, WI = wi, TOL = tol, DWORK = dwork, INFO = info, A = a, X = x)
+    res <- .Fortran("MB03RD", JOBX = jobx, SORT = sort, N = n, PMAX = pmax, A = a, LDA = lda, X = x, LDX = ldx, NBLCKS = nblcks, BLSIZE = blsize, WR = wr, WI = wi, TOL = tol, DWORK = dwork, INFO = info)
 
     return(list(nblcks = res$NBLCKS, blsize = res$BLSIZE, wr = res$WR, wi = res$WI, info = res$INFO, a = res$A, x = res$X))
 }

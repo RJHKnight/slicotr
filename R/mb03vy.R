@@ -12,7 +12,7 @@
 #' #'
 #' @references \url{http://slicot.org/objects/software/shared/doc/MB03VY.html}
 #' @export
-mb03vy <- function(n, a, ldwork, ihi, ilo, tau) {
+mb03vy <- function(n, ilo, ihi, a, tau, ldwork) {
 
     # In Parameters
     ldwork <- as.integer(ldwork)
@@ -28,7 +28,7 @@ mb03vy <- function(n, a, ldwork, ihi, ilo, tau) {
     ldtau <- dim(tau)[1]
 
 
-    res <- .Fortran("MB03VY", N = n, A = a, LDWORK = ldwork, INFO = info, DWORK = dwork, IHI = ihi, ILO = ilo, LDA1 = lda1, LDA2 = lda2, P = p, TAU = tau, LDTAU = ldtau)
+    res <- .Fortran("MB03VY", N = n, P = p, ILO = ilo, IHI = ihi, A = a, LDA1 = lda1, LDA2 = lda2, TAU = tau, LDTAU = ldtau, DWORK = dwork, LDWORK = ldwork, INFO = info)
 
     return(list(a = res$A, info = res$INFO))
 }

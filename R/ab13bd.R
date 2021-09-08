@@ -12,7 +12,7 @@
 #' #'
 #' @references \url{http://slicot.org/objects/software/shared/doc/AB13BD.html}
 #' @export
-ab13bd <- function(dico, jobn, n, m, p, tol, a, b, c, d) {
+ab13bd <- function(dico, jobn, n, m, p, a, b, c, d, tol) {
 
     # In Parameters
     dico <- as.character(dico)
@@ -34,8 +34,7 @@ ab13bd <- function(dico, jobn, n, m, p, tol, a, b, c, d) {
     ldd <- dim(d)[1]
 
 
-    res <- .Fortran("AB13BD", DICO = dico, JOBN = jobn, N = n, M = m, P = p, NQ = nq, TOL = tol, IWARN = iwarn, INFO = info, AB13BD = ab13bd, A = a, B = b, C = c, D = d, LDWORK = ldwork, DWORK = dwork, LDA = lda, LDB = ldb, LDC = ldc,
-        LDD = ldd)
+    res <- .Fortran("AB13BD", DICO = dico, JOBN = jobn, N = n, M = m, P = p, A = a, LDA = lda, B = b, LDB = ldb, C = c, LDC = ldc, D = d, LDD = ldd, NQ = nq, TOL = tol, DWORK = dwork, LDWORK = ldwork, IWARN = iwarn, INFO = info, AB13BD = ab13bd)
 
     return(list(nq = res$NQ, iwarn = res$IWARN, info = res$INFO, ab13bd = res$AB13BD))
 }

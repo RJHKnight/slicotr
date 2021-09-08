@@ -11,7 +11,7 @@
 #' #'
 #' @references \url{http://slicot.org/objects/software/shared/doc/AB09AD.html}
 #' @export
-ab09ad <- function(dico, job, equil, ordsel, n, m, p, nr, tol, ldwork, a, b, c) {
+ab09ad <- function(dico, job, equil, ordsel, n, m, p, nr, a, b, c, tol, ldwork) {
 
     # In Parameters
     dico <- as.character(dico)
@@ -35,8 +35,8 @@ ab09ad <- function(dico, job, equil, ordsel, n, m, p, nr, tol, ldwork, a, b, c) 
     ldc <- dim(c)[1]
 
 
-    res <- .Fortran("AB09AD", DICO = dico, JOB = job, EQUIL = equil, ORDSEL = ordsel, N = n, M = m, P = p, NR = nr, TOL = tol, IWORK = iwork, DWORK = dwork, LDWORK = ldwork, IWARN = iwarn, INFO = info, A = a, B = b, C = c, HSV = hsv,
-        LDA = lda, LDB = ldb, LDC = ldc)
+    res <- .Fortran("AB09AD", DICO = dico, JOB = job, EQUIL = equil, ORDSEL = ordsel, N = n, M = m, P = p, NR = nr, A = a, LDA = lda, B = b, LDB = ldb, C = c, LDC = ldc, HSV = hsv, TOL = tol, IWORK = iwork, DWORK = dwork, LDWORK = ldwork,
+        IWARN = iwarn, INFO = info)
 
     return(list(nr = res$NR, iwarn = res$IWARN, info = res$INFO, a = res$A, b = res$B, c = res$C, hsv = res$HSV))
 }

@@ -44,8 +44,8 @@ ab08nd <- function(equil, n, m, p, a, b, c, d, tol, ldwork) {
     ldbf <- dim(bf)[1]
 
 
-    res <- .Fortran("AB08ND", EQUIL = equil, N = n, M = m, P = p, A = a, LDA = lda, B = b, LDB = ldb, C = c, LDC = ldc, D = d, LDD = ldd, NU = nu, RANK_BN = rank_bn, DINFZ = dinfz, NKROR = nkror, NKROL = nkrol, AF = af, BF = bf, TOL = tol,
-        IWORK = iwork, DWORK = dwork, LDWORK = ldwork, INFO = info, INFZ = infz, KRONL = kronl, KRONR = kronr, LDAF = ldaf, LDBF = ldbf)
+    res <- .Fortran("AB08ND", EQUIL = equil, N = n, M = m, P = p, A = a, LDA = lda, B = b, LDB = ldb, C = c, LDC = ldc, D = d, LDD = ldd, NU = nu, RANK_BN = rank_bn, DINFZ = dinfz, NKROR = nkror, NKROL = nkrol, INFZ = infz, KRONR = kronr,
+        KRONL = kronl, AF = af, LDAF = ldaf, BF = bf, LDBF = ldbf, TOL = tol, IWORK = iwork, DWORK = dwork, LDWORK = ldwork, INFO = info)
 
     return(list(nu = res$NU, rank_bn = res$RANK_BN, dinfz = res$DINFZ, nkror = res$NKROR, nkrol = res$NKROL, af = res$AF, bf = res$BF, info = res$INFO, infz = res$INFZ, kronl = res$KRONL, kronr = res$KRONR))
 }

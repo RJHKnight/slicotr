@@ -12,7 +12,7 @@
 #' #'
 #' @references \url{http://slicot.org/objects/software/shared/doc/TC04AD.html}
 #' @export
-tc04ad_r <- function(m, p, index_bn, n, ldwork, pcoeff, qcoeff) {
+tc04ad_r <- function(m, p, index_bn, pcoeff, qcoeff, n, ldwork) {
 
     # In Parameters
     m <- as.integer(m)
@@ -39,8 +39,8 @@ tc04ad_r <- function(m, p, index_bn, n, ldwork, pcoeff, qcoeff) {
     ldqco2 <- dim(qcoeff)[2]
 
 
-    res <- .Fortran("TC04AD", LERI = leri, M = m, P = p, INDEX_BN = index_bn, N = n, RCOND = rcond, INFO = info, A = a, B = b, C = c, D = d, IWORK = iwork, LDWORK = ldwork, PCOEFF = pcoeff, QCOEFF = qcoeff, DWORK = dwork, LDA = lda,
-        LDB = ldb, LDC = ldc, LDD = ldd, LDPCO1 = ldpco1, LDPCO2 = ldpco2, LDQCO1 = ldqco1, LDQCO2 = ldqco2)
+    res <- .Fortran("TC04AD", LERI = leri, M = m, P = p, INDEX_BN = index_bn, PCOEFF = pcoeff, LDPCO1 = ldpco1, LDPCO2 = ldpco2, QCOEFF = qcoeff, LDQCO1 = ldqco1, LDQCO2 = ldqco2, N = n, RCOND = rcond, A = a, LDA = lda, B = b, LDB = ldb,
+        C = c, LDC = ldc, D = d, LDD = ldd, IWORK = iwork, DWORK = dwork, LDWORK = ldwork, INFO = info)
 
     return(list(n = res$N, rcond = res$RCOND, info = res$INFO, a = res$A, b = res$B, c = res$C, d = res$D))
 }

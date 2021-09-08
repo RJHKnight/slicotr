@@ -44,7 +44,7 @@
 #' #'
 #' @references \url{http://slicot.org/objects/software/shared/doc/SG02AD.html}
 #' @export
-sg02ad_bn <- function(dico, uplo, jobl, scal, sort, acc, n, m, tol, a, b, e, l, ldwork, q, r) {
+sg02ad_bn <- function(dico, uplo, jobl, scal, sort, acc, n, m, a, e, b, q, r, l, tol, ldwork) {
 
     # In Parameters
     acc <- as.character(acc)
@@ -86,9 +86,9 @@ sg02ad_bn <- function(dico, uplo, jobl, scal, sort, acc, n, m, tol, a, b, e, l, 
     ldx <- dim(x)[1]
 
 
-    res <- .Fortran("SG02AD", DICO = dico, JOBB = jobb, FACT = fact, UPLO = uplo, JOBL = jobl, SCAL = scal, SORT = sort, ACC = acc, N = n, M = m, P = p, RCONDU = rcondu, TOL = tol, DWORK = dwork, IWARN = iwarn, INFO = info, A = a, ALFAI = alfai,
-        ALFAR = alfar, B = b, BETA = beta, BWORK = bwork, E = e, IWORK = iwork, L = l, LDWORK = ldwork, Q = q, R = r, S = s, T = t, U = u, X = x, LDA = lda, LDB = ldb, LDE = lde, LDL = ldl, LDQ = ldq, LDR = ldr, LDS = lds, LDT = ldt,
-        LDU = ldu, LDX = ldx)
+    res <- .Fortran("SG02AD", DICO = dico, JOBB = jobb, FACT = fact, UPLO = uplo, JOBL = jobl, SCAL = scal, SORT = sort, ACC = acc, N = n, M = m, P = p, A = a, LDA = lda, E = e, LDE = lde, B = b, LDB = ldb, Q = q, LDQ = ldq, R = r, LDR = ldr,
+        L = l, LDL = ldl, RCONDU = rcondu, X = x, LDX = ldx, ALFAR = alfar, ALFAI = alfai, BETA = beta, S = s, LDS = lds, T = t, LDT = ldt, U = u, LDU = ldu, TOL = tol, IWORK = iwork, DWORK = dwork, LDWORK = ldwork, BWORK = bwork, IWARN = iwarn,
+        INFO = info)
 
     return(list(rcondu = res$RCONDU, iwarn = res$IWARN, info = res$INFO, alfai = res$ALFAI, alfar = res$ALFAR, beta = res$BETA, s = res$S, t = res$T, u = res$U, x = res$X))
 }

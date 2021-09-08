@@ -9,7 +9,7 @@
 #' #'
 #' @references \url{http://slicot.org/objects/software/shared/doc/AB05ND.html}
 #' @export
-ab05nd <- function(n1, m1, p1, n2, alpha, ldwork, a1, a2, b1, b2, c1, c2, d1, d2) {
+ab05nd <- function(n1, m1, p1, n2, alpha, a1, b1, c1, d1, a2, b2, c2, d2, ldwork) {
 
     # In Parameters
     alpha <- as.double(alpha)
@@ -42,8 +42,8 @@ ab05nd <- function(n1, m1, p1, n2, alpha, ldwork, a1, a2, b1, b2, c1, c2, d1, d2
     ldd2 <- dim(d2)[1]
 
 
-    res <- .Fortran("AB05ND", OVER = over, N1 = n1, M1 = m1, P1 = p1, N2 = n2, ALPHA = alpha, N = n, LDWORK = ldwork, INFO = info, A = a, A1 = a1, A2 = a2, B = b, B1 = b1, B2 = b2, C = c, C1 = c1, C2 = c2, D = d, D1 = d1, D2 = d2, DWORK = dwork,
-        IWORK = iwork, LDA = lda, LDA1 = lda1, LDA2 = lda2, LDB = ldb, LDB1 = ldb1, LDB2 = ldb2, LDC = ldc, LDC1 = ldc1, LDC2 = ldc2, LDD = ldd, LDD1 = ldd1, LDD2 = ldd2)
+    res <- .Fortran("AB05ND", OVER = over, N1 = n1, M1 = m1, P1 = p1, N2 = n2, ALPHA = alpha, A1 = a1, LDA1 = lda1, B1 = b1, LDB1 = ldb1, C1 = c1, LDC1 = ldc1, D1 = d1, LDD1 = ldd1, A2 = a2, LDA2 = lda2, B2 = b2, LDB2 = ldb2, C2 = c2,
+        LDC2 = ldc2, D2 = d2, LDD2 = ldd2, N = n, A = a, LDA = lda, B = b, LDB = ldb, C = c, LDC = ldc, D = d, LDD = ldd, IWORK = iwork, DWORK = dwork, LDWORK = ldwork, INFO = info)
 
     return(list(n = res$N, info = res$INFO, a = res$A, b = res$B, c = res$C, d = res$D))
 }

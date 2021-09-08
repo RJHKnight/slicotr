@@ -27,7 +27,7 @@ mc01td <- function(dico, dp, p) {
     dwork <- array(as.double(1), c(2 * dp + 2))
 
 
-    res <- .Fortran("MC01TD", DICO = dico, DP = dp, STABLE = stable, NZ = nz, IWARN = iwarn, INFO = info, DWORK = dwork, P = p)
+    res <- .Fortran("MC01TD", DICO = dico, DP = dp, P = p, STABLE = stable, NZ = nz, DWORK = dwork, IWARN = iwarn, INFO = info)
 
     return(list(dp = res$DP, stable = res$STABLE, nz = res$NZ, iwarn = res$IWARN, info = res$INFO))
 }

@@ -11,7 +11,7 @@
 #' #'
 #' @references \url{http://slicot.org/objects/software/shared/doc/TB01PD.html}
 #' @export
-tb01pd <- function(job, equil, n, m, p, tol, a, b, c, ldwork) {
+tb01pd <- function(job, equil, n, m, p, a, b, c, tol, ldwork) {
 
     # In Parameters
     equil <- as.character(equil)
@@ -31,7 +31,7 @@ tb01pd <- function(job, equil, n, m, p, tol, a, b, c, ldwork) {
     ldc <- dim(c)[1]
 
 
-    res <- .Fortran("TB01PD", JOB = job, EQUIL = equil, N = n, M = m, P = p, NR = nr, TOL = tol, INFO = info, A = a, B = b, C = c, IWORK = iwork, LDWORK = ldwork, DWORK = dwork, LDA = lda, LDB = ldb, LDC = ldc)
+    res <- .Fortran("TB01PD", JOB = job, EQUIL = equil, N = n, M = m, P = p, A = a, LDA = lda, B = b, LDB = ldb, C = c, LDC = ldc, NR = nr, TOL = tol, IWORK = iwork, DWORK = dwork, LDWORK = ldwork, INFO = info)
 
     return(list(nr = res$NR, info = res$INFO, a = res$A, b = res$B, c = res$C))
 }

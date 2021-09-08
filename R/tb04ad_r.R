@@ -11,7 +11,7 @@
 #' #'
 #' @references \url{http://slicot.org/objects/software/shared/doc/TB04AD.html}
 #' @export
-tb04ad_r <- function(n, m, p, tol1, tol2, ldwork, a, b, c, d) {
+tb04ad_r <- function(n, m, p, a, b, c, d, tol1, tol2, ldwork) {
 
     # In Parameters
     ldwork <- as.integer(ldwork)
@@ -38,8 +38,8 @@ tb04ad_r <- function(n, m, p, tol1, tol2, ldwork, a, b, c, d) {
     lduco2 <- dim(ucoeff)[2]
 
 
-    res <- .Fortran("TB04AD", ROWCOL = rowcol, N = n, M = m, P = p, NR = nr, TOL1 = tol1, TOL2 = tol2, IWORK = iwork, DWORK = dwork, LDWORK = ldwork, INFO = info, A = a, B = b, C = c, D = d, DCOEFF = dcoeff, INDEX_BN = index_bn, UCOEFF = ucoeff,
-        LDA = lda, LDB = ldb, LDC = ldc, LDD = ldd, LDDCOE = lddcoe, LDUCO1 = lduco1, LDUCO2 = lduco2)
+    res <- .Fortran("TB04AD", ROWCOL = rowcol, N = n, M = m, P = p, A = a, LDA = lda, B = b, LDB = ldb, C = c, LDC = ldc, D = d, LDD = ldd, NR = nr, INDEX_BN = index_bn, DCOEFF = dcoeff, LDDCOE = lddcoe, UCOEFF = ucoeff, LDUCO1 = lduco1,
+        LDUCO2 = lduco2, TOL1 = tol1, TOL2 = tol2, IWORK = iwork, DWORK = dwork, LDWORK = ldwork, INFO = info)
 
     return(list(nr = res$NR, info = res$INFO, a = res$A, b = res$B, c = res$C, dcoeff = res$DCOEFF, index_bn = res$INDEX_BN, ucoeff = res$UCOEFF))
 }

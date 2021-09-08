@@ -31,7 +31,7 @@ tf01rd <- function(na, nb, nc, n, a, b, c, ldwork) {
     ldh <- dim(h)[1]
 
 
-    res <- .Fortran("TF01RD", `NA` = na, NB = nb, NC = nc, N = n, DWORK = dwork, INFO = info, A = a, B = b, C = c, H = h, LDWORK = ldwork, LDA = lda, LDB = ldb, LDC = ldc, LDH = ldh)
+    res <- .Fortran("TF01RD", `NA` = na, NB = nb, NC = nc, N = n, A = a, LDA = lda, B = b, LDB = ldb, C = c, LDC = ldc, H = h, LDH = ldh, DWORK = dwork, LDWORK = ldwork, INFO = info)
 
     return(list(info = res$INFO, h = res$H))
 }

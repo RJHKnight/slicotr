@@ -27,7 +27,7 @@
 #' #'
 #' @references \url{http://slicot.org/objects/software/shared/doc/TG01FD.html}
 #' @export
-tg01fd_ii <- function(joba, l, n, m, p, tol, ldwork, a, b, c, e) {
+tg01fd_ii <- function(joba, l, n, m, p, a, e, b, c, tol, ldwork) {
 
     # In Parameters
     joba <- as.character(joba)
@@ -55,8 +55,8 @@ tg01fd_ii <- function(joba, l, n, m, p, tol, ldwork, a, b, c, e) {
     lde <- max(dim(e)[1], 1)
 
 
-    res <- .Fortran("TG01FD", COMPQ = compq, COMPZ = compz, JOBA = joba, L = l, N = n, M = m, P = p, Q = q, Z = z, RANKE = ranke, RNKA22 = rnka22, TOL = tol, LDWORK = ldwork, INFO = info, A = a, B = b, C = c, DWORK = dwork, E = e, IWORK = iwork,
-        LDQ = ldq, LDZ = ldz, LDA = lda, LDB = ldb, LDC = ldc, LDE = lde)
+    res <- .Fortran("TG01FD", COMPQ = compq, COMPZ = compz, JOBA = joba, L = l, N = n, M = m, P = p, A = a, LDA = lda, E = e, LDE = lde, B = b, LDB = ldb, C = c, LDC = ldc, Q = q, LDQ = ldq, Z = z, LDZ = ldz, RANKE = ranke, RNKA22 = rnka22,
+        TOL = tol, IWORK = iwork, DWORK = dwork, LDWORK = ldwork, INFO = info)
 
     return(list(q = res$Q, z = res$Z, ranke = res$RANKE, rnka22 = res$RNKA22, info = res$INFO, a = res$A, b = res$B, c = res$C, e = res$E))
 }

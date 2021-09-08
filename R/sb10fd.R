@@ -36,7 +36,7 @@
 #' #'
 #' @references \url{http://slicot.org/objects/software/shared/doc/SB10FD.html}
 #' @export
-sb10fd <- function(n, m, np, gamma, tol, ldwork, a, b, c, d, ncon, nmeas) {
+sb10fd <- function(n, m, np, ncon, nmeas, gamma, a, b, c, d, tol, ldwork) {
 
     # In Parameters
     gamma <- as.double(gamma)
@@ -67,8 +67,8 @@ sb10fd <- function(n, m, np, gamma, tol, ldwork, a, b, c, d, ncon, nmeas) {
     ldd <- dim(d)[1]
 
 
-    res <- .Fortran("SB10FD", N = n, M = m, NP = np, GAMMA = gamma, AK = ak, BK = bk, CK = ck, DK = dk, RCOND = rcond, TOL = tol, LDWORK = ldwork, INFO = info, A = a, B = b, BWORK = bwork, C = c, D = d, DWORK = dwork, IWORK = iwork,
-        LDAK = ldak, LDBK = ldbk, LDCK = ldck, LDDK = lddk, NCON = ncon, NMEAS = nmeas, LDA = lda, LDB = ldb, LDC = ldc, LDD = ldd)
+    res <- .Fortran("SB10FD", N = n, M = m, NP = np, NCON = ncon, NMEAS = nmeas, GAMMA = gamma, A = a, LDA = lda, B = b, LDB = ldb, C = c, LDC = ldc, D = d, LDD = ldd, AK = ak, LDAK = ldak, BK = bk, LDBK = ldbk, CK = ck, LDCK = ldck,
+        DK = dk, LDDK = lddk, RCOND = rcond, TOL = tol, IWORK = iwork, DWORK = dwork, LDWORK = ldwork, BWORK = bwork, INFO = info)
 
     return(list(ak = res$AK, bk = res$BK, ck = res$CK, dk = res$DK, rcond = res$RCOND, info = res$INFO))
 }

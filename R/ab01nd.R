@@ -36,7 +36,7 @@
 #' #'
 #' @references \url{http://slicot.org/objects/software/shared/doc/AB01ND.html}
 #' @export
-ab01nd <- function(jobz, n, m, tol, ldwork, a, b) {
+ab01nd <- function(jobz, n, m, a, b, tol, ldwork) {
 
     # In Parameters
     jobz <- as.character(jobz)
@@ -58,7 +58,7 @@ ab01nd <- function(jobz, n, m, tol, ldwork, a, b) {
     ldb <- dim(b)[1]
 
 
-    res <- .Fortran("AB01ND", JOBZ = jobz, N = n, M = m, NCONT = ncont, INDCON = indcon, TOL = tol, LDWORK = ldwork, INFO = info, A = a, B = b, DWORK = dwork, IWORK = iwork, LDZ = ldz, NBLK = nblk, TAU = tau, Z = z, LDA = lda, LDB = ldb)
+    res <- .Fortran("AB01ND", JOBZ = jobz, N = n, M = m, A = a, LDA = lda, B = b, LDB = ldb, NCONT = ncont, INDCON = indcon, NBLK = nblk, Z = z, LDZ = ldz, TAU = tau, TOL = tol, IWORK = iwork, DWORK = dwork, LDWORK = ldwork, INFO = info)
 
     return(list(ncont = res$NCONT, indcon = res$INDCON, info = res$INFO, a = res$A, b = res$B, nblk = res$NBLK, tau = res$TAU, z = res$Z))
 }

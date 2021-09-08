@@ -16,7 +16,7 @@
 #' #'
 #' @references \url{http://slicot.org/objects/software/shared/doc/AB09AX.html}
 #' @export
-ab09ax <- function(dico, job, ordsel, n, m, p, nr, tol, ldwork, a, b, c) {
+ab09ax <- function(dico, job, ordsel, n, m, p, nr, a, b, c, tol, ldwork) {
 
     # In Parameters
     dico <- as.character(dico)
@@ -43,8 +43,8 @@ ab09ax <- function(dico, job, ordsel, n, m, p, nr, tol, ldwork, a, b, c) {
     ldc <- dim(c)[1]
 
 
-    res <- .Fortran("AB09AX", DICO = dico, JOB = job, ORDSEL = ordsel, N = n, M = m, P = p, NR = nr, T = t, TI = ti, TOL = tol, IWORK = iwork, DWORK = dwork, LDWORK = ldwork, IWARN = iwarn, INFO = info, A = a, B = b, C = c, HSV = hsv,
-        LDT = ldt, LDTI = ldti, LDA = lda, LDB = ldb, LDC = ldc)
+    res <- .Fortran("AB09AX", DICO = dico, JOB = job, ORDSEL = ordsel, N = n, M = m, P = p, NR = nr, A = a, LDA = lda, B = b, LDB = ldb, C = c, LDC = ldc, HSV = hsv, T = t, LDT = ldt, TI = ti, LDTI = ldti, TOL = tol, IWORK = iwork, DWORK = dwork,
+        LDWORK = ldwork, IWARN = iwarn, INFO = info)
 
     return(list(nr = res$NR, t = res$T, ti = res$TI, iwarn = res$IWARN, info = res$INFO, a = res$A, b = res$B, c = res$C, hsv = res$HSV))
 }

@@ -15,7 +15,7 @@
 #' #'
 #' @references \url{http://slicot.org/objects/software/shared/doc/AB13FD.html}
 #' @export
-ab13fd <- function(n, tol, a) {
+ab13fd <- function(n, a, tol) {
 
     # In Parameters
     n <- as.integer(n)
@@ -30,7 +30,7 @@ ab13fd <- function(n, tol, a) {
     lda <- dim(a)[1]
 
 
-    res <- .Fortran("AB13FD", N = n, BETA = beta, OMEGA = omega, TOL = tol, INFO = info, A = a, LCWORK = lcwork, LDWORK = ldwork, DWORK = dwork, LDA = lda)
+    res <- .Fortran("AB13FD", N = n, A = a, LDA = lda, BETA = beta, OMEGA = omega, TOL = tol, DWORK = dwork, LDWORK = ldwork, LCWORK = lcwork, INFO = info)
 
     return(list(beta = res$BETA, omega = res$OMEGA, info = res$INFO))
 }

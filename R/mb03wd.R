@@ -26,7 +26,7 @@
 #' #'
 #' @references \url{http://slicot.org/objects/software/shared/doc/MB03WD.html}
 #' @export
-mb03wd <- function(job, compz, n, h, ihi, ihiz, ilo, iloz, ldwork, z) {
+mb03wd <- function(job, compz, n, ilo, ihi, iloz, ihiz, h, z, ldwork) {
 
     # In Parameters
     compz <- as.character(compz)
@@ -49,8 +49,8 @@ mb03wd <- function(job, compz, n, h, ihi, ihiz, ilo, iloz, ldwork, z) {
     ldz2 <- dim(z)[2]
 
 
-    res <- .Fortran("MB03WD", JOB = job, COMPZ = compz, N = n, H = h, DWORK = dwork, INFO = info, IHI = ihi, IHIZ = ihiz, ILO = ilo, LDH1 = ldh1, LDH2 = ldh2, P = p, WI = wi, WR = wr, ILOZ = iloz, LDWORK = ldwork, Z = z, LDZ1 = ldz1,
-        LDZ2 = ldz2)
+    res <- .Fortran("MB03WD", JOB = job, COMPZ = compz, N = n, P = p, ILO = ilo, IHI = ihi, ILOZ = iloz, IHIZ = ihiz, H = h, LDH1 = ldh1, LDH2 = ldh2, Z = z, LDZ1 = ldz1, LDZ2 = ldz2, WR = wr, WI = wi, DWORK = dwork, LDWORK = ldwork,
+        INFO = info)
 
     return(list(h = res$H, info = res$INFO, wi = res$WI, wr = res$WR, z = res$Z))
 }

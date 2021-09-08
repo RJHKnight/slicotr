@@ -44,7 +44,7 @@
 #' #'
 #' @references \url{http://slicot.org/objects/software/shared/doc/SB10AD.html}
 #' @export
-sb10ad <- function(job, n, m, np, ncon, gamma, gtol, actol, liwork, ldwork, a, b, c, d, nmeas) {
+sb10ad <- function(job, n, m, np, ncon, nmeas, gamma, a, b, c, d, gtol, actol, liwork, ldwork) {
 
     # In Parameters
     actol <- as.double(actol)
@@ -87,9 +87,9 @@ sb10ad <- function(job, n, m, np, ncon, gamma, gtol, actol, liwork, ldwork, a, b
     lddk <- dim(dk)[1]
 
 
-    res <- .Fortran("SB10AD", JOB = job, N = n, M = m, NP = np, NCON = ncon, GAMMA = gamma, RCOND = rcond, GTOL = gtol, ACTOL = actol, LIWORK = liwork, LDWORK = ldwork, INFO = info, A = a, AC = ac, AK = ak, B = b, BC = bc, BK = bk, C = c,
-        CC = cc, CK = ck, D = d, DC = dc, DK = dk, DWORK = dwork, IWORK = iwork, LBWORK = lbwork, NMEAS = nmeas, BWORK = bwork, LDA = lda, LDAC = ldac, LDAK = ldak, LDB = ldb, LDBC = ldbc, LDBK = ldbk, LDC = ldc, LDCC = ldcc, LDCK = ldck,
-        LDD = ldd, LDDC = lddc, LDDK = lddk)
+    res <- .Fortran("SB10AD", JOB = job, N = n, M = m, NP = np, NCON = ncon, NMEAS = nmeas, GAMMA = gamma, A = a, LDA = lda, B = b, LDB = ldb, C = c, LDC = ldc, D = d, LDD = ldd, AK = ak, LDAK = ldak, BK = bk, LDBK = ldbk, CK = ck, LDCK = ldck,
+        DK = dk, LDDK = lddk, AC = ac, LDAC = ldac, BC = bc, LDBC = ldbc, CC = cc, LDCC = ldcc, DC = dc, LDDC = lddc, RCOND = rcond, GTOL = gtol, ACTOL = actol, IWORK = iwork, LIWORK = liwork, DWORK = dwork, LDWORK = ldwork, BWORK = bwork,
+        LBWORK = lbwork, INFO = info)
 
     return(list(gamma = res$GAMMA, rcond = res$RCOND, info = res$INFO, ac = res$AC, ak = res$AK, bc = res$BC, bk = res$BK, cc = res$CC, ck = res$CK, dc = res$DC, dk = res$DK))
 }

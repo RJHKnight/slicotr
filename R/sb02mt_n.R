@@ -29,7 +29,7 @@
 #' #'
 #' @references \url{http://slicot.org/objects/software/shared/doc/SB02MT.html}
 #' @export
-sb02mt_n <- function(uplo, n, m, ldwork, b, r) {
+sb02mt_n <- function(uplo, n, m, b, r, ldwork) {
 
     # In Parameters
     ldwork <- as.integer(ldwork)
@@ -57,8 +57,8 @@ sb02mt_n <- function(uplo, n, m, ldwork, b, r) {
     ldr <- dim(r)[1]
 
 
-    res <- .Fortran("SB02MT", JOBG = jobg, JOBL = jobl, FACT = fact, UPLO = uplo, N = n, M = m, A = a, Q = q, L = l, OUFACT = oufact, IWORK = iwork, LDWORK = ldwork, INFO = info, B = b, DWORK = dwork, G = g, IPIV = ipiv, LDA = lda, LDL = ldl,
-        LDQ = ldq, R = r, LDB = ldb, LDG = ldg, LDR = ldr)
+    res <- .Fortran("SB02MT", JOBG = jobg, JOBL = jobl, FACT = fact, UPLO = uplo, N = n, M = m, A = a, LDA = lda, B = b, LDB = ldb, Q = q, LDQ = ldq, R = r, LDR = ldr, L = l, LDL = ldl, IPIV = ipiv, OUFACT = oufact, G = g, LDG = ldg,
+        IWORK = iwork, DWORK = dwork, LDWORK = ldwork, INFO = info)
 
     return(list(a = res$A, q = res$Q, l = res$L, oufact = res$OUFACT, info = res$INFO, b = res$B, g = res$G, ipiv = res$IPIV, r = res$R))
 }

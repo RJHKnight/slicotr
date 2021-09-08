@@ -31,7 +31,7 @@
 #' #'
 #' @references \url{http://slicot.org/objects/software/shared/doc/SB10HD.html}
 #' @export
-sb10hd <- function(n, m, np, ncon, tol, ldwork, a, b, c, d, nmeas) {
+sb10hd <- function(n, m, np, ncon, nmeas, a, b, c, d, tol, ldwork) {
 
     # In Parameters
     ldwork <- as.integer(ldwork)
@@ -61,8 +61,8 @@ sb10hd <- function(n, m, np, ncon, tol, ldwork, a, b, c, d, nmeas) {
     lddk <- dim(dk)[1]
 
 
-    res <- .Fortran("SB10HD", N = n, M = m, NP = np, NCON = ncon, RCOND = rcond, TOL = tol, LDWORK = ldwork, INFO = info, A = a, AK = ak, B = b, BK = bk, BWORK = bwork, C = c, CK = ck, D = d, DK = dk, DWORK = dwork, IWORK = iwork, NMEAS = nmeas,
-        LDA = lda, LDAK = ldak, LDB = ldb, LDBK = ldbk, LDC = ldc, LDCK = ldck, LDD = ldd, LDDK = lddk)
+    res <- .Fortran("SB10HD", N = n, M = m, NP = np, NCON = ncon, NMEAS = nmeas, A = a, LDA = lda, B = b, LDB = ldb, C = c, LDC = ldc, D = d, LDD = ldd, AK = ak, LDAK = ldak, BK = bk, LDBK = ldbk, CK = ck, LDCK = ldck, DK = dk, LDDK = lddk,
+        RCOND = rcond, TOL = tol, IWORK = iwork, DWORK = dwork, LDWORK = ldwork, BWORK = bwork, INFO = info)
 
     return(list(rcond = res$RCOND, info = res$INFO, ak = res$AK, bk = res$BK, ck = res$CK, dk = res$DK))
 }

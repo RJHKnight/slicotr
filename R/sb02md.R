@@ -34,7 +34,7 @@
 #' #'
 #' @references \url{http://slicot.org/objects/software/shared/doc/SB02MD.html}
 #' @export
-sb02md <- function(dico, hinv, uplo, scal, sort, n, a, g, ldwork, q) {
+sb02md <- function(dico, hinv, uplo, scal, sort, n, a, g, q, ldwork) {
 
     # In Parameters
     dico <- as.character(dico)
@@ -61,8 +61,8 @@ sb02md <- function(dico, hinv, uplo, scal, sort, n, a, g, ldwork, q) {
     ldu <- dim(u)[1]
 
 
-    res <- .Fortran("SB02MD", DICO = dico, HINV = hinv, UPLO = uplo, SCAL = scal, SORT = sort, N = n, INFO = info, RCOND = rcond, DWORK = dwork, A = a, BWORK = bwork, G = g, IWORK = iwork, LDWORK = ldwork, Q = q, S = s, U = u, WI = wi,
-        WR = wr, LDA = lda, LDG = ldg, LDQ = ldq, LDS = lds, LDU = ldu)
+    res <- .Fortran("SB02MD", DICO = dico, HINV = hinv, UPLO = uplo, SCAL = scal, SORT = sort, N = n, A = a, LDA = lda, G = g, LDG = ldg, Q = q, LDQ = ldq, U = u, LDU = ldu, INFO = info, RCOND = rcond, WR = wr, WI = wi, S = s, LDS = lds,
+        IWORK = iwork, DWORK = dwork, LDWORK = ldwork, BWORK = bwork)
 
     return(list(info = res$INFO, rcond = res$RCOND, a = res$A, q = res$Q, s = res$S, u = res$U, wi = res$WI, wr = res$WR))
 }

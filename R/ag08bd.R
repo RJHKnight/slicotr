@@ -19,7 +19,7 @@
 #' #'
 #' @references \url{http://slicot.org/objects/software/shared/doc/AG08BD.html}
 #' @export
-ag08bd <- function(equil, l, n, m, p, tol, ldwork, a, b, c, d, e) {
+ag08bd <- function(equil, l, n, m, p, a, e, b, c, d, tol, ldwork) {
 
     # In Parameters
     equil <- as.character(equil)
@@ -51,8 +51,8 @@ ag08bd <- function(equil, l, n, m, p, tol, ldwork, a, b, c, d, e) {
     lde <- max(dim(e)[1], 1)
 
 
-    res <- .Fortran("AG08BD", EQUIL = equil, L = l, N = n, M = m, P = p, NFZ = nfz, NRANK = nrank, NIZ = niz, DINFZ = dinfz, NKROR = nkror, NINFE = ninfe, NKROL = nkrol, TOL = tol, LDWORK = ldwork, INFO = info, A = a, B = b, C = c, D = d,
-        DWORK = dwork, E = e, INFE = infe, INFZ = infz, IWORK = iwork, KRONL = kronl, KRONR = kronr, LDA = lda, LDB = ldb, LDC = ldc, LDD = ldd, LDE = lde)
+    res <- .Fortran("AG08BD", EQUIL = equil, L = l, N = n, M = m, P = p, A = a, LDA = lda, E = e, LDE = lde, B = b, LDB = ldb, C = c, LDC = ldc, D = d, LDD = ldd, NFZ = nfz, NRANK = nrank, NIZ = niz, DINFZ = dinfz, NKROR = nkror, NINFE = ninfe,
+        NKROL = nkrol, INFZ = infz, KRONR = kronr, INFE = infe, KRONL = kronl, TOL = tol, IWORK = iwork, DWORK = dwork, LDWORK = ldwork, INFO = info)
 
     return(list(nfz = res$NFZ, nrank = res$NRANK, niz = res$NIZ, dinfz = res$DINFZ, nkror = res$NKROR, ninfe = res$NINFE, nkrol = res$NKROL, info = res$INFO, a = res$A, e = res$E, infe = res$INFE, infz = res$INFZ, kronl = res$KRONL,
         kronr = res$KRONR))

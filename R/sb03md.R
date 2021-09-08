@@ -20,7 +20,7 @@
 #' #'
 #' @references \url{http://slicot.org/objects/software/shared/doc/SB03MD.html}
 #' @export
-sb03md <- function(dico, job, fact, trana, n, a, c, ldwork, u) {
+sb03md <- function(dico, job, fact, trana, n, a, u, c, ldwork) {
 
     # In Parameters
     dico <- as.character(dico)
@@ -43,8 +43,8 @@ sb03md <- function(dico, job, fact, trana, n, a, c, ldwork, u) {
     ldu <- dim(u)[1]
 
 
-    res <- .Fortran("SB03MD", DICO = dico, JOB = job, FACT = fact, TRANA = trana, N = n, SCALE = scale, SEP = sep, FERR = ferr, DWORK = dwork, INFO = info, A = a, C = c, IWORK = iwork, LDWORK = ldwork, U = u, WI = wi, WR = wr, LDA = lda,
-        LDC = ldc, LDU = ldu)
+    res <- .Fortran("SB03MD", DICO = dico, JOB = job, FACT = fact, TRANA = trana, N = n, A = a, LDA = lda, U = u, LDU = ldu, C = c, LDC = ldc, SCALE = scale, SEP = sep, FERR = ferr, WR = wr, WI = wi, IWORK = iwork, DWORK = dwork, LDWORK = ldwork,
+        INFO = info)
 
     return(list(scale = res$SCALE, sep = res$SEP, ferr = res$FERR, info = res$INFO, a = res$A, c = res$C, u = res$U, wi = res$WI, wr = res$WR))
 }
