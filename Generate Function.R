@@ -10,7 +10,7 @@ generate_function <- function(name, file_name, params)
 
   output_name <- paste0(name, ".R")
 
-  param_names <- filter(params, stringr::str_detect(intent, "in") | is.na(intent)) %>% pull(name)
+  param_names <- filter(params, stringr::str_detect(intent, "in") | is.na(intent)) %>% arrange(original_order) %>% pull(name)
 
   x <- paste0(
 
@@ -103,6 +103,7 @@ create_return <- function(params)
 create_call <- function(file_name, params)
 {
   param_string <- params %>%
+    arrange(original_order) %>%
     mutate(text = paste0(stringr::str_to_upper(name), "=", name)) %>%
     pull(text) %>%
     paste(collapse = ",")
