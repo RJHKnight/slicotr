@@ -77,8 +77,11 @@ sb10dd <- function(n, m, np, ncon, nmeas, gamma, a, b, c, d, tol, ldwork) {
     ldz <- dim(z)[1]
 
 
-    res <- .Fortran("SB10DD", N = n, M = m, NP = np, NCON = ncon, NMEAS = nmeas, GAMMA = gamma, A = a, LDA = lda, B = b, LDB = ldb, C = c, LDC = ldc, D = d, LDD = ldd, AK = ak, LDAK = ldak, BK = bk, LDBK = ldbk, CK = ck, LDCK = ldck,
-        DK = dk, LDDK = lddk, X = x, LDX = ldx, Z = z, LDZ = ldz, RCOND = rcond, TOL = tol, IWORK = iwork, DWORK = dwork, LDWORK = ldwork, BWORK = bwork, INFO = info)
+    res <- suppressWarnings(.Fortran("SB10DD", N = n, M = m, NP = np, NCON = ncon, NMEAS = nmeas, GAMMA = gamma, A = a, LDA = lda,
+        B = b, LDB = ldb, C = c, LDC = ldc, D = d, LDD = ldd, AK = ak, LDAK = ldak, BK = bk, LDBK = ldbk, CK = ck, LDCK = ldck,
+        DK = dk, LDDK = lddk, X = x, LDX = ldx, Z = z, LDZ = ldz, RCOND = rcond, TOL = tol, IWORK = iwork, DWORK = dwork, LDWORK = ldwork,
+        BWORK = bwork, INFO = info))
 
-    return(list(gamma = res$GAMMA, rcond = res$RCOND, info = res$INFO, ak = res$AK, bk = res$BK, ck = res$CK, dk = res$DK, x = res$X, z = res$Z))
+    return(list(gamma = res$GAMMA, rcond = res$RCOND, info = res$INFO, ak = res$AK, bk = res$BK, ck = res$CK, dk = res$DK, x = res$X,
+        z = res$Z))
 }

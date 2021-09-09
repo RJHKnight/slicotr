@@ -61,8 +61,9 @@ sb02md <- function(dico, hinv, uplo, scal, sort, n, a, g, q, ldwork) {
     ldu <- dim(u)[1]
 
 
-    res <- .Fortran("SB02MD", DICO = dico, HINV = hinv, UPLO = uplo, SCAL = scal, SORT = sort, N = n, A = a, LDA = lda, G = g, LDG = ldg, Q = q, LDQ = ldq, U = u, LDU = ldu, INFO = info, RCOND = rcond, WR = wr, WI = wi, S = s, LDS = lds,
-        IWORK = iwork, DWORK = dwork, LDWORK = ldwork, BWORK = bwork)
+    res <- suppressWarnings(.Fortran("SB02MD", DICO = dico, HINV = hinv, UPLO = uplo, SCAL = scal, SORT = sort, N = n, A = a, LDA = lda,
+        G = g, LDG = ldg, Q = q, LDQ = ldq, RCOND = rcond, WR = wr, WI = wi, S = s, LDS = lds, U = u, LDU = ldu, IWORK = iwork,
+        DWORK = dwork, LDWORK = ldwork, BWORK = bwork, INFO = info))
 
     return(list(info = res$INFO, rcond = res$RCOND, a = res$A, q = res$Q, s = res$S, u = res$U, wi = res$WI, wr = res$WR))
 }

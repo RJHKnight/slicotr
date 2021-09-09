@@ -52,8 +52,10 @@ sg03ad <- function(dico, job, fact, trans, uplo, n, a, e, q, z, x, ldwork) {
     ldz <- dim(z)[1]
 
 
-    res <- .Fortran("SG03AD", DICO = dico, JOB = job, FACT = fact, TRANS = trans, UPLO = uplo, N = n, A = a, LDA = lda, E = e, LDE = lde, Q = q, LDQ = ldq, Z = z, LDZ = ldz, X = x, LDX = ldx, SCALE = scale, SEP = sep, FERR = ferr, ALPHAR = alphar,
-        ALPHAI = alphai, BETA = beta, IWORK = iwork, DWORK = dwork, LDWORK = ldwork, INFO = info)
+    res <- suppressWarnings(.Fortran("SG03AD", DICO = dico, JOB = job, FACT = fact, TRANS = trans, UPLO = uplo, N = n, A = a, LDA = lda,
+        E = e, LDE = lde, Q = q, LDQ = ldq, Z = z, LDZ = ldz, X = x, LDX = ldx, SCALE = scale, SEP = sep, FERR = ferr, ALPHAR = alphar,
+        ALPHAI = alphai, BETA = beta, IWORK = iwork, DWORK = dwork, LDWORK = ldwork, INFO = info))
 
-    return(list(scale = res$SCALE, sep = res$SEP, ferr = res$FERR, info = res$INFO, a = res$A, alphai = res$ALPHAI, alphar = res$ALPHAR, beta = res$BETA, e = res$E, q = res$Q, x = res$X, z = res$Z))
+    return(list(scale = res$SCALE, sep = res$SEP, ferr = res$FERR, info = res$INFO, a = res$A, alphai = res$ALPHAI, alphar = res$ALPHAR,
+        beta = res$BETA, e = res$E, q = res$Q, x = res$X, z = res$Z))
 }

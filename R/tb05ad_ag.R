@@ -38,8 +38,9 @@ tb05ad_ag <- function(n, m, p, a, b, c, ldwork, lzwork) {
     ldc <- dim(c)[1]
 
 
-    res <- .Fortran("TB05AD", BALEIG = baleig, INITA = inita, N = n, M = m, P = p, A = a, LDA = lda, B = b, LDB = ldb, C = c, LDC = ldc, RCOND = rcond, LDG = ldg, EVRE = evre, EVIM = evim, LDHINV = ldhinv, IWORK = iwork, DWORK = dwork,
-        LDWORK = ldwork, LZWORK = lzwork, INFO = info)
+    res <- suppressWarnings(.Fortran("TB05AD", BALEIG = baleig, INITA = inita, N = n, M = m, P = p, A = a, LDA = lda, B = b, LDB = ldb,
+        C = c, LDC = ldc, RCOND = rcond, LDG = ldg, EVRE = evre, EVIM = evim, LDHINV = ldhinv, IWORK = iwork, DWORK = dwork, LDWORK = ldwork,
+        LZWORK = lzwork, INFO = info))
 
     return(list(rcond = res$RCOND, info = res$INFO, a = res$A, b = res$B, c = res$C, evim = res$EVIM, evre = res$EVRE))
 }

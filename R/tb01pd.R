@@ -31,7 +31,8 @@ tb01pd <- function(job, equil, n, m, p, a, b, c, tol, ldwork) {
     ldc <- dim(c)[1]
 
 
-    res <- .Fortran("TB01PD", JOB = job, EQUIL = equil, N = n, M = m, P = p, A = a, LDA = lda, B = b, LDB = ldb, C = c, LDC = ldc, NR = nr, TOL = tol, IWORK = iwork, DWORK = dwork, LDWORK = ldwork, INFO = info)
+    res <- suppressWarnings(.Fortran("TB01PD", JOB = job, EQUIL = equil, N = n, M = m, P = p, A = a, LDA = lda, B = b, LDB = ldb,
+        C = c, LDC = ldc, NR = nr, TOL = tol, IWORK = iwork, DWORK = dwork, LDWORK = ldwork, INFO = info))
 
     return(list(nr = res$NR, info = res$INFO, a = res$A, b = res$B, c = res$C))
 }

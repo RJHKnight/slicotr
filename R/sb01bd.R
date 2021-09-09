@@ -35,8 +35,10 @@ sb01bd <- function(dico, n, m, np, alpha, a, b, wr, wi, tol, ldwork) {
     ldb <- dim(b)[1]
 
 
-    res <- .Fortran("SB01BD", DICO = dico, N = n, M = m, NP = np, ALPHA = alpha, A = a, LDA = lda, B = b, LDB = ldb, WR = wr, WI = wi, NFP = nfp, NAP = nap, NUP = nup, F = f, LDF = ldf, Z = z, LDZ = ldz, TOL = tol, DWORK = dwork, LDWORK = ldwork,
-        IWARN = iwarn, INFO = info)
+    res <- suppressWarnings(.Fortran("SB01BD", DICO = dico, N = n, M = m, NP = np, ALPHA = alpha, A = a, LDA = lda, B = b, LDB = ldb,
+        WR = wr, WI = wi, NFP = nfp, NAP = nap, NUP = nup, F = f, LDF = ldf, Z = z, LDZ = ldz, TOL = tol, DWORK = dwork, LDWORK = ldwork,
+        IWARN = iwarn, INFO = info))
 
-    return(list(nfp = res$NFP, nap = res$NAP, nup = res$NUP, f = res$F, z = res$Z, iwarn = res$IWARN, info = res$INFO, a = res$A, wi = res$WI, wr = res$WR))
+    return(list(nfp = res$NFP, nap = res$NAP, nup = res$NUP, f = res$F, z = res$Z, iwarn = res$IWARN, info = res$INFO, a = res$A,
+        wi = res$WI, wr = res$WR))
 }

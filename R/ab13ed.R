@@ -41,7 +41,8 @@ ab13ed <- function(n, a, tol) {
     lda <- dim(a)[1]
 
 
-    res <- .Fortran("AB13ED", N = n, A = a, LDA = lda, LOW = low, HIGH = high, TOL = tol, DWORK = dwork, LDWORK = ldwork, INFO = info)
+    res <- suppressWarnings(.Fortran("AB13ED", N = n, A = a, LDA = lda, LOW = low, HIGH = high, TOL = tol, DWORK = dwork, LDWORK = ldwork,
+        INFO = info))
 
     return(list(low = res$LOW, high = res$HIGH, info = res$INFO))
 }

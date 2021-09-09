@@ -54,8 +54,9 @@ sb02mt_nl <- function(uplo, n, m, a, b, q, r, l, ldwork) {
     ldr <- dim(r)[1]
 
 
-    res <- .Fortran("SB02MT", JOBG = jobg, JOBL = jobl, FACT = fact, UPLO = uplo, N = n, M = m, A = a, LDA = lda, B = b, LDB = ldb, Q = q, LDQ = ldq, R = r, LDR = ldr, L = l, LDL = ldl, IPIV = ipiv, OUFACT = oufact, G = g, LDG = ldg,
-        IWORK = iwork, DWORK = dwork, LDWORK = ldwork, INFO = info)
+    res <- suppressWarnings(.Fortran("SB02MT", JOBG = jobg, JOBL = jobl, FACT = fact, UPLO = uplo, N = n, M = m, A = a, LDA = lda,
+        B = b, LDB = ldb, Q = q, LDQ = ldq, R = r, LDR = ldr, L = l, LDL = ldl, IPIV = ipiv, OUFACT = oufact, G = g, LDG = ldg,
+        IWORK = iwork, DWORK = dwork, LDWORK = ldwork, INFO = info))
 
     return(list(oufact = res$OUFACT, info = res$INFO, a = res$A, b = res$B, g = res$G, ipiv = res$IPIV, l = res$L, q = res$Q, r = res$R))
 }

@@ -53,8 +53,10 @@ tg01fd_uu <- function(joba, l, n, m, p, a, e, b, c, q, z, tol, ldwork) {
     lde <- max(dim(e)[1], 1)
 
 
-    res <- .Fortran("TG01FD", COMPQ = compq, COMPZ = compz, JOBA = joba, L = l, N = n, M = m, P = p, A = a, LDA = lda, E = e, LDE = lde, B = b, LDB = ldb, C = c, LDC = ldc, Q = q, LDQ = ldq, Z = z, LDZ = ldz, RANKE = ranke, RNKA22 = rnka22,
-        TOL = tol, IWORK = iwork, DWORK = dwork, LDWORK = ldwork, INFO = info)
+    res <- suppressWarnings(.Fortran("TG01FD", COMPQ = compq, COMPZ = compz, JOBA = joba, L = l, N = n, M = m, P = p, A = a, LDA = lda,
+        E = e, LDE = lde, B = b, LDB = ldb, C = c, LDC = ldc, Q = q, LDQ = ldq, Z = z, LDZ = ldz, RANKE = ranke, RNKA22 = rnka22,
+        TOL = tol, IWORK = iwork, DWORK = dwork, LDWORK = ldwork, INFO = info))
 
-    return(list(q = res$Q, z = res$Z, ranke = res$RANKE, rnka22 = res$RNKA22, info = res$INFO, a = res$A, b = res$B, c = res$C, e = res$E))
+    return(list(q = res$Q, z = res$Z, ranke = res$RANKE, rnka22 = res$RNKA22, info = res$INFO, a = res$A, b = res$B, c = res$C,
+        e = res$E))
 }

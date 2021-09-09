@@ -43,8 +43,10 @@ sb03md <- function(dico, job, fact, trana, n, a, u, c, ldwork) {
     ldu <- dim(u)[1]
 
 
-    res <- .Fortran("SB03MD", DICO = dico, JOB = job, FACT = fact, TRANA = trana, N = n, A = a, LDA = lda, U = u, LDU = ldu, C = c, LDC = ldc, SCALE = scale, SEP = sep, FERR = ferr, WR = wr, WI = wi, IWORK = iwork, DWORK = dwork, LDWORK = ldwork,
-        INFO = info)
+    res <- suppressWarnings(.Fortran("SB03MD", DICO = dico, JOB = job, FACT = fact, TRANA = trana, N = n, A = a, LDA = lda, U = u,
+        LDU = ldu, C = c, LDC = ldc, SCALE = scale, SEP = sep, FERR = ferr, WR = wr, WI = wi, IWORK = iwork, DWORK = dwork, LDWORK = ldwork,
+        INFO = info))
 
-    return(list(scale = res$SCALE, sep = res$SEP, ferr = res$FERR, info = res$INFO, a = res$A, c = res$C, u = res$U, wi = res$WI, wr = res$WR))
+    return(list(scale = res$SCALE, sep = res$SEP, ferr = res$FERR, info = res$INFO, a = res$A, c = res$C, u = res$U, wi = res$WI,
+        wr = res$WR))
 }

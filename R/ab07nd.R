@@ -25,7 +25,8 @@ ab07nd <- function(n, m, a, b, c, d, ldwork) {
     ldd <- dim(d)[1]
 
 
-    res <- .Fortran("AB07ND", N = n, M = m, A = a, LDA = lda, B = b, LDB = ldb, C = c, LDC = ldc, D = d, LDD = ldd, RCOND = rcond, IWORK = iwork, DWORK = dwork, LDWORK = ldwork, INFO = info)
+    res <- suppressWarnings(.Fortran("AB07ND", N = n, M = m, A = a, LDA = lda, B = b, LDB = ldb, C = c, LDC = ldc, D = d, LDD = ldd,
+        RCOND = rcond, IWORK = iwork, DWORK = dwork, LDWORK = ldwork, INFO = info))
 
     return(list(rcond = res$RCOND, info = res$INFO, a = res$A, b = res$B, c = res$C, d = res$D))
 }

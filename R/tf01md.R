@@ -31,7 +31,8 @@ tf01md <- function(n, m, p, ny, a, b, c, d, u, x) {
     ldu <- dim(u)[1]
 
 
-    res <- .Fortran("TF01MD", N = n, M = m, P = p, NY = ny, A = a, LDA = lda, B = b, LDB = ldb, C = c, LDC = ldc, D = d, LDD = ldd, U = u, LDU = ldu, X = x, Y = y, LDY = ldy, DWORK = dwork, INFO = info)
+    res <- suppressWarnings(.Fortran("TF01MD", N = n, M = m, P = p, NY = ny, A = a, LDA = lda, B = b, LDB = ldb, C = c, LDC = ldc,
+        D = d, LDD = ldd, U = u, LDU = ldu, X = x, Y = y, LDY = ldy, DWORK = dwork, INFO = info))
 
     return(list(info = res$INFO, x = res$X, y = res$Y))
 }

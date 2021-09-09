@@ -37,8 +37,9 @@ td04ad_r <- function(m, p, index_bn, dcoeff, ucoeff, nr, tol, ldwork) {
     lduco2 <- dim(ucoeff)[2]
 
 
-    res <- .Fortran("TD04AD", ROWCOL = rowcol, M = m, P = p, INDEX_BN = index_bn, DCOEFF = dcoeff, LDDCOE = lddcoe, UCOEFF = ucoeff, LDUCO1 = lduco1, LDUCO2 = lduco2, NR = nr, A = a, LDA = lda, B = b, LDB = ldb, C = c, LDC = ldc, D = d,
-        LDD = ldd, TOL = tol, IWORK = iwork, DWORK = dwork, LDWORK = ldwork, INFO = info)
+    res <- suppressWarnings(.Fortran("TD04AD", ROWCOL = rowcol, M = m, P = p, INDEX_BN = index_bn, DCOEFF = dcoeff, LDDCOE = lddcoe,
+        UCOEFF = ucoeff, LDUCO1 = lduco1, LDUCO2 = lduco2, NR = nr, A = a, LDA = lda, B = b, LDB = ldb, C = c, LDC = ldc, D = d,
+        LDD = ldd, TOL = tol, IWORK = iwork, DWORK = dwork, LDWORK = ldwork, INFO = info))
 
     return(list(nr = res$NR, info = res$INFO, a = res$A, b = res$B, c = res$C, d = res$D))
 }

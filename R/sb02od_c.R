@@ -71,8 +71,10 @@ sb02od_c <- function(dico, uplo, jobl, sort, n, m, p, a, b, q, r, l, tol, ldwork
     ldr <- dim(r)[1]
 
 
-    res <- .Fortran("SB02OD", DICO = dico, JOBB = jobb, FACT = fact, UPLO = uplo, JOBL = jobl, SORT = sort, N = n, M = m, P = p, A = a, LDA = lda, B = b, LDB = ldb, Q = q, LDQ = ldq, R = r, LDR = ldr, L = l, LDL = ldl, RCOND = rcond,
-        X = x, LDX = ldx, ALFAR = alfar, ALFAI = alfai, BETA = beta, S = s, LDS = lds, T = t, LDT = ldt, U = u, LDU = ldu, TOL = tol, IWORK = iwork, DWORK = dwork, LDWORK = ldwork, BWORK = bwork, INFO = info)
+    res <- suppressWarnings(.Fortran("SB02OD", DICO = dico, JOBB = jobb, FACT = fact, UPLO = uplo, JOBL = jobl, SORT = sort, N = n,
+        M = m, P = p, A = a, LDA = lda, B = b, LDB = ldb, Q = q, LDQ = ldq, R = r, LDR = ldr, L = l, LDL = ldl, RCOND = rcond,
+        X = x, LDX = ldx, ALFAR = alfar, ALFAI = alfai, BETA = beta, S = s, LDS = lds, T = t, LDT = ldt, U = u, LDU = ldu, TOL = tol,
+        IWORK = iwork, DWORK = dwork, LDWORK = ldwork, BWORK = bwork, INFO = info))
 
     return(list(rcond = res$RCOND, x = res$X, alfar = res$ALFAR, alfai = res$ALFAI, beta = res$BETA, s = res$S, t = res$T, info = res$INFO))
 }

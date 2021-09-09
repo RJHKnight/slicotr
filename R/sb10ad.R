@@ -87,9 +87,12 @@ sb10ad <- function(job, n, m, np, ncon, nmeas, gamma, a, b, c, d, gtol, actol, l
     lddk <- dim(dk)[1]
 
 
-    res <- .Fortran("SB10AD", JOB = job, N = n, M = m, NP = np, NCON = ncon, NMEAS = nmeas, GAMMA = gamma, A = a, LDA = lda, B = b, LDB = ldb, C = c, LDC = ldc, D = d, LDD = ldd, AK = ak, LDAK = ldak, BK = bk, LDBK = ldbk, CK = ck, LDCK = ldck,
-        DK = dk, LDDK = lddk, AC = ac, LDAC = ldac, BC = bc, LDBC = ldbc, CC = cc, LDCC = ldcc, DC = dc, LDDC = lddc, RCOND = rcond, GTOL = gtol, ACTOL = actol, IWORK = iwork, LIWORK = liwork, DWORK = dwork, LDWORK = ldwork, BWORK = bwork,
-        LBWORK = lbwork, INFO = info)
+    res <- suppressWarnings(.Fortran("SB10AD", JOB = job, N = n, M = m, NP = np, NCON = ncon, NMEAS = nmeas, GAMMA = gamma, A = a,
+        LDA = lda, B = b, LDB = ldb, C = c, LDC = ldc, D = d, LDD = ldd, AK = ak, LDAK = ldak, BK = bk, LDBK = ldbk, CK = ck, LDCK = ldck,
+        DK = dk, LDDK = lddk, AC = ac, LDAC = ldac, BC = bc, LDBC = ldbc, CC = cc, LDCC = ldcc, DC = dc, LDDC = lddc, RCOND = rcond,
+        GTOL = gtol, ACTOL = actol, IWORK = iwork, LIWORK = liwork, DWORK = dwork, LDWORK = ldwork, BWORK = bwork, LBWORK = lbwork,
+        INFO = info))
 
-    return(list(gamma = res$GAMMA, rcond = res$RCOND, info = res$INFO, ac = res$AC, ak = res$AK, bc = res$BC, bk = res$BK, cc = res$CC, ck = res$CK, dc = res$DC, dk = res$DK))
+    return(list(gamma = res$GAMMA, rcond = res$RCOND, info = res$INFO, ac = res$AC, ak = res$AK, bc = res$BC, bk = res$BK, cc = res$CC,
+        ck = res$CK, dc = res$DC, dk = res$DK))
 }

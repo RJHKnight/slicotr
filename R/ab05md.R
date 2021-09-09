@@ -42,8 +42,10 @@ ab05md <- function(uplo, n1, m1, p1, n2, p2, a1, b1, c1, d1, a2, b2, c2, d2, ldw
     ldd2 <- dim(d2)[1]
 
 
-    res <- .Fortran("AB05MD", UPLO = uplo, OVER = over, N1 = n1, M1 = m1, P1 = p1, N2 = n2, P2 = p2, A1 = a1, LDA1 = lda1, B1 = b1, LDB1 = ldb1, C1 = c1, LDC1 = ldc1, D1 = d1, LDD1 = ldd1, A2 = a2, LDA2 = lda2, B2 = b2, LDB2 = ldb2,
-        C2 = c2, LDC2 = ldc2, D2 = d2, LDD2 = ldd2, N = n, A = a, LDA = lda, B = b, LDB = ldb, C = c, LDC = ldc, D = d, LDD = ldd, DWORK = dwork, LDWORK = ldwork, INFO = info)
+    res <- suppressWarnings(.Fortran("AB05MD", UPLO = uplo, OVER = over, N1 = n1, M1 = m1, P1 = p1, N2 = n2, P2 = p2, A1 = a1,
+        LDA1 = lda1, B1 = b1, LDB1 = ldb1, C1 = c1, LDC1 = ldc1, D1 = d1, LDD1 = ldd1, A2 = a2, LDA2 = lda2, B2 = b2, LDB2 = ldb2,
+        C2 = c2, LDC2 = ldc2, D2 = d2, LDD2 = ldd2, N = n, A = a, LDA = lda, B = b, LDB = ldb, C = c, LDC = ldc, D = d, LDD = ldd,
+        DWORK = dwork, LDWORK = ldwork, INFO = info))
 
     return(list(n = res$N, info = res$INFO, a = res$A, b = res$B, c = res$C, d = res$D))
 }

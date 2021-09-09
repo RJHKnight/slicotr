@@ -39,8 +39,9 @@ tc04ad_l <- function(m, p, index_bn, pcoeff, qcoeff, n, ldwork) {
     ldqco2 <- dim(qcoeff)[2]
 
 
-    res <- .Fortran("TC04AD", LERI = leri, M = m, P = p, INDEX_BN = index_bn, PCOEFF = pcoeff, LDPCO1 = ldpco1, LDPCO2 = ldpco2, QCOEFF = qcoeff, LDQCO1 = ldqco1, LDQCO2 = ldqco2, N = n, RCOND = rcond, A = a, LDA = lda, B = b, LDB = ldb,
-        C = c, LDC = ldc, D = d, LDD = ldd, IWORK = iwork, DWORK = dwork, LDWORK = ldwork, INFO = info)
+    res <- suppressWarnings(.Fortran("TC04AD", LERI = leri, M = m, P = p, INDEX_BN = index_bn, PCOEFF = pcoeff, LDPCO1 = ldpco1,
+        LDPCO2 = ldpco2, QCOEFF = qcoeff, LDQCO1 = ldqco1, LDQCO2 = ldqco2, N = n, RCOND = rcond, A = a, LDA = lda, B = b, LDB = ldb,
+        C = c, LDC = ldc, D = d, LDD = ldd, IWORK = iwork, DWORK = dwork, LDWORK = ldwork, INFO = info))
 
     return(list(n = res$N, rcond = res$RCOND, info = res$INFO, a = res$A, b = res$B, c = res$C, d = res$D))
 }

@@ -49,8 +49,8 @@ mb03wd <- function(job, compz, n, ilo, ihi, iloz, ihiz, h, z, ldwork) {
     ldz2 <- dim(z)[2]
 
 
-    res <- .Fortran("MB03WD", JOB = job, COMPZ = compz, N = n, P = p, ILO = ilo, IHI = ihi, ILOZ = iloz, IHIZ = ihiz, H = h, LDH1 = ldh1, LDH2 = ldh2, Z = z, LDZ1 = ldz1, LDZ2 = ldz2, WR = wr, WI = wi, DWORK = dwork, LDWORK = ldwork,
-        INFO = info)
+    res <- suppressWarnings(.Fortran("MB03WD", JOB = job, COMPZ = compz, N = n, P = p, ILO = ilo, IHI = ihi, ILOZ = iloz, IHIZ = ihiz,
+        H = h, LDH1 = ldh1, LDH2 = ldh2, Z = z, LDZ1 = ldz1, LDZ2 = ldz2, WR = wr, WI = wi, DWORK = dwork, LDWORK = ldwork, INFO = info))
 
     return(list(h = res$H, info = res$INFO, wi = res$WI, wr = res$WR, z = res$Z))
 }

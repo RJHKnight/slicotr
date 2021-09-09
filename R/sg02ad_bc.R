@@ -86,9 +86,11 @@ sg02ad_bc <- function(dico, jobl, scal, sort, acc, n, m, p, a, e, b, q, r, l, to
     ldx <- dim(x)[1]
 
 
-    res <- .Fortran("SG02AD", DICO = dico, JOBB = jobb, FACT = fact, UPLO = uplo, JOBL = jobl, SCAL = scal, SORT = sort, ACC = acc, N = n, M = m, P = p, A = a, LDA = lda, E = e, LDE = lde, B = b, LDB = ldb, Q = q, LDQ = ldq, R = r, LDR = ldr,
-        L = l, LDL = ldl, RCONDU = rcondu, X = x, LDX = ldx, ALFAR = alfar, ALFAI = alfai, BETA = beta, S = s, LDS = lds, T = t, LDT = ldt, U = u, LDU = ldu, TOL = tol, IWORK = iwork, DWORK = dwork, LDWORK = ldwork, BWORK = bwork, IWARN = iwarn,
-        INFO = info)
+    res <- suppressWarnings(.Fortran("SG02AD", DICO = dico, JOBB = jobb, FACT = fact, UPLO = uplo, JOBL = jobl, SCAL = scal, SORT = sort,
+        ACC = acc, N = n, M = m, P = p, A = a, LDA = lda, E = e, LDE = lde, B = b, LDB = ldb, Q = q, LDQ = ldq, R = r, LDR = ldr,
+        L = l, LDL = ldl, RCONDU = rcondu, X = x, LDX = ldx, ALFAR = alfar, ALFAI = alfai, BETA = beta, S = s, LDS = lds, T = t,
+        LDT = ldt, U = u, LDU = ldu, TOL = tol, IWORK = iwork, DWORK = dwork, LDWORK = ldwork, BWORK = bwork, IWARN = iwarn, INFO = info))
 
-    return(list(rcondu = res$RCONDU, iwarn = res$IWARN, info = res$INFO, alfai = res$ALFAI, alfar = res$ALFAR, beta = res$BETA, s = res$S, t = res$T, u = res$U, x = res$X))
+    return(list(rcondu = res$RCONDU, iwarn = res$IWARN, info = res$INFO, alfai = res$ALFAI, alfar = res$ALFAR, beta = res$BETA,
+        s = res$S, t = res$T, u = res$U, x = res$X))
 }

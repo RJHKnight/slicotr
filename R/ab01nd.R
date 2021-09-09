@@ -58,7 +58,9 @@ ab01nd <- function(jobz, n, m, a, b, tol, ldwork) {
     ldb <- dim(b)[1]
 
 
-    res <- .Fortran("AB01ND", JOBZ = jobz, N = n, M = m, A = a, LDA = lda, B = b, LDB = ldb, NCONT = ncont, INDCON = indcon, NBLK = nblk, Z = z, LDZ = ldz, TAU = tau, TOL = tol, IWORK = iwork, DWORK = dwork, LDWORK = ldwork, INFO = info)
+    res <- suppressWarnings(.Fortran("AB01ND", JOBZ = jobz, N = n, M = m, A = a, LDA = lda, B = b, LDB = ldb, NCONT = ncont, INDCON = indcon,
+        NBLK = nblk, Z = z, LDZ = ldz, TAU = tau, TOL = tol, IWORK = iwork, DWORK = dwork, LDWORK = ldwork, INFO = info))
 
-    return(list(ncont = res$NCONT, indcon = res$INDCON, info = res$INFO, a = res$A, b = res$B, nblk = res$NBLK, tau = res$TAU, z = res$Z))
+    return(list(ncont = res$NCONT, indcon = res$INDCON, info = res$INFO, a = res$A, b = res$B, nblk = res$NBLK, tau = res$TAU,
+        z = res$Z))
 }

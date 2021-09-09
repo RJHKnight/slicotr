@@ -35,7 +35,8 @@ mb05md <- function(balanc, n, delta, a) {
     ldy <- dim(y)[1]
 
 
-    res <- .Fortran("MB05MD", BALANC = balanc, N = n, DELTA = delta, A = a, LDA = lda, V = v, LDV = ldv, Y = y, LDY = ldy, VALR = valr, VALI = vali, IWORK = iwork, DWORK = dwork, LDWORK = ldwork, INFO = info)
+    res <- suppressWarnings(.Fortran("MB05MD", BALANC = balanc, N = n, DELTA = delta, A = a, LDA = lda, V = v, LDV = ldv, Y = y,
+        LDY = ldy, VALR = valr, VALI = vali, IWORK = iwork, DWORK = dwork, LDWORK = ldwork, INFO = info))
 
     return(list(a = res$A, info = res$INFO, v = res$V, vali = res$VALI, valr = res$VALR, y = res$Y))
 }

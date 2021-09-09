@@ -33,7 +33,8 @@ mb03rd <- function(jobx, sort, n, pmax, a, x, tol) {
     info <- as.integer(0)
 
 
-    res <- .Fortran("MB03RD", JOBX = jobx, SORT = sort, N = n, PMAX = pmax, A = a, LDA = lda, X = x, LDX = ldx, NBLCKS = nblcks, BLSIZE = blsize, WR = wr, WI = wi, TOL = tol, DWORK = dwork, INFO = info)
+    res <- suppressWarnings(.Fortran("MB03RD", JOBX = jobx, SORT = sort, N = n, PMAX = pmax, A = a, LDA = lda, X = x, LDX = ldx,
+        NBLCKS = nblcks, BLSIZE = blsize, WR = wr, WI = wi, TOL = tol, DWORK = dwork, INFO = info))
 
     return(list(nblcks = res$NBLCKS, blsize = res$BLSIZE, wr = res$WR, wi = res$WI, info = res$INFO, a = res$A, x = res$X))
 }

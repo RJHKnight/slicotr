@@ -35,8 +35,9 @@ ab09ad <- function(dico, job, equil, ordsel, n, m, p, nr, a, b, c, tol, ldwork) 
     ldc <- dim(c)[1]
 
 
-    res <- .Fortran("AB09AD", DICO = dico, JOB = job, EQUIL = equil, ORDSEL = ordsel, N = n, M = m, P = p, NR = nr, A = a, LDA = lda, B = b, LDB = ldb, C = c, LDC = ldc, HSV = hsv, TOL = tol, IWORK = iwork, DWORK = dwork, LDWORK = ldwork,
-        IWARN = iwarn, INFO = info)
+    res <- suppressWarnings(.Fortran("AB09AD", DICO = dico, JOB = job, EQUIL = equil, ORDSEL = ordsel, N = n, M = m, P = p, NR = nr,
+        A = a, LDA = lda, B = b, LDB = ldb, C = c, LDC = ldc, HSV = hsv, TOL = tol, IWORK = iwork, DWORK = dwork, LDWORK = ldwork,
+        IWARN = iwarn, INFO = info))
 
     return(list(nr = res$NR, iwarn = res$IWARN, info = res$INFO, a = res$A, b = res$B, c = res$C, hsv = res$HSV))
 }

@@ -32,7 +32,8 @@ mb05nd <- function(n, delta, a, tol) {
     ldwork <- dim(dwork)[1]
 
 
-    res <- .Fortran("MB05ND", N = n, DELTA = delta, A = a, LDA = lda, EX = ex, LDEX = ldex, EXINT = exint, LDEXIN = ldexin, TOL = tol, IWORK = iwork, DWORK = dwork, LDWORK = ldwork, INFO = info)
+    res <- suppressWarnings(.Fortran("MB05ND", N = n, DELTA = delta, A = a, LDA = lda, EX = ex, LDEX = ldex, EXINT = exint, LDEXIN = ldexin,
+        TOL = tol, IWORK = iwork, DWORK = dwork, LDWORK = ldwork, INFO = info))
 
     return(list(ex = res$EX, exint = res$EXINT, info = res$INFO))
 }

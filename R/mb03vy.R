@@ -28,7 +28,8 @@ mb03vy <- function(n, ilo, ihi, a, tau, ldwork) {
     ldtau <- dim(tau)[1]
 
 
-    res <- .Fortran("MB03VY", N = n, P = p, ILO = ilo, IHI = ihi, A = a, LDA1 = lda1, LDA2 = lda2, TAU = tau, LDTAU = ldtau, DWORK = dwork, LDWORK = ldwork, INFO = info)
+    res <- suppressWarnings(.Fortran("MB03VY", N = n, P = p, ILO = ilo, IHI = ihi, A = a, LDA1 = lda1, LDA2 = lda2, TAU = tau,
+        LDTAU = ldtau, DWORK = dwork, LDWORK = ldwork, INFO = info))
 
     return(list(a = res$A, info = res$INFO))
 }

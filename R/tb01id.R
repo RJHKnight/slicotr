@@ -41,7 +41,8 @@ tb01id <- function(job, n, m, p, maxred, a, b, c) {
     ldc <- dim(c)[1]
 
 
-    res <- .Fortran("TB01ID", JOB = job, N = n, M = m, P = p, MAXRED = maxred, A = a, LDA = lda, B = b, LDB = ldb, C = c, LDC = ldc, SCALE = scale, INFO = info)
+    res <- suppressWarnings(.Fortran("TB01ID", JOB = job, N = n, M = m, P = p, MAXRED = maxred, A = a, LDA = lda, B = b, LDB = ldb,
+        C = c, LDC = ldc, SCALE = scale, INFO = info))
 
     return(list(maxred = res$MAXRED, info = res$INFO, a = res$A, b = res$B, c = res$C, scale = res$SCALE))
 }

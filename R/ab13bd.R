@@ -34,7 +34,8 @@ ab13bd <- function(dico, jobn, n, m, p, a, b, c, d, tol) {
     ldd <- dim(d)[1]
 
 
-    res <- .Fortran("AB13BD", DICO = dico, JOBN = jobn, N = n, M = m, P = p, A = a, LDA = lda, B = b, LDB = ldb, C = c, LDC = ldc, D = d, LDD = ldd, NQ = nq, TOL = tol, DWORK = dwork, LDWORK = ldwork, IWARN = iwarn, INFO = info, AB13BD = ab13bd)
+    res <- suppressWarnings(.Fortran("AB13BD", DICO = dico, JOBN = jobn, N = n, M = m, P = p, A = a, LDA = lda, B = b, LDB = ldb,
+        C = c, LDC = ldc, D = d, LDD = ldd, NQ = nq, TOL = tol, DWORK = dwork, LDWORK = ldwork, IWARN = iwarn, INFO = info, AB13BD = ab13bd))
 
     return(list(nq = res$NQ, iwarn = res$IWARN, info = res$INFO, ab13bd = res$AB13BD))
 }

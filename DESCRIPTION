@@ -1,7 +1,7 @@
 Package: slicotr
 Type: Package
 Title: An R interface to the SLICOT control library
-Version: 0.1.0
+Version: 1.0.0
 Author: Richard Knight
 Maintainer: Richard Knight <rjhknight@gmail.com>
 Description: A wrapper for the SLICOT control library, leaning heavily on the slycot python project.

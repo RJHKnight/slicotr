@@ -42,8 +42,9 @@ ab13dd <- function(dico, jobe, equil, jobd, n, m, p, fpeak, a, e, b, c, d, tol) 
     lde <- dim(e)[1]
 
 
-    res <- .Fortran("AB13DD", DICO = dico, JOBE = jobe, EQUIL = equil, JOBD = jobd, N = n, M = m, P = p, FPEAK = fpeak, A = a, LDA = lda, E = e, LDE = lde, B = b, LDB = ldb, C = c, LDC = ldc, D = d, LDD = ldd, GPEAK = gpeak, TOL = tol,
-        IWORK = iwork, DWORK = dwork, LDWORK = ldwork, LCWORK = lcwork, INFO = info)
+    res <- suppressWarnings(.Fortran("AB13DD", DICO = dico, JOBE = jobe, EQUIL = equil, JOBD = jobd, N = n, M = m, P = p, FPEAK = fpeak,
+        A = a, LDA = lda, E = e, LDE = lde, B = b, LDB = ldb, C = c, LDC = ldc, D = d, LDD = ldd, GPEAK = gpeak, TOL = tol, IWORK = iwork,
+        DWORK = dwork, LDWORK = ldwork, LCWORK = lcwork, INFO = info))
 
     return(list(fpeak = res$FPEAK, gpeak = res$GPEAK, info = res$INFO))
 }

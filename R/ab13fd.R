@@ -30,7 +30,8 @@ ab13fd <- function(n, a, tol) {
     lda <- dim(a)[1]
 
 
-    res <- .Fortran("AB13FD", N = n, A = a, LDA = lda, BETA = beta, OMEGA = omega, TOL = tol, DWORK = dwork, LDWORK = ldwork, LCWORK = lcwork, INFO = info)
+    res <- suppressWarnings(.Fortran("AB13FD", N = n, A = a, LDA = lda, BETA = beta, OMEGA = omega, TOL = tol, DWORK = dwork, LDWORK = ldwork,
+        LCWORK = lcwork, INFO = info))
 
     return(list(beta = res$BETA, omega = res$OMEGA, info = res$INFO))
 }

@@ -66,8 +66,9 @@ sg03bd <- function(dico, fact, trans, n, m, a, e, q, z, b, ldwork) {
     ldz <- dim(z)[1]
 
 
-    res <- .Fortran("SG03BD", DICO = dico, FACT = fact, TRANS = trans, N = n, M = m, A = a, LDA = lda, E = e, LDE = lde, Q = q, LDQ = ldq, Z = z, LDZ = ldz, B = b, LDB = ldb, SCALE = scale, ALPHAR = alphar, ALPHAI = alphai, BETA = beta,
-        DWORK = dwork, LDWORK = ldwork, INFO = info)
+    res <- suppressWarnings(.Fortran("SG03BD", DICO = dico, FACT = fact, TRANS = trans, N = n, M = m, A = a, LDA = lda, E = e,
+        LDE = lde, Q = q, LDQ = ldq, Z = z, LDZ = ldz, B = b, LDB = ldb, SCALE = scale, ALPHAR = alphar, ALPHAI = alphai, BETA = beta,
+        DWORK = dwork, LDWORK = ldwork, INFO = info))
 
     return(list(scale = res$SCALE, info = res$INFO, alphai = res$ALPHAI, alphar = res$ALPHAR, b = res$B, beta = res$BETA))
 }

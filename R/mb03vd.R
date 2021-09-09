@@ -32,7 +32,8 @@ mb03vd <- function(n, ilo, ihi, a) {
     ldtau <- dim(tau)[1]
 
 
-    res <- .Fortran("MB03VD", N = n, P = p, ILO = ilo, IHI = ihi, A = a, LDA1 = lda1, LDA2 = lda2, TAU = tau, LDTAU = ldtau, DWORK = dwork, INFO = info)
+    res <- suppressWarnings(.Fortran("MB03VD", N = n, P = p, ILO = ilo, IHI = ihi, A = a, LDA1 = lda1, LDA2 = lda2, TAU = tau,
+        LDTAU = ldtau, DWORK = dwork, INFO = info))
 
     return(list(a = res$A, info = res$INFO, tau = res$TAU))
 }

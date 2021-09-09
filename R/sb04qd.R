@@ -32,7 +32,8 @@ sb04qd <- function(n, m, a, b, c, ldwork) {
     ldz <- dim(z)[1]
 
 
-    res <- .Fortran("SB04QD", N = n, M = m, A = a, LDA = lda, B = b, LDB = ldb, C = c, LDC = ldc, Z = z, LDZ = ldz, IWORK = iwork, DWORK = dwork, LDWORK = ldwork, INFO = info)
+    res <- suppressWarnings(.Fortran("SB04QD", N = n, M = m, A = a, LDA = lda, B = b, LDB = ldb, C = c, LDC = ldc, Z = z, LDZ = ldz,
+        IWORK = iwork, DWORK = dwork, LDWORK = ldwork, INFO = info))
 
     return(list(info = res$INFO, a = res$A, b = res$B, c = res$C, z = res$Z))
 }

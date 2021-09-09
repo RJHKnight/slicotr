@@ -52,7 +52,8 @@ tg01ad <- function(job, l, n, m, p, thresh, a, e, b, c) {
     lde <- max(dim(e)[1], 1)
 
 
-    res <- .Fortran("TG01AD", JOB = job, L = l, N = n, M = m, P = p, THRESH = thresh, A = a, LDA = lda, E = e, LDE = lde, B = b, LDB = ldb, C = c, LDC = ldc, LSCALE = lscale, RSCALE = rscale, DWORK = dwork, INFO = info)
+    res <- suppressWarnings(.Fortran("TG01AD", JOB = job, L = l, N = n, M = m, P = p, THRESH = thresh, A = a, LDA = lda, E = e,
+        LDE = lde, B = b, LDB = ldb, C = c, LDC = ldc, LSCALE = lscale, RSCALE = rscale, DWORK = dwork, INFO = info))
 
     return(list(lscale = res$LSCALE, rscale = res$RSCALE, info = res$INFO, a = res$A, b = res$B, c = res$C, e = res$E))
 }
