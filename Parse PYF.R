@@ -15,7 +15,7 @@ parse_pyf <- function(file_name)
   sub_name <- ""
   file_name <- ""
   params <- NULL
-  counter <- 1
+  param_order <- NULL
 
   for (i in 1:length(raw))
   {
@@ -31,7 +31,9 @@ parse_pyf <- function(file_name)
       file_name <- stringr::str_remove_all(file_name, "\\:.*\\:")
 
       sub_name <- stringr::str_match(this_line, "^(subroutine|function) ([^\\(]*)")[1,3]
-
+      fn_params <- stringr::str_match(this_line, "(?<=\\().*(?=\\))")
+      bits <- stringr::str_split(fn_params, ",")
+      param_order <- data.frame(name = bits[[1]], original_order = 1:length(bits[[1]]))
     }
     else if (stringr::str_detect(this_line, FORTRAN_NAME))
     {
@@ -46,14 +48,14 @@ parse_pyf <- function(file_name)
       }
 
       # Handle params
-      params <- rbind(params, parse_param(this_line, counter))
-      counter <- counter + 1
+      params <- rbind(params, parse_param(this_line))
     }
     else if (stringr::str_detect(this_line, END_SUB))
     {
       cat(paste("Generating function:", sub_name, "\n"))
 
       params <- handle_depends(params, sub_name)
+      params <- left_join(params, param_order, by = "name")
 
       # Generate the R file
       generate_function(sub_name, file_name, filter(unique(params), !is.na(type)))
@@ -63,14 +65,14 @@ parse_pyf <- function(file_name)
       file_name <- ""
       params <- NULL
       handling_sub <- FALSE
-      counter <- 1
+      param_order <- NULL
 
     }
   }
 }
 
 
-parse_param <- function(this_line, counter)
+parse_param <- function(this_line)
 {
   #integer optional,check(ldwork>=ihi-ilo+p-1), depend(ihi,ilo,p) :: ldwork=max(1,ihi-ilo+p-1)
 
@@ -95,7 +97,7 @@ parse_param <- function(this_line, counter)
 
   return (create_param(type, other$intent, param_name,
                        check = other$check, dimension = other$dimension,
-                       value = param_value, depend = other$depend, counter))
+                       value = param_value, depend = other$depend))
 }
 
 OPEN_PAREN <- "("
@@ -213,7 +215,7 @@ handle_other <- function(other_properties)
   return (list(intent = intent, check = check, dimension = dimension, depend = depend))
 }
 
-create_param <- function(type, intent, name, check = NA, dimension = NA, value = NA, depend = NA, original_order)
+create_param <- function(type, intent, name, check = NA, dimension = NA, value = NA, depend = NA)
 {
   return (data.frame(
     name = stringr::str_to_lower(stringr::str_trim(name[1])),
@@ -222,8 +224,7 @@ create_param <- function(type, intent, name, check = NA, dimension = NA, value =
     check = stringr::str_to_lower(stringr::str_trim(check[1])),
     dimension = stringr::str_to_lower(stringr::str_trim(dimension[1])),
     value = stringr::str_to_lower(stringr::str_trim(value[1])),
-    depend = stringr::str_to_lower(stringr::str_trim(depend[1])),
-    original_order = original_order
+    depend = stringr::str_to_lower(stringr::str_trim(depend[1]))
   ))
 }
 
@@ -251,8 +252,7 @@ handle_depends <- function(params, name)
                 check = check[1],
                 dimension = dimension[1],
                 value = value[1],
-                depend = paste(depend, collapse = ","),
-                original_order = original_order[1])
+                depend = paste(depend, collapse = ","))
 
     # These all depend on a depend param
     depend_res <- dplyr::filter(depend_params, !name %in% depend_1$name)
@@ -268,8 +268,7 @@ handle_depends <- function(params, name)
                 dimension = dimension[1],
                 value = value[1],
                 depend = paste(depend, collapse = ","),
-                include = all(in_depend_1, TRUE),
-                original_order = original_order[1]) %>%
+                include = all(in_depend_1, TRUE)) %>%
       filter(include) %>%
       select(-include)
 
