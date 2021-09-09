@@ -110,10 +110,10 @@ create_call <- function(file_name, params)
 
   return (
     paste0(
-      "res <- .Fortran(\"",
+      "res <- suppressWarnings(.Fortran(\"",
       stringr::str_split_fixed(file_name, "\\.", 2)[1,1],
       "\",", param_string,
-      ")"
+      "))"
     )
   )
 }
