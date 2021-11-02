@@ -1,8 +1,7 @@
 #' sb02md
 #'
 #' Solution of continuous- or discrete-time algebraic Riccati equations (Schur vectors method)
-#' @examples 
-
+#'
 #'   To solve for X either the continuous-time algebraic Riccati
 #'   equation
 #'                            -1
